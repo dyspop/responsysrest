@@ -1,5 +1,12 @@
+"""Packaging settings."""
+
+from codecs import open
+from os.path import abspath, dirname, join
+from subprocess import call
 from setuptools import setup, find_packages
 from os import path
+
+from setuptools import Command, find_packages, setup
 
 import responsysrest
 
