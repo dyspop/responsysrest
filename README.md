@@ -4,10 +4,6 @@ A python library providing access to the Responsys Interact API. Currently suppo
 
 ## Install ##
 
-Via pypi:
-
-    pip install responsysrest
-
 Via source package:
 
     cd responsysrest/
