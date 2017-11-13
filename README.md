@@ -11,6 +11,12 @@ Via source package:
 
 ## Usage ##
 
+```
+import responsysrest as r
+
+r.login_with_username_and_password(r.base_url, r.secrets["user_name"], r.secrets["password"])
+```
+
 ## Development/Testing ##
 
 Tests can be run via setuptools:
