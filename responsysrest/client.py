@@ -9,7 +9,7 @@ from string import ascii_uppercase
 
 print(secrets)
 
-headers = {'content-type': 'application/x-www-form-urlencoded'}
+headers = {'content-type' : 'application/x-www-form-urlencoded'}
 base_url = 'http://login5.responsys.net/rest/api/v1.3/'
 
 # Helper functions for use with direct implementations of calls as below
@@ -67,4 +67,14 @@ def login_with_username_and_password(url, user_name, password):
 #         server_challenge=encrypt(response["serverChallenge"])
 #     )
 
+#     return response
+
+# # TODO: Implement
+# # Refresh token
+# def refresh_token(url, old_auth_token):
+#     service_url = 'auth/token'
+#     url = url + service_url
+#     data = {'auth_type' : 'token'}
+#     headers = {'Authorization' : auth_token}
+#     response = requests.post(url, data=data, headers=headers)
 #     return response
