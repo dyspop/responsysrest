@@ -3,6 +3,7 @@ secrets = {"user_name": "", "password": ""}
 
 import requests
 import base64 as base64
+import json
 from secret import secrets
 from random import choice
 from string import ascii_uppercase
@@ -19,8 +20,8 @@ base_url = 'http://login5.responsys.net/rest/api/v1.3/'
 #     return base64.b64encode(bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8'))
 
 # Direct implentations of calls from Responsys Interact REST API documentation
-# All function names and comment descriptions are directly from the v1.3 REST API documentation
 # https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
+# All function names and comment descriptions are directly from the v1.3 REST API documentation, except some English-language inconsistencies are modified from their documentation and code-comment style to match PEP-8 for their corresponding function/method names.
 
 # Login with username and password
 def login_with_username_and_password(url, user_name, password):
@@ -78,3 +79,19 @@ def login_with_username_and_password(url, user_name, password):
 #     headers = {'Authorization' : auth_token}
 #     response = requests.post(url, data=data, headers=headers)
 #     return response
+
+# Retrieving all profile lists for an account
+def retrieve_all_profile_lists(url):
+    service_url = 'lists'
+    url = url + service_url
+    auth_token = json.loads(
+        login_with_username_and_password(
+            base_url, 
+            secrets["user_name"], 
+            secrets["password"]
+        ).text
+    )["authToken"]
+    headers = {'Authorization' : auth_token}
+    response = requests.get(url, headers=headers)
+    return response
+
