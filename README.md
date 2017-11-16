@@ -4,10 +4,15 @@ A python library providing access to the Responsys Interact API. Currently suppo
 
 ## Install ##
 
-Via source package:
+You can install this other ways, but I recommend installing Python3 this way:
+http://docs.python-guide.org/en/latest/starting/install3/osx/
+
+This should alias your Python3 and pip to separate commands `python3` and `pip3`.
+
+Then you can clone this repo and install via source package:
 
     cd responsysrest/
-    pip install .
+    pip3 install .
 
 ## Usage ##
 
