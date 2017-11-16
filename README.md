@@ -90,4 +90,4 @@ This library was developed inspired by the SOAP client on pypi as ```responsys``
 
 ## Legal ##
 
-This code is neither officially supported nor endorsed by Oracle, Responsys, or any related entites.
+This code is neither officially supported nor endorsed by Oracle, Responsys, or any related entities.
