@@ -63,6 +63,10 @@ r.get('campaigns')
 
 ### Complete usage mapping:
 | English  | Documentation  | Better  | CRUD  |
+|---    |---    |---    |---    |
+| Login with username and password      | `login_with_username_and_password(user_name, password)`      | `login(user_name, password)`       | n/a      |
+| Retrieving all profile lists for an account      | `retrieving_all_profile_lists_for_an_account()`      | `profile_lists()`      | `get('lists')`      |
+| Get all EMD email campaigns      | `get_all_emd_email_campaigns()`      | `campaigns()`      | `get('campaigns')`      |
 
 
 This wrapper is opinionated and returns a json object where appropriate rather than the raw string.
