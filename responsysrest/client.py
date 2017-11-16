@@ -10,7 +10,7 @@ from string import ascii_uppercase
 
 print(secrets)
 
-base_url = 'http://login5.responsys.net/rest/api/v1.3/'
+login_url = 'http://login5.responsys.net/rest/api/v1.3/'
 
 # Helper functions for use with direct implementations of calls as below
 
@@ -18,16 +18,23 @@ base_url = 'http://login5.responsys.net/rest/api/v1.3/'
 # def generate_client_challenge_value(length=16):
 #     return base64.b64encode(bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8'))
 
+# Gets endpoint url from login request responses
+# Used to issue all further requests
+def get_endpoint(response_text):
+    endpoint = response_text.text["endPoint"]
+    base_url = endpoint # assign it to the base url too!
+    return endpoint
+
 # Direct implentations of calls from Responsys Interact REST API documentation
 # https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
 # All function names and comment descriptions are directly from the v1.3 REST API documentation, except some English-language inconsistencies are modified from their documentation and code-comment style to match PEP-8 for their corresponding function/method names.
 
 # Login with username and password
-def login_with_username_and_password(user_name, password, url=base_url):
+def login_with_username_and_password(user_name, password, url=login_url):
 
     # one-liner
     # return requests.post(
-    #     url='%sauth/token' % base_url, 
+    #     url = f'{base_url}auth/token', 
     #     data={
     #         "user_name" : user_name, 
     #         "password" : password, 
@@ -36,8 +43,7 @@ def login_with_username_and_password(user_name, password, url=base_url):
     #     headers={'content-type' : 'application/x-www-form-urlencoded'}
     # )
 
-    service_url = 'auth/token'
-    url = url + service_url
+    url = f'{base_url}auth/token'
     data = {
         "user_name" : user_name,
         "password" : password,
@@ -94,9 +100,9 @@ def login_with_username_and_password(user_name, password, url=base_url):
 #     return response
 
 # Retrieving all profile lists for an account
-def retrieve_all_profile_lists(url=base_url):
+def retrieve_all_profile_lists(endpoint_url):
     service_url = 'list'
-    url = url + service_url
+    url = endpoint_url + service_url
     auth_token = json.loads(
         login_with_username_and_password(
             secrets["user_name"], 
