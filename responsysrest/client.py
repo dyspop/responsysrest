@@ -1,18 +1,18 @@
 # container for context
 secrets = {"user_name": "", "password": ""}
 
-import requests
-import base64 as base64
-import json
-from secret import secrets
-from random import choice
-from string import ascii_uppercase
-from .containers import rules
+import requests # used to issue CRUD requests, the meat and 'taters of this thing
+import base64 as base64 # used with the login with certificate functions
+from random import choice # used with the login with certificate functions
+from string import ascii_uppercase #used with the login with certificate functions
+import json # Interact API returns a lot of json-like text objects, we use this to bind them to python objects
+from secret import secrets # this should get removed, but can be used to store a local password! crazy... but Interact has additional security measures on top of your user login / password and these aren't stored anywhere else than your local machine or app server. if you can encrypt/decrypt them yourself... please do! TODO: proper password prompting/storage
+from .containers import rules # our own rules for data objects. the API should return reponses for bad requests of course, but I'll do my best to define input rules and user feedback prior to issuing the request. 
 
-print(secrets)
-print(rules)
+print(secrets) # TODO: delete this!
+print(rules) # TODO: delete this!
 
-api_url = 'rest/api/v1.3'
+api_url = 'rest/api/v1.3' 
 login_url = f'http://login5.responsys.net/{api_url}/'
 
 # Helper functions for use with direct implementations of calls as below
