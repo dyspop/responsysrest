@@ -10,7 +10,8 @@ from string import ascii_uppercase
 
 print(secrets)
 
-login_url = 'http://login5.responsys.net/rest/api/v1.3/'
+api_url = 'rest/api/v1.3'
+login_url = f'http://login5.responsys.net/{api_url}/'
 
 # Helper functions for use with direct implementations of calls as below
 
@@ -25,25 +26,22 @@ def get_endpoint(response_text):
     base_url = endpoint # assign it to the base url too!
     return endpoint
 
+def get_context():
+    return json.loads(
+        login_with_username_and_password(
+            secrets["user_name"], 
+            secrets["password"]
+        ).text
+    )
+
 # Direct implentations of calls from Responsys Interact REST API documentation
 # https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
 # All function names and comment descriptions are directly from the v1.3 REST API documentation, except some English-language inconsistencies are modified from their documentation and code-comment style to match PEP-8 for their corresponding function/method names.
+# Many functions are mapped to another name afterwards as well for ease of use.
 
 # Login with username and password
 def login_with_username_and_password(user_name, password, url=login_url):
-
-    # one-liner
-    # return requests.post(
-    #     url = f'{base_url}auth/token', 
-    #     data={
-    #         "user_name" : user_name, 
-    #         "password" : password, 
-    #         "auth_type" : "password"
-    #     }, 
-    #     headers={'content-type' : 'application/x-www-form-urlencoded'}
-    # )
-
-    url = f'{base_url}auth/token'
+    url = f'{login_url}auth/token'
     data = {
         "user_name" : user_name,
         "password" : password,
@@ -52,6 +50,9 @@ def login_with_username_and_password(user_name, password, url=login_url):
     headers = {'content-type' : 'application/x-www-form-urlencoded'}
     response = requests.post(url, data=data, headers=headers)
     return response
+# Or use a more sensible name
+def login(user_name, password, url=login_url):
+    return login_with_username_and_password(user_name, password, url=login_url)
 
 # # TODO: Implement 
 # # Login with username and certificates
@@ -100,16 +101,19 @@ def login_with_username_and_password(user_name, password, url=login_url):
 #     return response
 
 # Retrieving all profile lists for an account
-def retrieve_all_profile_lists(endpoint_url):
-    service_url = 'list'
-    url = endpoint_url + service_url
-    auth_token = json.loads(
-        login_with_username_and_password(
-            secrets["user_name"], 
-            secrets["password"]
-        ).text
-    )["authToken"]
+def retrieve_all_profile_lists():
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = f'{context["endPoint"]}/{api_url}/lists'
     headers = {'Authorization' : auth_token}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url=endpoint, headers=headers)
     return response
+# Or use a more sensible name
+def profile_lists():
+    return retrieve_all_profile_lists()
 
+# Get All Campaigns
+
+# Get all EMD email campaigns
+def get_all_emd_email_campaigns():
+    return

@@ -27,6 +27,7 @@ import responsysrest as r
 r.login_with_username_and_password(r.secrets["user_name"], r.secrets["password"])
 ```
 
+Call `dir(r)` to see a list of all possible functions.
 
 
 ## Development/Testing ##
