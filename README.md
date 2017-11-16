@@ -40,7 +40,7 @@ Testing within a dev environment can be accomplished via ```nosetests```.
 
 ## Acknowledgements ##
 
-This library was developed based on the SOAP client on pypi as ```responsys```. 
+This library was developed inspired by the SOAP client on pypi as ```responsys```. 
 🙇 Oracle for the heavy lifting building and maintaining their API.
 
 ## Legal ##
