@@ -24,7 +24,7 @@ base_url = 'http://login5.responsys.net/rest/api/v1.3/'
 # All function names and comment descriptions are directly from the v1.3 REST API documentation, except some English-language inconsistencies are modified from their documentation and code-comment style to match PEP-8 for their corresponding function/method names.
 
 # Login with username and password
-def login_with_username_and_password(url, user_name, password):
+def login_with_username_and_password(user_name, password, url=base_url):
     service_url = 'auth/token'
     url = url + service_url
     data = {
@@ -81,12 +81,11 @@ def login_with_username_and_password(url, user_name, password):
 #     return response
 
 # Retrieving all profile lists for an account
-def retrieve_all_profile_lists(url):
-    service_url = 'lists'
+def retrieve_all_profile_lists(url=base_url):
+    service_url = 'list'
     url = url + service_url
     auth_token = json.loads(
         login_with_username_and_password(
-            base_url, 
             secrets["user_name"], 
             secrets["password"]
         ).text
