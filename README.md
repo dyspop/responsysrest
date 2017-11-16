@@ -34,7 +34,7 @@ r.login_with_username_and_password(r.secrets["user_name"], r.secrets["password"]
 
 There are multiple ways of calling any part of the API.
 
-### The documentation way:
+### Documentation Style
 
 Any function in the Responsys documentation (6.33 E65150-15) is created as a function name based on its documented name.
 
@@ -43,7 +43,7 @@ r.retrieve_all_profile_lists()
 r.get_all_emd_email_campaigns()
 ```
 
-### The better-named-than-the-documentation way.
+### Better Style
 
 Most of the names in the Responsys documentation are verbose. This client wrapper provides shorter, more sensible names.
 
@@ -52,7 +52,7 @@ r.profile_lists()
 r.campaigns()
 ```
 
-### The direct get
+### CRUD Style
 
 This wrapper library is constructed mostly on issuing requests in a format that the Interact API expects. As such you may call the get function directly to a desired endpoint:
 
@@ -60,6 +60,14 @@ This wrapper library is constructed mostly on issuing requests in a format that 
 r.get('lists')
 r.get('campaigns')
 ```
+
+### Complete usage mapping:
+| English      | Documentation      | Better      | CRUD      |
+|---    |---    |---    |---    |---    |
+| Login with username and password      | `login_with_username_and_password(user_name, password)`      | `login(user_name, password)`       | n/a      |
+| Retrieving all profile lists for an account      | `retrieving_all_profile_lists_for_an_account()`      | `profile_lists()`      | `get('lists')`      |
+| Get all EMD email campaigns      | `get_all_emd_email_campaigns()`      | `campaigns()`      | `get('campaigns')`      |
+
 
 This wrapper is opinionated and returns a json object where appropriate rather than the raw string.
 
