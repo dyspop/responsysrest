@@ -7,8 +7,10 @@ import json
 from secret import secrets
 from random import choice
 from string import ascii_uppercase
+from .containers import containers
 
 print(secrets)
+print(containers)
 
 api_url = 'rest/api/v1.3'
 login_url = f'http://login5.responsys.net/{api_url}/'
@@ -105,13 +107,11 @@ def login(user_name, password, url=login_url):
 #     return response
 
 # Retrieving all profile lists for an account
-def retrieve_all_profile_lists():
+def retrieving_all_profile_lists_for_an_account():
     return get('lists')
 # Or use a more sensible name
 def profile_lists():
-    return retrieve_all_profile_lists()
-
-# Get All Campaigns
+    return retrieving_all_profile_lists_for_an_account()
 
 # Get all EMD email campaigns
 def get_all_emd_email_campaigns():
@@ -121,5 +121,13 @@ def campaigns():
     return get_all_emd_email_campaigns()
 
 # Merge or update members in a profile list table
-def merge_or_update_members_in_a_profile_list_table():
+def merge_or_update_members_in_a_profile_list_table(listName):
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = f'{context["endPoint"]}/{api_url}/lists/{listName}/members'
+    headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+    response = requests.post(url, )
     return
+# Or use a more sensible name
+def list_manage(listName):
+    return merge_or_update_members_in_a_profile_list_table(listName)
