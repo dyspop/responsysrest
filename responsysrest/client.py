@@ -36,6 +36,15 @@ def get_context():
         ).text
     )
 
+# General purpose build for get requests to Interact API
+def get(service_url, **kwargs):
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
+    headers = kwargs.get('headers', {'Authorization' : auth_token})
+    response = json.loads(requests.get(url=endpoint, headers=headers).text)
+    return response
+
 # Direct implentations of calls from Responsys Interact REST API documentation
 # https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
 # All function names and comment descriptions are directly from the v1.3 REST API documentation, except some English-language inconsistencies are modified from their documentation and code-comment style to match PEP-8 for their corresponding function/method names.
@@ -104,13 +113,7 @@ def login(user_name, password, url=login_url):
 
 # Retrieving all profile lists for an account
 def retrieve_all_profile_lists():
-    service_url = 'lists'
-    context = get_context()
-    auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
-    headers = {'Authorization' : auth_token}
-    response = json.loads(requests.get(url=endpoint, headers=headers).text)
-    return response
+    return get('lists')
 # Or use a more sensible name
 def profile_lists():
     return retrieve_all_profile_lists()
@@ -119,13 +122,11 @@ def profile_lists():
 
 # Get all EMD email campaigns
 def get_all_emd_email_campaigns():
-    service_url = 'campaigns'
-    context = get_context()
-    auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
-    headers = {'Authorization' : auth_token}
-    response = json.loads(requests.get(url=endpoint, headers=headers).text)
-    return response
+    return get('campaigns')
 # Or use a more sensible name
 def campaigns():
     return get_all_emd_email_campaigns()
+
+# Merge or update members in a profile list table
+def merge_or_update_members_in_a_profile_list_table():
+    return
