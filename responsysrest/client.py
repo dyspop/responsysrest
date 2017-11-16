@@ -26,6 +26,8 @@ def get_endpoint(response_text):
     base_url = endpoint # assign it to the base url too!
     return endpoint
 
+# Return the login response as context, used with each individual call
+# TODO: figure out how to log out after each log in!
 def get_context():
     return json.loads(
         login_with_username_and_password(
