@@ -124,3 +124,6 @@ def get_all_emd_email_campaigns():
     headers = {'Authorization' : auth_token}
     response = requests.get(url=endpoint, headers=headers)
     return response
+# Or use a more sensible name
+def campaigns():
+    return get_all_emd_email_campaigns()
