@@ -10,7 +10,6 @@ from string import ascii_uppercase
 
 print(secrets)
 
-headers = {'content-type' : 'application/x-www-form-urlencoded'}
 base_url = 'http://login5.responsys.net/rest/api/v1.3/'
 
 # Helper functions for use with direct implementations of calls as below
@@ -25,6 +24,18 @@ base_url = 'http://login5.responsys.net/rest/api/v1.3/'
 
 # Login with username and password
 def login_with_username_and_password(user_name, password, url=base_url):
+
+    # one-liner
+    # return requests.post(
+    #     url='%sauth/token' % base_url, 
+    #     data={
+    #         "user_name" : user_name, 
+    #         "password" : password, 
+    #         "auth_type" : "password"
+    #     }, 
+    #     headers={'content-type' : 'application/x-www-form-urlencoded'}
+    # )
+
     service_url = 'auth/token'
     url = url + service_url
     data = {
@@ -32,7 +43,9 @@ def login_with_username_and_password(user_name, password, url=base_url):
         "password" : password,
         "auth_type" : "password"
     }
-    return requests.post(url, data=data, headers=headers)
+    headers = {'content-type' : 'application/x-www-form-urlencoded'}
+    response = requests.post(url, data=data, headers=headers)
+    return response
 
 # # TODO: Implement 
 # # Login with username and certificates
