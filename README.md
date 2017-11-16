@@ -27,7 +27,34 @@ import responsysrest as r
 r.login_with_username_and_password(r.secrets["user_name"], r.secrets["password"])
 ```
 
-Call `dir(r)` to see a list of all possible functions.
+There are multiple ways of calling any part of the API.
+
+### The documentation way:
+
+Any function in the Responsys documentation (6.33 E65150-15) is created as a function name based on its documented name.
+
+```
+r.retrieve_all_profile_lists()
+r.get_all_emd_email_campaigns()
+```
+
+### The better-named-than-the-documentation way.
+
+Most of the names in the Responsys documentation are verbose. This client wrapper provides shorter, more sensible names.
+
+```
+r.profile_lists()
+r.campaigns()
+```
+
+### The direct get
+
+This wrapper library is constructed mostly on issuing requests in a format that the Interact API expects. As such you may call the get function directly to a desired endpoint:
+
+```
+r.get('lists')
+r.get('campaigns')
+```
 
 This wrapper is opinionated and returns a json object where appropriate rather than the raw string.
 
