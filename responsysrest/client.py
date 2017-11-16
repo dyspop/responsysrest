@@ -19,13 +19,6 @@ login_url = f'http://login5.responsys.net/{api_url}/'
 # def generate_client_challenge_value(length=16):
 #     return base64.b64encode(bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8'))
 
-# Gets endpoint url from login request responses
-# Used to issue all further requests
-def get_endpoint(response_text):
-    endpoint = response_text.text["endPoint"]
-    base_url = endpoint # assign it to the base url too!
-    return endpoint
-
 # Return the login response as context, used with each individual call
 # TODO: figure out how to log out after each log in!
 def get_context():
