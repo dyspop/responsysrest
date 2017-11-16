@@ -102,9 +102,10 @@ def login(user_name, password, url=login_url):
 
 # Retrieving all profile lists for an account
 def retrieve_all_profile_lists():
+    service_url = 'lists'
     context = get_context()
     auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/{api_url}/lists'
+    endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
     headers = {'Authorization' : auth_token}
     response = requests.get(url=endpoint, headers=headers)
     return response
@@ -116,4 +117,10 @@ def profile_lists():
 
 # Get all EMD email campaigns
 def get_all_emd_email_campaigns():
-    return
+    service_url = 'campaigns'
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
+    headers = {'Authorization' : auth_token}
+    response = requests.get(url=endpoint, headers=headers)
+    return response
