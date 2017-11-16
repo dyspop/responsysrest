@@ -7,10 +7,10 @@ import json
 from secret import secrets
 from random import choice
 from string import ascii_uppercase
-from .containers import containers
+from .containers import rules
 
 print(secrets)
-print(containers)
+print(rules)
 
 api_url = 'rest/api/v1.3'
 login_url = f'http://login5.responsys.net/{api_url}/'
@@ -126,8 +126,9 @@ def merge_or_update_members_in_a_profile_list_table(listName):
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/lists/{listName}/members'
     headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
-    response = requests.post(url, )
-    return
+    data = rules["merge_or_update_members_in_a_profile_list_table"]
+    # response = requests.post(url)
+    return data
 # Or use a more sensible name
 def list_manage(listName):
     return merge_or_update_members_in_a_profile_list_table(listName)
