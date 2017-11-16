@@ -107,7 +107,7 @@ def retrieve_all_profile_lists():
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
     headers = {'Authorization' : auth_token}
-    response = requests.get(url=endpoint, headers=headers)
+    response = json.loads(requests.get(url=endpoint, headers=headers).text)
     return response
 # Or use a more sensible name
 def profile_lists():
@@ -122,7 +122,7 @@ def get_all_emd_email_campaigns():
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
     headers = {'Authorization' : auth_token}
-    response = requests.get(url=endpoint, headers=headers)
+    response = json.loads(requests.get(url=endpoint, headers=headers).text)
     return response
 # Or use a more sensible name
 def campaigns():
