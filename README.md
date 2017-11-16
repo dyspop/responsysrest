@@ -11,11 +11,23 @@ Via source package:
 
 ## Usage ##
 
+Set your username and password as a dictionary data object in `responsysrest/secret.py`
+IMPORTANT: this is ignored by git. If you use another version control you'll need to keep this file out of the way from it!
+
+```
+secrets = {
+    "user_name" : "MyResponsysInteractAPIuserName",
+    "password" : "FillInPasswordHere"
+}
+```
+
 ```
 import responsysrest as r
 
-r.login_with_username_and_password(r.base_url, r.secrets["user_name"], r.secrets["password"])
+r.login_with_username_and_password(r.secrets["user_name"], r.secrets["password"])
 ```
+
+
 
 ## Development/Testing ##
 
