@@ -85,8 +85,8 @@ The login itself returns a context with the Interact supplied endpoint for furth
 
 #### Retrieving all profile lists for an account
 
-`retrieving_all_profile_lists_for_an_account()`
-`profile_lists()`
+    retrieving_all_profile_lists_for_an_account()
+    profile_lists()
 
 Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so you probably want to call `[list["name"] for list in r.profile_lists()]` for a simple list of the profile lists or `[(list["name"], list["folderName"]) for list in r.profile_lists()]` for a list of all profile lists along with their folders.
 
