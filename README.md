@@ -78,15 +78,26 @@ r.get('campaigns')
 #### Login with username and password
 
 This can be called individually but isn't necessary since any function that requires it will call it.
-`login_with_username_and_password(user_name, password)`
-`login(user_name, password)`
+
+    r.login_with_username_and_password(user_name, password)
+
+or
+
+    r.login(user_name, password)
 
 The login itself returns a context with the Interact supplied endpoint for further requests for that user, an auth token, and a timestamp. Typically this is passed to whatever other request you make each time you do so.
 
 #### Retrieving all profile lists for an account
 
-    retrieving_all_profile_lists_for_an_account()
-    profile_lists()
+    r.retrieving_all_profile_lists_for_an_account()
+
+or
+
+    r.profile_lists()
+
+or
+    
+    r.get('lists')
 
 Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so you probably want to call `[list["name"] for list in r.profile_lists()]` for a simple list of the profile lists or `[(list["name"], list["folderName"]) for list in r.profile_lists()]` for a list of all profile lists along with their folders.
 
