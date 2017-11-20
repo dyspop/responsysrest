@@ -143,6 +143,7 @@ def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
         try:
             if merge_value in data["mergeRule"][merge_rule]["options"]: # if the user input merge rule value is valid based on the container data
                 # TODO: add the new merge rule value to the data
+                return
         except KeyError:
             print(f'ERROR: Merge rule "{merge_rule}" is not valid. Valid merge rules are:\n{rules_keys}')
         # print(merge_rule + " : " + merge_value)
