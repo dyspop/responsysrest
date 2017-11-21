@@ -161,7 +161,6 @@ def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
     response = requests.post(url, data=json.dumps(data), headers=headers) # make the request
     data = rules["merge_or_update_members_in_a_profile_list_table"][0] # return the data to the container?
     return response
-
 # Or use a more sensible name
 def list_manage(list_name, **kwargs):
     return merge_or_update_members_in_a_profile_list_table(list_name)
