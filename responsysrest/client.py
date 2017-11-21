@@ -163,4 +163,4 @@ def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
     return response
 # Or use a more sensible name
 def list_manage(list_name, **kwargs):
-    return merge_or_update_members_in_a_profile_list_table(list_name)
+    return merge_or_update_members_in_a_profile_list_table(list_name, **kwargs)
