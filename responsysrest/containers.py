@@ -94,12 +94,12 @@ rules = {
                         'EMAIL_SHA256_HASH_'
                     ]
                 },
-                'matchColumnName3' : {
-                    'default' : None,
-                    'options' : [
-                        None
-                    ] # deprecated
-                },
+                # 'matchColumnName3' : {
+                #     'default' : None,
+                #     'options' : [
+                #         None
+                #     ] # deprecated
+                # },
                 'matchOperator' : {
                     'default' : 'NONE',
                     'options' : [

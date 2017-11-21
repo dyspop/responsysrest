@@ -124,9 +124,10 @@ def campaigns():
 def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
     data = rules["merge_or_update_members_in_a_profile_list_table"][0] # load container data
     # process keyword arguments
-    fields = kwargs.get('fields', None)
+    fields = kwargs.get('fields')
     records = kwargs.get('records', None)
-    merge_rules = kwargs.get('merge_rules', None)
+    merge_rules = kwargs.get('merge_rules', data["mergeRule"])
+
     if isinstance(fields, list) and isinstance(records, list): # make sure the input fields and records are lists
         if len(fields) == len(records): # make sure the fields and records have the same amount of columns
             data["recordData"]["fieldNames"] = fields # insert our fields into the data 
@@ -134,30 +135,33 @@ def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
         else:
             raise ValueError("ERROR: List headers count does not match record column count")
     else:
-        raise ValueError("ERROR: input fields or records are not list objects")
+        raise ValueError("ARGUMENT ERROR: input fields or records are not list objects.\nPlease specify lists for 'fields' or 'records' arguments.")
 
     rules_keys = [key for key in data["mergeRule"]] # extract merge rules 
     rules_values = [data["mergeRule"][rule]["default"] for rule in rules_keys] # extract merge rules default values
     rules_dict = dict(zip(rules_keys, rules_values)) # assign a new rules object to work on before we insert it into the request object
+
     for merge_rule, merge_value in merge_rules.items():
         try:
             if merge_value in data["mergeRule"][merge_rule]["options"]: # if the user input merge rule value is valid based on the container data
-                # TODO: add the new merge rule value to the data
-                return
+                data["mergeRule"][merge_rule] = merge_value # add the new merge rule value to the data
         except KeyError:
             print(f'ERROR: Merge rule "{merge_rule}" is not valid. Valid merge rules are:\n{rules_keys}')
         # print(merge_rule + " : " + merge_value)
 
         rules_dict[merge_rule] = merge_value # assign the parameters supplied in the merge_rules keyword argument to the new rules
+    data["mergeRule"] = rules_dict # add the merge rules back into the data
 
-    # print(rules_dict)
-
+    # build post request
     context = get_context()
     auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
+    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
     headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+    print(json.dumps(data))
+    response = requests.post(url, data=json.dumps(data), headers=headers) # make the request
+    data = rules["merge_or_update_members_in_a_profile_list_table"][0] # return the data to the container?
+    return response
 
-    # return data
 # Or use a more sensible name
 def list_manage(list_name, **kwargs):
     return merge_or_update_members_in_a_profile_list_table(list_name)
