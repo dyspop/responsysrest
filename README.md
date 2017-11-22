@@ -72,6 +72,7 @@ r.get('campaigns')
 | Retrieving all profile lists for an account      | `retrieving_all_profile_lists_for_an_account()`      | `profile_lists()`      | `get('lists')`      |
 | Get all EMD email campaigns      | `get_all_emd_email_campaigns()`      | `campaigns()`      | `get('campaigns')`      |
 | Merge or update members in a profile list table      | `merge_or_update_members_in_a_profile_list_table(list)`      | `list_manage(list_name)`      | n/a      |
+| Retrieve a member of a profile list using RIID      | `retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)`      | `get_member_of_list_by_riid(list_name, riid)` | n/a     |
 
 ### Specific functions usage:
 
@@ -100,6 +101,16 @@ or
     r.get('lists')
 
 Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so you probably want to call `[list["name"] for list in r.profile_lists()]` for a simple list of the profile lists or `[(list["name"], list["folderName"]) for list in r.profile_lists()]` for a list of all profile lists along with their folders.
+
+#### Retrieve a member of a profile list using RIID
+
+    `retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
+
+or
+
+    get_member_of_list_by_riid(list_name, riid)
+
+Returns a full record if it's in the list.
 
 ## Development/Testing ##
 
