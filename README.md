@@ -73,6 +73,7 @@ r.get('campaigns')
 | Get all EMD email campaigns      | `get_all_emd_email_campaigns()`      | `campaigns()`      | `get('campaigns')`      |
 | Merge or update members in a profile list table      | `merge_or_update_members_in_a_profile_list_table(list)`      | `list_manage(list_name)`      | n/a      |
 | Retrieve a member of a profile list using RIID      | `retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)`      | `get_member_of_list_by_riid(list_name, riid)` | n/a     |
+| Get lists for record      | n/a       | `get_lists_for_record(riid)` | n/a    |
 
 ### Specific functions usage:
 
@@ -104,13 +105,20 @@ Returns a list of dictionaries of all profile lists. This comes bundled with the
 
 #### Retrieve a member of a profile list using RIID
 
-    `retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
+    r.retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
 
 or
 
-    get_member_of_list_by_riid(list_name, riid)
+    r.get_member_of_list_by_riid(list_name, riid)
 
 Returns a full record if it's in the list.
+
+#### Get lists for record
+
+    r.get_lists_for_record(riid)
+
+Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
+
 
 ## Development/Testing ##
 
