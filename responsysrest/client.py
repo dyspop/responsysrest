@@ -37,6 +37,9 @@ def get(service_url, **kwargs):
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
     headers = kwargs.get('headers', {'Authorization' : auth_token})
+    if "parameters" in kwargs: # use parameters if we got them
+        parameters = kwargs.get('parameters', None)
+        endpoint = f'{endpoint}?{parameters}'
     response = json.loads(requests.get(url=endpoint, headers=headers).text)
     return response
 
@@ -167,7 +170,8 @@ def list_manage(list_name, **kwargs):
 
 # Retrieve a member of a profile list using RIID
 def retrieve_a_member_of_a_profile_list_using_riid(list_name, riid):
-    return
+    service_url = f'lists/{list_name}/members/{riid}'
+    return get(service_url, parameters='fs=all') # only support returning all fields for now
 # Or use a more sensible name
 def get_member_of_list_by_riid(list_name, riid):
     return retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
