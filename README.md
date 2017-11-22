@@ -26,6 +26,8 @@ secrets = {
 }
 ```
 
+If you were to need to set these manually you'd do it like this:
+
 ```
 import responsysrest as r
 
