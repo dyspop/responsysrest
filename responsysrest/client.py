@@ -182,10 +182,11 @@ def get_member_of_list_by_riid(list_name, riid):
 
 # Find what lists a record is in by the input RIID, Email Address or Mobile Number
 def get_lists_for_record(riid):
-    all_lists = [list_name["name"] for list_name in r.profile_lists()] # get a list of all the profile list names
+    all_lists = [list_name["name"] for list_name in profile_lists()] # get a list of all the profile list names
     member_of = [] # container list
     for profile_list in all_lists:
-        if retrieve_a_member_of_a_profile_list_using_riid(profile_list, riid): # if the member by riid is in the list, add it to the list of profiles lists the member is a member of... (yikes)
+        response = retrieve_a_member_of_a_profile_list_using_riid(profile_list, riid)
+        if "recordData" in response: # if the member (by riid) is in the profile list, add it to the list of profiles all_lists
             member_of.append(profile_list) 
     return member_of
 
