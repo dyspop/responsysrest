@@ -122,7 +122,7 @@ Returns a full record if it's in the list.
 
 or
 
-    r.retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)
+    r.get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)
 
 or
 
