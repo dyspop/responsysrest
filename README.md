@@ -144,11 +144,7 @@ Loops through every list and checks to see if the record is in the list. If the 
 
 ## Development/Testing ##
 
-Tests can be run via setuptools:
-
-    python setup.py nosetests
-
-Testing within a dev environment can be accomplished via ```nosetests```.
+None!
 
 ## Acknowledgements ##
 
