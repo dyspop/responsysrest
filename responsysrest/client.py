@@ -171,10 +171,18 @@ def list_manage(list_name, **kwargs):
 # Retrieve a member of a profile list using RIID
 def retrieve_a_member_of_a_profile_list_using_riid(list_name, riid):
     service_url = f'lists/{list_name}/members/{riid}'
-    return get(service_url, parameters='fs=all') # only support returning all fields for now
+    return get(service_url, parameters='fs=all') # only support returning all fields for now # TODO: implement other fields
 # Or use a more sensible name
 def get_member_of_list_by_riid(list_name, riid):
     return retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
+
+# Retrieve a member of a profile list based on query attribute
+def retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, query_attribute='c', id, fields_to_return='all'):
+    service_url = f'lists/{list_name}/members/'
+    return get(service_url, parameters=f'?fs={fields_to_return}&qa={query_attribute}&id={id}')
+# Or use a more sensible name
+def get_member_of_list_by_id(list_name, query_attribute='c', id, fields_to_return='all'):
+    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, query_attribute='c', id, fields_to_return='all')
 
 ##################
 # Extra features #
