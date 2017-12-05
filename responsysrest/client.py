@@ -238,9 +238,13 @@ def create_a_new_profile_extension_table(list_name, folder_name='___api-generate
     headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
     response = requests.post(url=endpoint, headers=headers)
     return response
-#Or use a more sensible name
-def create_profile_extension():
-    return create_a_new_profile_extension_table()
+# Or use a more sensible name
+def create_profile_extension(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
+    return create_a_new_profile_extension_table(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000')
+
+# Retrieve a member of a profile extension table based on RIID
+def retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
+    return 
 
 ##################
 # Extra features #
