@@ -208,6 +208,13 @@ def delete_profile_list_recipients_based_on_riid(list_name, riid):
 def delete_from_profile_list(list_name, riid):
     return delete_profile_list_recipients_based_on_riid(list_name, riid)
 
+# Retrieve all profile extentions of a profile list
+def retrieve_all_profile_extensions_of_a_profile_list(list_name):
+    return get(f'lists/{list_name}/listExtensions')
+# Or use a more sensible name
+def get_profile_extensions(list_name):
+    return retrieve_all_profile_extensions_of_a_profile_list(list_name)
+
 ##################
 # Extra features #
 ##################
