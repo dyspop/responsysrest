@@ -217,7 +217,8 @@ def get_profile_extensions(list_name):
 
 # Create a new profile extension table
 # TODO: fix 403 response
-def create_a_new_profile_extension_table(list_name, folder_name='___api-generated', extension_name=f'{list_name}_pet', default_field_type='STR4000'):
+def create_a_new_profile_extension_table(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
+    extension_name = f'{list_name}{extension_name}'
     data = {
         "profileExtension" : {
             "objectName" : extension_name,
