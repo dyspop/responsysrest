@@ -242,9 +242,14 @@ def create_a_new_profile_extension_table(list_name, folder_name='___api-generate
 def create_profile_extension(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
     return create_a_new_profile_extension_table(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000')
 
-# Retrieve a member of a profile extension table based on RIID
+# TODO: Merge or update members in a profile extension table 
+
+# TODO: Retrieve a member of a profile extension table based on RIID
 def retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
     return 
+# Or use a more sensible name
+def get_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
+    return retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return='all')
 
 ##################
 # Extra features #
