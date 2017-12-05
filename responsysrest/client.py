@@ -215,6 +215,32 @@ def retrieve_all_profile_extensions_of_a_profile_list(list_name):
 def get_profile_extensions(list_name):
     return retrieve_all_profile_extensions_of_a_profile_list(list_name)
 
+# Create a new profile extension table
+# TODO: fix 403 response
+def create_a_new_profile_extension_table(list_name, folder_name='___api-generated', extension_name=f'{list_name}_pet', default_field_type='STR4000'):
+    data = {
+        "profileExtension" : {
+            "objectName" : extension_name,
+            "folderName" : folder_name,
+            "fields" :
+            [
+                {
+                    "fieldName" : "edu",
+                    "fieldType" : default_field_type # Could be STR500, STR4000, INTEGER, NUMBER, or TIMESTAMP
+                }
+            ]
+        }
+    }
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = f'{context["endPoint"]}/lists/{list_name}/listExtensions'
+    headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+    response = requests.post(url=endpoint, headers=headers)
+    return response
+#Or use a more sensible name
+def create_profile_extension():
+    return create_a_new_profile_extension_table()
+
 ##################
 # Extra features #
 ##################
