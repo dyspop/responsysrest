@@ -194,6 +194,18 @@ def retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, reco
 def get_member_of_list_by_id(list_name, record_id, query_attribute='c', fields_to_return='all'):
     return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute='c', fields_to_return='all')
 
+# Delete Profile List Recipients based on RIID
+def delete_profile_list_recipients_based_on_riid(list_name, riid):
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = f'{context["endPoint"]}/lists/{list_name}/members/{riid}'
+    headers = {'Authorization' : auth_token}
+    response = requests.delete(url=endpoint, headers=headers)
+    return response
+# Or use a more sensible name
+def delete_from_profile_list(list_name, riid):
+    return delete_profile_list_recipients_based_on_riid(list_name, riid)
+
 ##################
 # Extra features #
 ##################
