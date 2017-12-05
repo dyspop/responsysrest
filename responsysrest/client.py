@@ -6,10 +6,10 @@ import base64 as base64 # used with the login with certificate functions
 from random import choice # used with the login with certificate functions
 from string import ascii_uppercase #used with the login with certificate functions
 import json # Interact API returns a lot of json-like text objects, we use this to bind them to python objects
-from secret import secrets # this should get removed, but can be used to store a local password! crazy... but Interact has additional security measures on top of your user login / password and these aren't stored anywhere else than your local machine or app server. if you can encrypt/decrypt them yourself... please do! TODO: proper password prompting/storage
+from secret import secrets as secret # this should get removed, but can be used to store a local password! crazy... but Interact has additional security measures on top of your user login / password and these aren't stored anywhere else than your local machine or app server. if you can encrypt/decrypt them yourself... please do! TODO: proper password prompting/storage
 from .containers import rules # our own rules for data objects. the API should return reponses for bad requests of course, but I'll do my best to define input rules and user feedback prior to issuing the request. 
 
-print(secrets) # TODO: delete this!
+print(secret) # TODO: delete this!
 print(rules) # TODO: delete this!
 
 api_url = 'rest/api/v1.3' 
@@ -26,8 +26,8 @@ login_url = f'http://login5.responsys.net/{api_url}/'
 def get_context():
     return json.loads(
         login_with_username_and_password(
-            secrets["user_name"], 
-            secrets["password"]
+            secret["user_name"], 
+            secret["password"]
         ).text
     )
 
@@ -60,7 +60,7 @@ def login_with_username_and_password(user_name, password, url=login_url):
     response = requests.post(url, data=data, headers=headers)
     return response
 # Or use a more sensible name
-def login(user_name, password, url=login_url):
+def login(user_name=secret['user_name'], password=secret['password'], url=login_url):
     return login_with_username_and_password(user_name, password, url=login_url)
 
 # # TODO: Implement 
