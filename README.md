@@ -77,6 +77,7 @@ r.get('campaigns')
 | Retrieve a member of a profile list using RIID      | `retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)`      | `get_member_of_list_by_riid(list_name, riid)` | n/a     |
 | Retrieve a member of a profile list based on query attribute      | `retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)`       | `get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)` | `get('lists/{list_name}/members/', parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')`    |
 | Get lists for record      | n/a       | `get_lists_for_record(riid)` | n/a    |
+| Retrieve all profile extentions of a profile list      | `retrieve_all_profile_extensions_of_a_profile_list(list_name)`       | `get_profile_extensions(list_name)` | `get(f'lists/{list_name}/listExtensions'`    |
 
 ### Specific functions usage:
 
@@ -104,7 +105,10 @@ or
     
     r.get('lists')
 
-Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so you probably want to call `[list["name"] for list in r.profile_lists()]` for a simple list of the profile lists or `[(list["name"], list["folderName"]) for list in r.profile_lists()]` for a list of all profile lists along with their folders.
+Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
+
+    [list["name"] for list in r.profile_lists()] 
+    [(list["name"], list["folderName"]) for list in r.profile_lists()]
 
 #### Retrieve a member of a profile list using RIID
 
@@ -134,6 +138,23 @@ Examples:
 
     r.get_member_of_list_by_id('CONTACTS_LIST', 'a@b.c')
     r.get_member_of_list_by_id('AFFILIATES', '901210', 'c', 'email_address_,first_name')
+
+#### Retrieve all profile extentions of a profile list
+
+    r.retrieve_all_profile_extensions_of_a_profile_list(list_name)
+
+or
+
+    r.get_profile_extensions(list_name)
+
+or
+
+    r.get(f'lists/{list_name}/listExtensions')
+
+Returns the profile extension tables (also known as profile extensions, profile extenion lists, or PETs) associated with a given list. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
+
+    [list['profileExtension']['objectName'] for list in r.get_profile_extensions(list_name')]
+    [(list['profileExtension']['objectName'], list['profileExtension']['folderName']) for list in r.get_profile_extensions(list_name)]
 
 #### Get lists for record
 
