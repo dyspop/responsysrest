@@ -124,6 +124,7 @@ def campaigns():
     return get_all_emd_email_campaigns()
 
 # Merge or update members in a profile list table
+# TODO: fix 403 response
 def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
     data = rules["merge_or_update_members_in_a_profile_list_table"][0] # load container data
     # process keyword arguments
@@ -195,6 +196,7 @@ def get_member_of_list_by_id(list_name, record_id, query_attribute='c', fields_t
     return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute='c', fields_to_return='all')
 
 # Delete Profile List Recipients based on RIID
+# TODO: fix 403 response
 def delete_profile_list_recipients_based_on_riid(list_name, riid):
     context = get_context()
     auth_token = context["authToken"]
