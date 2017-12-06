@@ -21,26 +21,17 @@ login_url = f'http://login5.responsys.net/{api_url}/'
 # def generate_client_challenge_value(length=16):
 #     return base64.b64encode(bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8'))
 
-# Return the login response as context, used with each individual call
-# TODO: figure out how to log out after each log in!
-def get_context():
-    return json.loads(
-        login_with_username_and_password(
-            secret["user_name"], 
-            secret["password"]
-        ).text
-    )
 
 # General purpose build for get requests to Interact API
 def get(service_url, **kwargs):
-    context = get_context()
-    auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
+    # context = get_context()
+    # auth_token = context["authToken"]
+    # endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
     headers = kwargs.get('headers', {'Authorization' : auth_token})
     if "parameters" in kwargs: # use parameters if we got them
         parameters = kwargs.get('parameters', None)
         endpoint = f'{endpoint}?{parameters}'
-    response = json.loads(requests.get(url=endpoint, headers=headers).text)
+    response = json.loads(requests.get(url=endpoint(service_url), headers=headers).text)
     return response
 
 # Direct implentations of calls from Responsys Interact REST API documentation
@@ -62,6 +53,20 @@ def login_with_username_and_password(user_name, password, url=login_url):
 # Or use a more sensible name
 def login(user_name=secret['user_name'], password=secret['password'], url=login_url):
     return login_with_username_and_password(user_name, password, url=login_url)
+
+# Return the login response as context, used with each individual call
+# TODO: figure out how to log out after each log in!
+def get_context():
+    return json.loads(
+        login_with_username_and_password(
+            secret["user_name"], 
+            secret["password"]
+        ).text
+    )
+
+# Format the endpoint url
+def endpoint(service_url, base_url=get_context()["authToken"], api_url=api_url):
+    return f'{base_url}/{api_url}/{service_url}'
 
 # # TODO: Implement 
 # # Login with username and certificates
