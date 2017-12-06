@@ -162,14 +162,14 @@ Examples:
 
     r.get(f'lists/{list_name}/listExtensions')
 
-Returns the profile extension tables (also known as profile extensions, profile extenion lists, or PETs) associated with a given list. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
+Returns the profile extension tables (also known as profile extensions, profile extenion lists, or PETs) associated with a given list. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use:
 
     [list['profileExtension']['objectName'] for list in r.get_profile_extensions(list_name')]
     [(list['profileExtension']['objectName'], list['profileExtension']['folderName']) for list in r.get_profile_extensions(list_name)]
 
 #### Retrieve a member of a profile extension table based on RIID
 
-#### Retrieve a member of a profile extension table based on query a attribute
+#### Retrieve a member of a profile extension table based on a query attribute
 
 #### Get lists for record
 
