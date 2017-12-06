@@ -91,8 +91,6 @@ This can be called individually but isn't necessary since any function that requ
 
     r.login_with_username_and_password(user_name, password)
 
-or
-
     r.login(user_name, password)
 
 The login itself returns a context with the Interact supplied endpoint for further requests for that user, an auth token, and a timestamp. Typically this is passed to whatever other request you make each time you do so.
@@ -101,11 +99,7 @@ The login itself returns a context with the Interact supplied endpoint for furth
 
     r.retrieving_all_profile_lists_for_an_account()
 
-or
-
     r.profile_lists()
-
-or
     
     r.get('lists')
 
@@ -129,8 +123,6 @@ Returns a dictionary of campaigns and their data, along with links and their dat
 
     r.retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
 
-or
-
     r.get_member_of_list_by_riid(list_name, riid)
 
 Returns a full record if it's in the list.
@@ -139,11 +131,7 @@ Returns a full record if it's in the list.
 
     r.retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)
 
-or
-
     r.get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)
-
-or
 
     r.get('lists/{list_name}/members/', parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')
 
@@ -158,8 +146,6 @@ Examples:
 
     r.delete_profile_list_recipients_based_on_riid(list_name, riid)
 
-or
-
     r.delete_from_profile_list(list_name, riid)
 
 Examples:
@@ -170,11 +156,7 @@ Examples:
 
     r.retrieve_all_profile_extensions_of_a_profile_list(list_name)
 
-or
-
     r.get_profile_extensions(list_name)
-
-or
 
     r.get(f'lists/{list_name}/listExtensions')
 
@@ -194,8 +176,6 @@ Loops through every list and checks to see if the record is in the list. If the 
 Creates a new profile extension table. Requires as and argument the list name you wish to extend, but supplying only this argument will create a blank profile extension table.
 
     r.create_a_new_profile_extension_table(list_name)
-
-or
 
     r.create_profile_extension(list_name)
 
