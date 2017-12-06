@@ -189,7 +189,7 @@ def retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, reco
         query_attribute in query_attributes_allowed
     except:
         raise ValueError(f"Query attribute is not one of {query_attributes_allowed}")
-    service_url = f'lists/{list_name}/members/'
+    service_url = f'lists/{list_name}/members'
     return get(service_url, parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')
 # Or use a more sensible name
 def get_member_of_list_by_id(list_name, record_id, query_attribute='c', fields_to_return='all'):
@@ -252,6 +252,24 @@ def retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, prof
 # Or use a more sensible name
 def get_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
     return retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return)
+
+# Retrieve a member of a profile extension table based on query a attribute
+def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
+    query_attributes_allowed = [
+        'r', # RIID
+        'e', # EMAIL_ADDRESS
+        'c', # CUSTOMER_ID
+        'm'  # MOBILE_NUMBER
+    ]
+    try:
+        query_attribute in query_attributes_allowed
+    except:
+        raise ValueError(f"Query attribute is not one of {query_attributes_allowed}")
+    service_url = f'lists/{list_name}/listExtensions/{profile_extension_name}/members'
+    return get(service_url, parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')
+# Or use a more sensible name
+def get_member_of_profile_list_by_id(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
+    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)
 
 ##################
 # Extra features #
