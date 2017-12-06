@@ -77,7 +77,7 @@ r.get('campaigns')
 | Get all EMD email campaigns      | `get_all_emd_email_campaigns()`      | `campaigns()`      | `get('campaigns')`      |
 | Merge or update members in a profile list table      | `merge_or_update_members_in_a_profile_list_table(list)`      | `list_manage(list_name)`      | n/a      |
 | Retrieve a member of a profile list using RIID      | `retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)`      | `get_member_of_list_by_riid(list_name, riid)` | n/a     |
-| Retrieve a member of a profile list based on query attribute      | `retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)`       | `get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)` | `get('lists/{list_name}/members/', parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')`    |
+| Retrieve a member of a profile list based on query attribute      | `retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)`       | `get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)` | `get(f'lists/{list_name}/members/', parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')`    |
 | Get lists for record      | n/a       | `get_lists_for_record(riid)` | n/a    |
 | Retrieve all profile extentions of a profile list      | `retrieve_all_profile_extensions_of_a_profile_list(list_name)`       | `get_profile_extensions(list_name)` | `get(f'lists/{list_name}/listExtensions'`    |
 
@@ -121,7 +121,6 @@ Returns a dictionary of campaigns and their data, along with links and their dat
     [campaign['name'] for campaign in r.campaigns()['campaigns']]
     [(campaign['name'], campaign['folderName']) for campaign in r.campaigns()['campaigns']]
 
-Returns dictionary with a single
 
 #### Retrieve a member of a profile list using RIID
 
