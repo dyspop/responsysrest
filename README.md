@@ -38,6 +38,8 @@ r.login(username, password)
 
 In general you should not need to call login from a single user command line session. If you are using this API wrapper to build an application on top of the Interact API then the login function is available to you, but it's still probably not as good as calling the API ad-hoc in order to issue context for the call. The wrapper should manage refreshing context for you.
 
+---
+
 There are multiple ways of calling any part of the API.
 
 ### Documentation Style
