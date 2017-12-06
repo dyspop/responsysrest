@@ -110,6 +110,17 @@ Returns a list of dictionaries of all profile lists. This comes bundled with the
     [list["name"] for list in r.profile_lists()] 
     [(list["name"], list["folderName"]) for list in r.profile_lists()]
 
+#### Get all EMD Campaigns
+
+    r.campaigns()
+
+Returns a dictionary of campaigns and their data, along with links and their data. To see a list of all campaigns or a list of campaigns and their respective folders use
+
+    [campaign['name'] for campaign in r.campaigns()['campaigns']]
+    [(campaign['name'], campaign['folderName']) for campaign in r.campaigns()['campaigns']]
+
+Returns dictionary with a single
+
 #### Retrieve a member of a profile list using RIID
 
     r.retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
@@ -162,6 +173,7 @@ Returns the profile extension tables (also known as profile extensions, profile 
 
 Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
 
+####
 
 ## Development/Testing ##
 
