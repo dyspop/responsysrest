@@ -217,21 +217,18 @@ def get_profile_extensions(list_name):
 
 # Create a new profile extension table
 # TODO: fix 403 response
-def create_a_new_profile_extension_table(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
+def create_a_new_profile_extension_table(list_name, fields='', folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
     extension_name = f'{list_name}{extension_name}'
+    field_types = ['STR500', 'STR4000', 'INTEGER', 'NUMBER', 'TIMESTAMP']
     data = {
         "profileExtension" : {
             "objectName" : extension_name,
-            "folderName" : folder_name,
-            "fields" :
-            [
-                {
-                    "fieldName" : "edu",
-                    "fieldType" : default_field_type # Could be STR500, STR4000, INTEGER, NUMBER, or TIMESTAMP
-                }
-            ]
+            "folderName" : folder_name
         }
     }
+    # TODO: override default field type with fields from those specified in the fields input argument list
+    if fields != '':
+        data["profileExtension"]["fields"] = [{"fieldName" : field, "fieldType" : default_field_type} for field in fields]
     context = get_context()
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/lists/{list_name}/listExtensions'
