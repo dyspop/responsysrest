@@ -271,6 +271,8 @@ def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(li
 def get_member_of_profile_list_by_id(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
     return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)
 
+# TODO: Delete a member of a profile extension table based on RIID
+
 ##################
 # Extra features #
 ##################
