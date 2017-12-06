@@ -238,7 +238,8 @@ def create_a_new_profile_extension_table(list_name, fields='', folder_name='___a
 def create_profile_extension(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
     return create_a_new_profile_extension_table(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000')
 
-# TODO: Merge or update members in a profile extension table 
+# TODO: Merge or update members in a profile extension table
+# extend/based on merge_or_update_members_in_a_profile_list_table
 def merge_or_update_members_in_a_profile_extension_table():
     return
 # Or use a more sensible name
