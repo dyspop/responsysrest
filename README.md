@@ -78,9 +78,10 @@ r.get('campaigns')
 | Merge or update members in a profile list table      | `merge_or_update_members_in_a_profile_list_table(list)`      | `list_manage(list_name)`      | n/a      |
 | Retrieve a member of a profile list using RIID      | `retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)`      | `get_member_of_list_by_riid(list_name, riid)` | n/a     |
 | Retrieve a member of a profile list based on query attribute      | `retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)`       | `get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)` | `get(f'lists/{list_name}/members/', parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')`    |
-| Delete Profile List Recipients based on RIID      | `r.delete_profile_list_recipients_based_on_riid(list_name, riid)`       | `r.delete_from_profile_list(list_name, riid)` | n/a    |
+| Delete Profile List Recipients based on RIID      | `delete_profile_list_recipients_based_on_riid(list_name, riid)`       | `delete_from_profile_list(list_name, riid)` | n/a    |
 | Get lists for record      | n/a       | `get_lists_for_record(riid)` | n/a    |
 | Retrieve all profile extentions of a profile list      | `retrieve_all_profile_extensions_of_a_profile_list(list_name)`       | `get_profile_extensions(list_name)` | `get(f'lists/{list_name}/listExtensions'`    |
+| Create a new profile extension table    | `create_a_new_profile_extension_table(list_name, fields, folder_name, extension_name, default_field_type)`    | `create_profile_extension(list_name, fields, folder_name, extension_name, default_field_type)`    | n/a    |
 
 ### Specific functions usage:
 
@@ -188,7 +189,47 @@ Returns the profile extension tables (also known as profile extensions, profile 
 
 Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
 
-####
+#### Create a new profile extension table
+
+Creates a new profile extension table. Requires as and argument the list name you wish to extend, but supplying only this argument will create a blank profile extension table.
+
+    r.create_a_new_profile_extension_table(list_name)
+
+or
+
+    r.create_profile_extension(list_name)
+
+Examples:
+
+    r.create_profile_extension('CONTACTS_LIST')
+
+This creates a `CONTACTS_LIST_pet` profile extension table extending `CONTACTS_LIST` in a folder named `___api-generated` with no records and no non-default fields.
+
+You can also specify the extension you want to use, but this function is slightly opinionated and will only let you create a profile extension table that begins with the name of the profile list that is being extended.
+
+This example will create an empty profile extension table extending `CONTACTS_LIST` called `CONTACTS_LIST-Profile_Extension`:
+
+    r.create_profile_extension('CONTACTS_LIST', extension_name='-Profile_Extension')
+
+You can specify the folder to place it in as `___api-generated` isn't particularly likely to suit your needs:
+
+    r.create_profile_extension('CONTACTS_LIST', folder_name='TestFolder')
+
+Additionally you can supply fields as a list:
+
+    r.create_profile_extension('CONTACTS_LIST', fields=['LTV_v1', 'LTV_v2', 'decile'])
+
+If you don't specify a (Responsys Interact) data type for each it will default to `STR4000`. This default data type can be overridden with one of `STR500`, `STR4000`, `INTEGER`, `NUMBER`, or `TIMESTAMP`:
+
+    r.create_profile_extension('CONTACTS_LIST', fields=['last_purchased_date', 'first_purchased_date'], default_field_type='TIMESTAMP')
+
+You can also specify the field type of each within the list if you supply it as a list or tuple:
+
+    r.create_profile_extension('CONTACTS_LIST', fields=[('last_purchased_date','TIMESTAMP'),('lifetime_purchases', 'INTEGER')])
+
+The default field type override can be supplied alongside individual fields without their own field type specifications:
+
+    r.create_profile_extension('CONTACTS_LIST', fields=[('probability_of_login', 'NUMBER'), 'CUSTOMER_ID_', ('ARTICLE_CONTENTS','STR4000')], default_field_type='STR500')
 
 ## Development/Testing ##
 
