@@ -246,7 +246,7 @@ def merge_or_update_members_in_a_profile_extension_table():
 def profile_list_manage():
     return merge_or_update_members_in_a_profile_extension_table()
 
-# TODO: Retrieve a member of a profile extension table based on RIID
+# Retrieve a member of a profile extension table based on RIID
 def retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
     return get(f'lists/{list_name}/listExtensions/{profile_extension_name}/members/{riid}', parameters=f'fs={fields_to_return}')
 # Or use a more sensible name
