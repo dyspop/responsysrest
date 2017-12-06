@@ -235,7 +235,7 @@ def create_a_new_profile_extension_table(list_name, fields='', folder_name='___a
     response = requests.post(url=endpoint, headers=headers)
     return response
 # Or use a more sensible name
-def create_profile_extension(list_name, folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
+def create_profile_extension(list_name, fields='', folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
     return create_a_new_profile_extension_table(list_name, folder_name, extension_name, default_field_type)
 
 # TODO: Merge or update members in a profile extension table
@@ -253,7 +253,7 @@ def retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, prof
 def get_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
     return retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return)
 
-# Retrieve a member of a profile extension table based on query a attribute
+# Retrieve a member of a profile extension table based on a query attribute
 def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
     query_attributes_allowed = [
         'r', # RIID

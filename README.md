@@ -167,6 +167,10 @@ Returns the profile extension tables (also known as profile extensions, profile 
     [list['profileExtension']['objectName'] for list in r.get_profile_extensions(list_name')]
     [(list['profileExtension']['objectName'], list['profileExtension']['folderName']) for list in r.get_profile_extensions(list_name)]
 
+#### Retrieve a member of a profile extension table based on RIID
+
+#### Retrieve a member of a profile extension table based on query a attribute
+
 #### Get lists for record
 
     r.get_lists_for_record(riid)
