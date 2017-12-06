@@ -231,7 +231,7 @@ def create_a_new_profile_extension_table(list_name, fields='', folder_name='___a
         data["profileExtension"]["fields"] = [{"fieldName" : field, "fieldType" : default_field_type} for field in fields]
     context = get_context()
     auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/lists/{list_name}/listExtensions'
+    endpoint = f'{context["endPoint"]}{api_url}/lists/{list_name}/listExtensions'
     headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
     response = requests.post(url=endpoint, headers=headers)
     return response
