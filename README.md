@@ -114,7 +114,9 @@ Returns a list of dictionaries of all profile lists. This comes bundled with the
 
     r.campaigns()
 
-Returns a dictionary of campaigns and their data, along with links and their data. To see a list of all campaigns or a list of campaigns and their respective folders use
+Returns a dictionary of campaigns and their data, along with links and their data.
+
+To see a list of all campaigns or a list of campaigns and their respective folders use:
 
     [campaign['name'] for campaign in r.campaigns()['campaigns']]
     [(campaign['name'], campaign['folderName']) for campaign in r.campaigns()['campaigns']]
@@ -173,7 +175,7 @@ Loops through every list and checks to see if the record is in the list. If the 
 
 #### Create a new profile extension table
 
-Creates a new profile extension table. Requires as and argument the list name you wish to extend, but supplying only this argument will create a blank profile extension table.
+Creates a new profile extension table. Requires only the list name you wish to extend, but this will create a blank profile extension table using default a folder locations and name.
 
     r.create_a_new_profile_extension_table(list_name)
 
@@ -213,7 +215,7 @@ The default field type override can be supplied alongside individual fields with
 
 ## Development/Testing ##
 
-None!
+None! 😱
 
 ## Acknowledgements ##
 
