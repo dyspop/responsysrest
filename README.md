@@ -114,6 +114,8 @@ Returns a list of dictionaries of all profile lists. This comes bundled with the
 
 #### Get all EMD Campaigns
 
+    r.get_all_emd_email_campaigns()
+
     r.campaigns()
 
 Returns a dictionary of campaigns and their data, along with links and their data. To see a list of all campaigns or a list of campaigns and their respective folders use
@@ -144,7 +146,7 @@ or
 
     r.get('lists/{list_name}/members/', parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')
 
-Takes four arguments, but requires list name and record id. All should formatted as strings. The list name is the the list name in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
+Takes four arguments, but requires list name and record id. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
 
 Examples:
 
