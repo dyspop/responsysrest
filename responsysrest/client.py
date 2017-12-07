@@ -267,7 +267,16 @@ def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(li
 def get_member_of_profile_list_by_id(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
     return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)
 
-# TODO: Delete a member of a profile extension table based on RIID
+# Delete a member of a profile extension table based on RIID
+def delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid):
+    context = get_context()
+    auth_token = context["authToken"]
+    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions/{profile_extension_name}/members/{riid}'
+    headers = {'Authorization' : auth_token}
+    return requests.delete(url=url, headers=headers)
+# Or use a more sensible name
+def delete_member_of_profile_extension_by_id(list_name, profile_extension_name, riid):
+    return delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid)
 
 ##################
 # Extra features #
