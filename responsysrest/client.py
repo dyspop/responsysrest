@@ -207,7 +207,7 @@ def get_profile_extensions(list_name):
     return retrieve_all_profile_extensions_of_a_profile_list(list_name)
 
 # Create a new profile extension table
-def create_a_new_profile_extension_table(list_name, fields='', folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
+def create_a_new_profile_extension_table(list_name, fields='', folder_name='___api-generated', extension_name='_pet', default_field_type='STR500'):
     extension_name = f'{list_name}{extension_name}'
     field_types = ['STR500', 'STR4000', 'INTEGER', 'NUMBER', 'TIMESTAMP']
     data = {
@@ -267,15 +267,34 @@ def delete_member_of_profile_extension_by_riid(list_name, profile_extension_name
     return delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid)
 
 # Create a new supplemental table
-def create_a_new_supplemental_table():
-    return
+def create_a_new_supplemental_table(supplemental_table_name, folder_name, fields='', default_field_type='STR500', data_extraction_key=None, primary_key=None):
+    context = get_context()
+    auth_token = context["authToken"]
+    url = f'{context["endPoint"]}/{api_url}/folders/{folder_name}/suppData'
+    if primary_key == None:
+        primary_key = fields[0]
+    data = {
+        "table" : {"objectName" : supplemental_table_name},
+        "fields" : [
+            {
+                "fieldName" : field,
+                "fieldType" : default_field_type,
+                "dataExtractionKey" : False
+            } for field in fields
+        ],
+        "primaryKeys" : [primary_key]
+    }
+    print(json.dumps(data))
+    input()
+    headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+    return requests.post(url=url, headers=headers, data=json.dumps(data))
 # OR use a more sensible name
-def create_supplemental_table():
-    return create_a_new_supplemental_table()
+def create_supplemental_table(supplemental_table_name, folder_name, fields='', default_field_type='STR500', data_extraction_key=None):
+    return create_a_new_supplemental_table(supplemental_table_name, folder_name, fields, default_field_type, data_extraction_key)
 
 
 class table:
-    def __init__(self, folder, ri_type, fields, records):
+    def __init__(self, name, folder, ri_type, fields, records):
         self.name = name # The name of the table
         self.folder = folder # The name of the folder it resides in
         self.ri_type = ri_type # The Responsys Interact type of table. One of: Profile, Profile Extension, or Supplemental
