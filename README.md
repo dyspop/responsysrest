@@ -50,8 +50,6 @@ The Responsys documentation (6.33 E65150-15) provides a useful guide to its endp
 
 This can be called individually but isn't necessary since any function that requires it will call it.
 
-    r.login_with_username_and_password(user_name, password)
-
     r.login(user_name, password)
 
 The login itself returns a context with the Interact supplied endpoint for further requests for that user, an auth token, and a timestamp. Typically this is passed to whatever other request you make each time you do so.
