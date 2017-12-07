@@ -251,12 +251,12 @@ def get_member_of_profile_extension_by_riid(list_name, profile_extension_name, r
 
 # Retrieve a member of a profile extension table based on a query attribute
 def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
-    query_attributes_allowed = [
-        'r', # RIID
-        'e', # EMAIL_ADDRESS
-        'c', # CUSTOMER_ID
-        'm'  # MOBILE_NUMBER
-    ]
+    # query_attributes_allowed = [
+    #     'r', # RIID
+    #     'e', # EMAIL_ADDRESS
+    #     'c', # CUSTOMER_ID
+    #     'm'  # MOBILE_NUMBER
+    # ]
     try:
         query_attribute in rules["query_attributes_allowed"]
     except:
