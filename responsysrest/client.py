@@ -123,49 +123,49 @@ def campaigns():
 
 # Merge or update members in a profile list table
 # TODO: fix 403 response
-def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
-    data = rules["merge_or_update_members_in_a_profile_list_table"][0] # load container data
-    # process keyword arguments
-    fields = kwargs.get('fields')
-    records = kwargs.get('records', None)
-    merge_rules = kwargs.get('merge_rules', data["mergeRule"])
+# def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
+#     data = rules["merge_or_update_members_in_a_profile_list_table"][0] # load container data
+#     # process keyword arguments
+#     fields = kwargs.get('fields')
+#     records = kwargs.get('records', None)
+#     merge_rules = kwargs.get('merge_rules', data["mergeRule"])
 
-    if isinstance(fields, list) and isinstance(records, list): # make sure the input fields and records are lists
-        if len(fields) == len(records): # make sure the fields and records have the same amount of columns
-            data["recordData"]["fieldNames"] = fields # insert our fields into the data 
-            data["recordData"]["records"] = records # insert our records into the data
-        else:
-            raise ValueError("ERROR: List headers count does not match record column count")
-    else:
-        raise ValueError("ARGUMENT ERROR: input fields or records are not list objects.\nPlease specify lists for 'fields' or 'records' arguments.")
+#     if isinstance(fields, list) and isinstance(records, list): # make sure the input fields and records are lists
+#         if len(fields) == len(records): # make sure the fields and records have the same amount of columns
+#             data["recordData"]["fieldNames"] = fields # insert our fields into the data 
+#             data["recordData"]["records"] = records # insert our records into the data
+#         else:
+#             raise ValueError("ERROR: List headers count does not match record column count")
+#     else:
+#         raise ValueError("ARGUMENT ERROR: input fields or records are not list objects.\nPlease specify lists for 'fields' or 'records' arguments.")
 
-    rules_keys = [key for key in data["mergeRule"]] # extract merge rules 
-    rules_values = [data["mergeRule"][rule]["default"] for rule in rules_keys] # extract merge rules default values
-    rules_dict = dict(zip(rules_keys, rules_values)) # assign a new rules object to work on before we insert it into the request object
+#     rules_keys = [key for key in data["mergeRule"]] # extract merge rules 
+#     rules_values = [data["mergeRule"][rule]["default"] for rule in rules_keys] # extract merge rules default values
+#     rules_dict = dict(zip(rules_keys, rules_values)) # assign a new rules object to work on before we insert it into the request object
 
-    for merge_rule, merge_value in merge_rules.items():
-        try:
-            if merge_value in data["mergeRule"][merge_rule]["options"]: # if the user input merge rule value is valid based on the container data
-                data["mergeRule"][merge_rule] = merge_value # add the new merge rule value to the data
-        except KeyError:
-            print(f'ERROR: Merge rule "{merge_rule}" is not valid. Valid merge rules are:\n{rules_keys}')
-        # print(merge_rule + " : " + merge_value)
+#     for merge_rule, merge_value in merge_rules.items():
+#         try:
+#             if merge_value in data["mergeRule"][merge_rule]["options"]: # if the user input merge rule value is valid based on the container data
+#                 data["mergeRule"][merge_rule] = merge_value # add the new merge rule value to the data
+#         except KeyError:
+#             print(f'ERROR: Merge rule "{merge_rule}" is not valid. Valid merge rules are:\n{rules_keys}')
+#         # print(merge_rule + " : " + merge_value)
 
-        rules_dict[merge_rule] = merge_value # assign the parameters supplied in the merge_rules keyword argument to the new rules
-    data["mergeRule"] = rules_dict # add the merge rules back into the data
+#         rules_dict[merge_rule] = merge_value # assign the parameters supplied in the merge_rules keyword argument to the new rules
+#     data["mergeRule"] = rules_dict # add the merge rules back into the data
 
-    # build post request
-    context = get_context()
-    auth_token = context["authToken"]
-    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
-    headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
-    print(json.dumps(data))
-    response = requests.post(url, data=json.dumps(data), headers=headers) # make the request
-    data = rules["merge_or_update_members_in_a_profile_list_table"][0] # return the data to the container?
-    return response
-# Or use a more sensible name
-def list_manage(list_name, **kwargs):
-    return merge_or_update_members_in_a_profile_list_table(list_name, **kwargs)
+#     # build post request
+#     context = get_context()
+#     auth_token = context["authToken"]
+#     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
+#     headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+#     print(json.dumps(data))
+#     response = requests.post(url, data=json.dumps(data), headers=headers) # make the request
+#     data = rules["merge_or_update_members_in_a_profile_list_table"][0] # return the data to the container?
+#     return response
+# # Or use a more sensible name
+# def list_manage(list_name, **kwargs):
+#     return merge_or_update_members_in_a_profile_list_table(list_name, **kwargs)
 
 # Retrieve a member of a profile list using RIID
 def retrieve_a_member_of_a_profile_list_using_riid(list_name, riid):
@@ -177,12 +177,6 @@ def get_member_of_list_by_riid(list_name, riid):
 
 # Retrieve a member of a profile list based on query attribute
 def retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute='c', fields_to_return='all'):
-    # query_attributes_allowed = [
-    #     'r', # RIID
-    #     'e', # EMAIL_ADDRESS
-    #     'c', # CUSTOMER_ID
-    #     'm'  # MOBILE_NUMBER
-    # ]
     try:
         query_attribute in rules["query_attributes_allowed"]
     except:
@@ -236,11 +230,11 @@ def create_profile_extension(list_name, fields='', folder_name='___api-generated
 
 # TODO: Merge or update members in a profile extension table
 # extend/based on merge_or_update_members_in_a_profile_list_table
-def merge_or_update_members_in_a_profile_extension_table():
-    return
+# def merge_or_update_members_in_a_profile_extension_table():
+    # return
 # Or use a more sensible name
-def profile_list_manage():
-    return merge_or_update_members_in_a_profile_extension_table()
+# def profile_list_manage():
+    # return merge_or_update_members_in_a_profile_extension_table()
 
 # Retrieve a member of a profile extension table based on RIID
 def retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
@@ -251,12 +245,6 @@ def get_member_of_profile_extension_by_riid(list_name, profile_extension_name, r
 
 # Retrieve a member of a profile extension table based on a query attribute
 def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
-    # query_attributes_allowed = [
-    #     'r', # RIID
-    #     'e', # EMAIL_ADDRESS
-    #     'c', # CUSTOMER_ID
-    #     'm'  # MOBILE_NUMBER
-    # ]
     try:
         query_attribute in rules["query_attributes_allowed"]
     except:

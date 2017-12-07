@@ -84,7 +84,7 @@ Returns a full record if it's in the list.
 
     r.get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)
 
-Takes four arguments, but requires list name and record id. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
+Takes four arguments, but requires `list_name` and `record_id`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
 
 Examples:
 
@@ -110,7 +110,24 @@ Returns the profile extension tables (also known as profile extensions, profile 
 
 #### Retrieve a member of a profile extension table based on RIID
 
+Returns a full record if it's in the profile extension table.
+
+    r.get_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid)
+
+Also takes an optional argument `fields_to_return` which defaults to `all` if not specified. Examples:
+
+    r.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890')
+    r.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890', fields_to_return='FIRST_NAME, LAST_PURCHASE_DATE')
+
 #### Retrieve a member of a profile extension table based on a query attribute
+
+    r.get_member_of_profile_extension_by_attribute(list_name, profile_extension_name record_id, query_attribute, fields_to_return)
+
+Takes five arguments, but requires `list_name`, `profile_extension_name` and `record_id`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
+
+Examples:
+
+    r.get_member_of_profile_extension_by_attribute('AFFILIATES', '901210', 'c', 'email_address_,first_name')
 
 #### Get lists for record
 
