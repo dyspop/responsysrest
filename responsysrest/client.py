@@ -266,6 +266,46 @@ def delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profil
 def delete_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid):
     return delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid)
 
+# Create a new supplemental table
+def create_a_new_supplemental_table():
+    return
+# OR use a more sensible name
+def create_supplemental_table():
+    return create_a_new_supplemental_table()
+
+
+class table:
+    def __init__(self, folder, ri_type, fields, records):
+        self.name = name # The name of the table
+        self.folder = folder # The name of the folder it resides in
+        self.ri_type = ri_type # The Responsys Interact type of table. One of: Profile, Profile Extension, or Supplemental
+        self.fields = fields
+        self.records = records
+
+    def create(name, folder, ri_type, records):
+        return
+
+    def merge(name, ri_type, fields, records):
+        return
+
+    def delete(name):
+        return
+
+class member:
+    def __init__(self, record_id, table, data):
+        self.record_id = record_id # Responsys provides different methods for accessing records based on their id type, one of RIID, email address, customer id, or mobile number.
+        self.table = table
+        self.data = data
+
+    def create(record_id, table, data):
+        return
+
+    def retrieve(record_id, table):
+        return
+
+    def delete(record_id, table):
+        return
+
 ##################
 # Extra features #
 ##################
