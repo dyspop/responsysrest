@@ -275,7 +275,7 @@ def delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profil
     headers = {'Authorization' : auth_token}
     return requests.delete(url=url, headers=headers)
 # Or use a more sensible name
-def delete_member_of_profile_extension_by_id(list_name, profile_extension_name, riid):
+def delete_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid):
     return delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid)
 
 ##################
