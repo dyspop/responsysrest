@@ -40,8 +40,7 @@ def get(service_url, **kwargs):
     if "parameters" in kwargs: # use parameters if we got them
         parameters = kwargs.get('parameters', None)
         endpoint = f'{endpoint}?{parameters}'
-    response = json.loads(requests.get(url=endpoint, headers=headers).text)
-    return response
+    return json.loads(requests.get(url=endpoint, headers=headers).text)
 
 # Direct implentations of calls from Responsys Interact REST API documentation
 # https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
@@ -57,8 +56,7 @@ def login_with_username_and_password(user_name, password, url=login_url):
         "auth_type" : "password"
     }
     headers = {'content-type' : 'application/x-www-form-urlencoded'}
-    response = requests.post(url, data=data, headers=headers)
-    return response
+    return requests.post(url, data=data, headers=headers)
 # Or use a more sensible name
 def login(user_name=secret['user_name'], password=secret['password'], url=login_url):
     return login_with_username_and_password(user_name, password, url=login_url)
@@ -200,10 +198,9 @@ def delete_profile_list_recipients_based_on_riid(list_name, riid):
     context = get_context()
     auth_token = context["authToken"]
     print(context["endPoint"])
-    endpoint = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members/{riid}'
+    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members/{riid}'
     headers = {'Authorization' : auth_token}
-    response = requests.delete(url=endpoint, headers=headers)
-    return response
+    return requests.delete(url=url, headers=headers)
 # Or use a more sensible name
 def delete_from_profile_list(list_name, riid):
     return delete_profile_list_recipients_based_on_riid(list_name, riid)
@@ -232,8 +229,7 @@ def create_a_new_profile_extension_table(list_name, fields='', folder_name='___a
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions'
     headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
-    response = requests.post(url=endpoint, headers=headers)
-    return response
+    return requests.post(url=endpoint, headers=headers)
 # Or use a more sensible name
 def create_profile_extension(list_name, fields='', folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
     return create_a_new_profile_extension_table(list_name, folder_name, extension_name, default_field_type)
