@@ -190,7 +190,7 @@ def retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, reco
     service_url = f'lists/{list_name}/members'
     return get(service_url, parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')
 # Or use a more sensible name
-def get_member_of_list_by_id(list_name, record_id, query_attribute='c', fields_to_return='all'):
+def get_member_of_list_by_attribute(list_name, record_id, query_attribute='c', fields_to_return='all'):
     return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute='c', fields_to_return='all')
 
 # Delete Profile List Recipients based on RIID
