@@ -76,8 +76,6 @@ To see a list of all campaigns or a list of campaigns and their respective folde
 
 #### Retrieve a member of a profile list using RIID
 
-    r.retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
-
     r.get_member_of_list_by_riid(list_name, riid)
 
 Returns a full record if it's in the list.
