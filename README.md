@@ -42,7 +42,7 @@ In general you should not need to call login from a single user command line ses
 
 ### Stylized method names
 
-The Responsys documentation (6.33 E65150-15) provides a useful guide to its endpoints but organizes the calls inconsistently and litters the naming conventions with inconsistencies and confusing terms. The wrapper is written with internal/private class names that respoect the documentation, but exposes them as much more friendly and sensible names: `r.get_all_emd_email_campaigns()` becomes `r.campaigns()` or `r.retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute()` becomes `r.get_member_of_profile_list_by_id()`
+The Responsys documentation (6.33 E65150-15) provides a useful guide to its endpoints but organizes the calls inconveniently and litters the naming conventions with inconsistencies and confusing terms. The wrapper is written with internal/private class names that respoect the documentation, but exposes them as much more friendly and sensible names: `r.get_all_emd_email_campaigns()` becomes `r.campaigns()` or `r.retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute()` becomes `r.get_member_of_profile_list_by_id()`
 
 ### Specific functions usage:
 
