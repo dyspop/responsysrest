@@ -44,9 +44,9 @@ In general you should not need to call login from a single user command line ses
 
 The Responsys documentation (6.33 E65150-15) provides a useful guide to its endpoints but organizes the calls inconveniently and litters the naming conventions with inconsistencies and confusing terms. The wrapper is written with internal/private class names that respoect the documentation, but exposes them as much more friendly and sensible names: `r.get_all_emd_email_campaigns()` becomes `r.campaigns()` or `r.retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute()` becomes `r.get_member_of_profile_list_by_id()`
 
-### Specific functions usage:
+## Specific functions usage:
 
-#### Login with username and password
+### Login with username and password
 
 This can be called individually but isn't necessary since any function that requires it will call it.
 
@@ -54,7 +54,7 @@ This can be called individually but isn't necessary since any function that requ
 
 The login itself returns a context with the Interact supplied endpoint for further requests for that user, an auth token, and a timestamp. Typically this is passed to whatever other request you make each time you do so.
 
-#### Retrieving all profile lists for an account
+### Retrieving all profile lists for an account
 
     r.profile_lists()
   
@@ -63,7 +63,7 @@ Returns a list of dictionaries of all profile lists. This comes bundled with the
     [list["name"] for list in r.profile_lists()] 
     [(list["name"], list["folderName"]) for list in r.profile_lists()]
 
-#### Get all EMD Campaigns
+### Get all EMD Campaigns
 
     r.campaigns()
 
@@ -74,13 +74,13 @@ To see a list of all campaigns or a list of campaigns and their respective folde
     [campaign['name'] for campaign in r.campaigns()['campaigns']]
     [(campaign['name'], campaign['folderName']) for campaign in r.campaigns()['campaigns']]
 
-#### Retrieve a member of a profile list using RIID
+### Retrieve a member of a profile list using RIID
 
     r.get_member_of_list_by_riid(list_name, riid)
 
 Returns a full record if it's in the list.
 
-#### Retrieve a member of a profile list based on query attribute
+### Retrieve a member of a profile list based on query attribute
 
     r.get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)
 
@@ -91,7 +91,7 @@ Examples:
     r.get_member_of_list_by_id('CONTACTS_LIST', 'a@b.c')
     r.get_member_of_list_by_id('AFFILIATES', '901210', 'c', 'email_address_,first_name')
 
-#### Delete Profile List Recipients based on RIID
+### Delete Profile List Recipients based on RIID
 
     r.delete_from_profile_list(list_name, riid)
 
@@ -99,7 +99,7 @@ Examples:
 
     r.delete_from_profile_list('CONTACTS_LIST', 'a@b.c')
 
-#### Retrieve all profile extentions of a profile list
+### Retrieve all profile extentions of a profile list
 
     r.get_profile_extensions(list_name)
 
@@ -108,7 +108,7 @@ Returns the profile extension tables (also known as profile extensions, profile 
     [list['profileExtension']['objectName'] for list in r.get_profile_extensions(list_name')]
     [(list['profileExtension']['objectName'], list['profileExtension']['folderName']) for list in r.get_profile_extensions(list_name)]
 
-#### Retrieve a member of a profile extension table based on RIID
+### Retrieve a member of a profile extension table based on RIID
 
 Returns a full record if it's in the profile extension table.
 
@@ -119,7 +119,7 @@ Also takes an optional argument `fields_to_return` which defaults to `all` if no
     r.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890')
     r.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890', fields_to_return='FIRST_NAME, LAST_PURCHASE_DATE')
 
-#### Retrieve a member of a profile extension table based on a query attribute
+### Retrieve a member of a profile extension table based on a query attribute
 
     r.get_member_of_profile_extension_by_attribute(list_name, profile_extension_name record_id, query_attribute, fields_to_return)
 
@@ -129,13 +129,13 @@ Examples:
 
     r.get_member_of_profile_extension_by_attribute('AFFILIATES', '901210', 'c', 'email_address_,first_name')
 
-#### Get lists for record
+### Get lists for record
 
     r.get_lists_for_record(riid)
 
 Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
 
-#### Create a new profile extension table
+### Create a new profile extension table
 
 Creates a new profile extension table. Requires only the list name you wish to extend, but this will create a blank profile extension table using default a folder locations and name.
 
