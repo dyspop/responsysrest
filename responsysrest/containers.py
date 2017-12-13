@@ -1,3 +1,4 @@
+"""Containers to expose to client for rules and request processing."""
 # TODO expose as a class with enums
 rules = {
     'merge_or_update_members_in_a_profile_list_table':

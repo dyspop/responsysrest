@@ -1,67 +1,105 @@
-# container for context
-secrets = {"user_name": "", "password": ""}
+"""Responsys REST API Client."""
+# used to issue CRUD requests, the meat and 'taters of this thing
+import requests
 
-import requests # used to issue CRUD requests, the meat and 'taters of this thing
-import base64 as base64 # used with the login with certificate functions
-from random import choice # used with the login with certificate functions
-from string import ascii_uppercase #used with the login with certificate functions
-import json # Interact API returns a lot of json-like text objects, we use this to bind them to python objects
-from secret import secrets as secret # this should get removed, but can be used to store a local password! crazy... but Interact has additional security measures on top of your user login / password and these aren't stored anywhere else than your local machine or app server. if you can encrypt/decrypt them yourself... please do! TODO: proper password prompting/storage
-from .containers import rules # our own rules for data objects. the API should return reponses for bad requests of course, but I'll do my best to define input rules and user feedback prior to issuing the request. 
+# used with the login with certificate functions
+# import base64 as base64
 
-print(secret) # TODO: delete this!
-print(rules) # TODO: delete this!
+# Interact API returns a lot of json-like text objects
+# we use this to bind them to python objects
+import json
 
-api_url = 'rest/api/v1.3' 
+# used with the login with certificate functions
+# from random import choice
+
+# used with the login with certificate functions
+# from string import ascii_uppercase
+
+# this should get removed, but can be used to store a local password!
+# crazy... but Interact has additional security measures
+# on top of your user login / password and these aren't stored
+# anywhere else than your local machine or app server.
+# If you can encrypt/decrypt them yourself... please do!
+# TODO: proper password prompting/storage
+from secret import secrets as secret
+# our own rules for data objects.
+# from .containers import rules
+
+# TODO: delete this!
+print(secret)
+
+api_url = 'rest/api/v1.3'
 login_url = f'http://login5.responsys.net/{api_url}/'
 
 # Helper functions for use with direct implementations of calls as below
 
 # # Helps with Login with username and certificates
 # def generate_client_challenge_value(length=16):
-#     return base64.b64encode(bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8'))
+#     return base64.b64encode(
+#         bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8')
+#     )
 
-# Return the login response as context, used with each individual call
-# TODO: figure out how to log out after each log in!
+
 def get_context():
-    return json.loads(
+    """
+    Return the login response as context.
+
+    Used with each individual call to Responsys API.
+    """
+    # TODO: figure out how to log out after each log in!
+    context = json.loads(
         login_with_username_and_password(
-            secret["user_name"], 
+            secret["user_name"],
             secret["password"]
         ).text
     )
+    return context
 
-# General purpose build for get requests to Interact API
+
 def get(service_url, **kwargs):
+    """General purpose build for GET requests to Interact API."""
     context = get_context()
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
-    headers = kwargs.get('headers', {'Authorization' : auth_token})
-    if "parameters" in kwargs: # use parameters if we got them
+    headers = kwargs.get('headers', {'Authorization': auth_token})
+    # use parameters if we got them
+    if "parameters" in kwargs:
         parameters = kwargs.get('parameters', None)
         endpoint = f'{endpoint}?{parameters}'
     return json.loads(requests.get(url=endpoint, headers=headers).text)
 
+
 # Direct implentations of calls from Responsys Interact REST API documentation
 # https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
-# All function names and comment descriptions are directly from the v1.3 REST API documentation, except some English-language inconsistencies are modified from their documentation and code-comment style to match PEP-8 for their corresponding function/method names.
+# All function names and comment descriptions are directly from the
+# v1.3 REST API documentation, except some English-language inconsistencies
+# are modified from their documentation and code-comment style to match PEP-8
+# for their corresponding function/method names.
 # Many functions are mapped to another name afterwards as well for ease of use.
 
-# Login with username and password
+
 def login_with_username_and_password(user_name, password, url=login_url):
+    """Login with username and password."""
     url = f'{login_url}auth/token'
     data = {
-        "user_name" : user_name,
-        "password" : password,
-        "auth_type" : "password"
+        "user_name": user_name,
+        "password": password,
+        "auth_type": "password"
     }
-    headers = {'content-type' : 'application/x-www-form-urlencoded'}
+    headers = {'content-type': 'application/x-www-form-urlencoded'}
     return requests.post(url, data=data, headers=headers)
-# Or use a more sensible name
-def login(user_name=secret['user_name'], password=secret['password'], url=login_url):
+
+
+def login(
+    user_name=secret['user_name'],
+    password=secret['password'],
+    url=login_url
+):
+    """A more sensible name for
+    login_with_username_and_password."""
     return login_with_username_and_password(user_name, password, url=login_url)
 
-# # TODO: Implement 
+# # TODO: Implement
 # # Login with username and certificates
 # def login_with_username_and_certificates(url, user_name):
 #     # Step 1 - Authenticate server by sending the following REST request
@@ -74,7 +112,8 @@ def login(user_name=secret['user_name'], password=secret['password'], url=login_
 #     url = url + service_url
 #     client_challenge_value = generate_client_challenge_value()
 
-#     # Step 2 - Get response from the server and decrypt with RSA and Public Key Certificate (downloaded from Interact interface)
+#     # Step 2 - Get response from the server and decrypt with RSA and
+#     # Public Key Certificate (downloaded from Interact interface)
 #     response = requests.post(url, data=data, headers=headers)
 #     # TODO: Implement parse response
 #     # Expect:
@@ -90,8 +129,8 @@ def login(user_name=secret['user_name'], password=secret['password'], url=login_
 #     response = decrypt(response)
 #     # TODO: Implement authorize call
 #     response = login_with_username_and_certificate_authorization(
-#         user_name, 
-#         auth_type=client, 
+#         user_name,
+#         auth_type=client,
 #         server_challenge=encrypt(response["serverChallenge"])
 #     )
 
@@ -107,126 +146,221 @@ def login(user_name=secret['user_name'], password=secret['password'], url=login_
 #     response = requests.post(url, data=data, headers=headers)
 #     return response
 
-# Retrieving all profile lists for an account
+
 def retrieving_all_profile_lists_for_an_account():
+    """Retrieving all profile lists for an account."""
     return get('lists')
-# Or use a more sensible name
+
+
 def profile_lists():
+    """A more sensible name for
+    retrieving_all_profile_lists_for_an_account."""
     return retrieving_all_profile_lists_for_an_account()
 
-# Get all EMD email campaigns
+
 def get_all_emd_email_campaigns():
+    """Get all EMD email campaigns."""
     return get('campaigns')
-# Or use a more sensible name
+
+
 def campaigns():
+    """A more sensible name for
+    get_all_emd_email_campaigns."""
     return get_all_emd_email_campaigns()
 
 # Merge or update members in a profile list table
 # TODO: fix 403 response
 # def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
-#     data = rules["merge_or_update_members_in_a_profile_list_table"][0] # load container data
+#     # load container data
+#     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
 #     # process keyword arguments
 #     fields = kwargs.get('fields')
 #     records = kwargs.get('records', None)
 #     merge_rules = kwargs.get('merge_rules', data["mergeRule"])
 
-#     if isinstance(fields, list) and isinstance(records, list): # make sure the input fields and records are lists
-#         if len(fields) == len(records): # make sure the fields and records have the same amount of columns
-#             data["recordData"]["fieldNames"] = fields # insert our fields into the data 
-#             data["recordData"]["records"] = records # insert our records into the data
+#     # make sure the input fields and records are lists
+#     if isinstance(fields, list) and isinstance(records, list):
+#         # make sure the fields and records have the same amount of columns
+#         if len(fields) == len(records):
+#             # insert our fields into the data
+#             data["recordData"]["fieldNames"] = fields
+#             # insert our records into the data
+#             data["recordData"]["records"] = records
 #         else:
-#             raise ValueError("ERROR: List headers count does not match record column count")
+#             raise ValueError(
+#               "ERROR: List headers count does not match record column count"
+#             )
 #     else:
-#         raise ValueError("ARGUMENT ERROR: input fields or records are not list objects.\nPlease specify lists for 'fields' or 'records' arguments.")
+#         raise ValueError(
+#             "ARGUMENT ERROR: input fields or records are not list objects.\n
+#             Please specify lists for 'fields' or 'records' arguments."
+#         )
 
-#     rules_keys = [key for key in data["mergeRule"]] # extract merge rules 
-#     rules_values = [data["mergeRule"][rule]["default"] for rule in rules_keys] # extract merge rules default values
-#     rules_dict = dict(zip(rules_keys, rules_values)) # assign a new rules object to work on before we insert it into the request object
+#     rules_keys = [key for key in data["mergeRule"]] # extract merge rules
+#     # extract merge rules default values
+#     rules_values = [
+#         data["mergeRule"][rule]["default"] for rule in rules_keys
+#     ]
+#     # assign a new rules object to work on before we insert it into the
+#     # request object
+#     rules_dict = dict(zip(rules_keys, rules_values))
 
 #     for merge_rule, merge_value in merge_rules.items():
 #         try:
-#             if merge_value in data["mergeRule"][merge_rule]["options"]: # if the user input merge rule value is valid based on the container data
-#                 data["mergeRule"][merge_rule] = merge_value # add the new merge rule value to the data
+#             # if the user input merge rule value is valid based on the
+#             # container data
+#             if merge_value in data["mergeRule"][merge_rule]["options"]:
+#                 # add the new merge rule value to the data
+#                 data["mergeRule"][merge_rule] = merge_value
 #         except KeyError:
-#             print(f'ERROR: Merge rule "{merge_rule}" is not valid. Valid merge rules are:\n{rules_keys}')
+#             print(
+#                 f'ERROR: Merge rule "{merge_rule}" is not valid.
+#                 Valid merge rules are:
+#                 {rules_keys}'
+#             )
 #         # print(merge_rule + " : " + merge_value)
-
-#         rules_dict[merge_rule] = merge_value # assign the parameters supplied in the merge_rules keyword argument to the new rules
+#         # assign parameters from merge_rules keyword arguments to new rules
+#         rules_dict[merge_rule] = merge_value
 #     data["mergeRule"] = rules_dict # add the merge rules back into the data
 
 #     # build post request
 #     context = get_context()
 #     auth_token = context["authToken"]
 #     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
-#     headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+#     headers = {
+#         'Authorization' : auth_token, 'Content-Type' : 'application/json'
+#     }
 #     print(json.dumps(data))
-#     response = requests.post(url, data=json.dumps(data), headers=headers) # make the request
-#     data = rules["merge_or_update_members_in_a_profile_list_table"][0] # return the data to the container?
+#     # make the request
+#     response = requests.post(url, data=json.dumps(data), headers=headers)
+#     # return the data to the container?
+#     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
 #     return response
 # # Or use a more sensible name
 # def list_manage(list_name, **kwargs):
-#     return merge_or_update_members_in_a_profile_list_table(list_name, **kwargs)
+#     managed_list = merge_or_update_members_in_a_profile_list_table(
+#         list_name, **kwargs
+#     )
+#     return managed_list
 
-# Retrieve a member of a profile list using RIID
+
 def retrieve_a_member_of_a_profile_list_using_riid(list_name, riid):
+    """Retrieve a member of a profile list using RIID."""
     service_url = f'lists/{list_name}/members/{riid}'
-    return get(service_url, parameters='fs=all') # only support returning all fields for now # TODO: implement other fields
-# Or use a more sensible name
+    # only support returning all fields for now
+    # TODO: implement other fields
+    return get(service_url, parameters='fs=all')
+
+
 def get_member_of_list_by_riid(list_name, riid):
+    """A more sensible name for
+    retrieve_a_member_of_a_profile_list_using_riid."""
     return retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
 
-# Retrieve a member of a profile list based on query attribute
-def retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute='c', fields_to_return='all'):
-    try:
-        query_attribute in rules["query_attributes_allowed"]
-    except:
-        raise ValueError(f"Query attribute is not one of {query_attributes_allowed}")
-    service_url = f'lists/{list_name}/members'
-    return get(service_url, parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')
-# Or use a more sensible name
-def get_member_of_list_by_attribute(list_name, record_id, query_attribute='c', fields_to_return='all'):
-    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute='c', fields_to_return='all')
 
-# Delete Profile List Recipients based on RIID
+def retrieve_a_member_of_a_profile_list_based_on_query_attribute(
+    list_name,
+    record_id,
+    query_attribute='c',
+    fields_to_return='all'
+):
+    """Retrieve a member of a profile list based on query attribute."""
+    service_url = f'lists/{list_name}/members'
+    parameters = f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
+    print(service_url, parameters, input())
+    return get(service_url, parameters=parameters)
+
+
+def get_member_of_list_by_attribute(
+    list_name,
+    record_id,
+    query_attribute='c',
+    fields_to_return='all'
+):
+    """A more sensible name for
+    retrieve_a_member_of_a_profile_list_based_on_query_attribute."""
+    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(
+        list_name,
+        record_id,
+        query_attribute='c',
+        fields_to_return='all'
+    )
+
+
 def delete_profile_list_recipients_based_on_riid(list_name, riid):
+    """Delete Profile List Recipients based on RIID."""
     context = get_context()
     auth_token = context["authToken"]
     print(context["endPoint"])
     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members/{riid}'
-    headers = {'Authorization' : auth_token}
+    headers = {'Authorization': auth_token}
     return requests.delete(url=url, headers=headers)
-# Or use a more sensible name
+
+
 def delete_from_profile_list(list_name, riid):
+    """A more sensible name for
+    delete_profile_list_recipients_based_on_riid."""
     return delete_profile_list_recipients_based_on_riid(list_name, riid)
 
-# Retrieve all profile extentions of a profile list
+
 def retrieve_all_profile_extensions_of_a_profile_list(list_name):
+    """Retrieve all profile extentions of a profile list."""
     return get(f'lists/{list_name}/listExtensions')
-# Or use a more sensible name
+
+
 def get_profile_extensions(list_name):
+    """A more sensible name for
+    retrieve_all_profile_extensions_of_a_profile_list.
+    """
     return retrieve_all_profile_extensions_of_a_profile_list(list_name)
 
-# Create a new profile extension table
-def create_a_new_profile_extension_table(list_name, fields='', folder_name='___api-generated', extension_name='_pet', default_field_type='STR500'):
+
+def create_a_new_profile_extension_table(
+    list_name, fields='',
+    folder_name='___api-generated',
+    extension_name='_pet',
+    default_field_type='STR500'
+):
+    """Create a new profile extension table."""
     extension_name = f'{list_name}{extension_name}'
-    field_types = ['STR500', 'STR4000', 'INTEGER', 'NUMBER', 'TIMESTAMP']
+    # field_types = ['STR500', 'STR4000', 'INTEGER', 'NUMBER', 'TIMESTAMP']
     data = {
-        "profileExtension" : {
-            "objectName" : extension_name,
-            "folderName" : folder_name
+        "profileExtension": {
+            "objectName": extension_name,
+            "folderName": folder_name
         }
     }
-    # TODO: override default field type with fields from those specified in the fields input argument list
+    # TODO: override default field type with fields from input list
     if fields != '':
-        data["profileExtension"]["fields"] = [{"fieldName" : field, "fieldType" : default_field_type} for field in fields]
+        data["profileExtension"]["fields"] = [
+            {
+                "fieldName": field,
+                "fieldType": default_field_type
+            } for field in fields
+        ]
     context = get_context()
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions'
-    headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+    headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
     return requests.post(url=endpoint, headers=headers)
-# Or use a more sensible name
-def create_profile_extension(list_name, fields='', folder_name='___api-generated', extension_name='_pet', default_field_type='STR4000'):
-    return create_a_new_profile_extension_table(list_name, folder_name, extension_name, default_field_type)
+
+
+def create_profile_extension(
+    list_name,
+    fields='',
+    folder_name='___api-generated',
+    extension_name='_pet',
+    default_field_type='STR4000'
+):
+    """A more sensible name for
+    create_a_new_profile_extension_table."""
+    return create_a_new_profile_extension_table(
+        list_name,
+        folder_name,
+        extension_name,
+        default_field_type
+    )
+
 
 # TODO: Merge or update members in a profile extension table
 # extend/based on merge_or_update_members_in_a_profile_list_table
@@ -236,106 +370,225 @@ def create_profile_extension(list_name, fields='', folder_name='___api-generated
 # def profile_list_manage():
     # return merge_or_update_members_in_a_profile_extension_table()
 
-# Retrieve a member of a profile extension table based on RIID
-def retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
-    return get(f'lists/{list_name}/listExtensions/{profile_extension_name}/members/{riid}', parameters=f'fs={fields_to_return}')
-# Or use a more sensible name
-def get_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid, fields_to_return='all'):
-    return retrieve_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid, fields_to_return)
 
-# Retrieve a member of a profile extension table based on a query attribute
-def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
-    try:
-        query_attribute in rules["query_attributes_allowed"]
-    except:
-        raise ValueError(f"Query attribute is not one of {query_attributes_allowed}")
+def retrieve_a_member_of_a_profile_extension_table_based_on_riid(
+    list_name,
+    profile_extension_name,
+    riid,
+    fields_to_return='all'
+):
+    """Retrieve a member of a profile extension table based on RIID."""
+    return get(
+        f'lists/{list_name}/listExtensions/{profile_extension_name}/members/{riid}',
+        parameters=f'fs={fields_to_return}'
+    )
+
+
+def get_member_of_profile_extension_by_riid(
+    list_name,
+    profile_extension_name,
+    riid, fields_to_return='all'
+):
+    """A more sensible name for
+    retrieve_a_member_of_a_profile_extension_table_based_on_riid"""
+    return retrieve_a_member_of_a_profile_extension_table_based_on_riid(
+        list_name,
+        profile_extension_name,
+        riid, fields_to_return
+    )
+
+
+def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(
+    list_name,
+    profile_extension_name,
+    record_id,
+    query_attribute='c',
+    fields_to_return='all'
+):
+    """Retrieve a member of a profile extension table based on a query attribute."""
+
     service_url = f'lists/{list_name}/listExtensions/{profile_extension_name}/members'
-    return get(service_url, parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}')
-# Or use a more sensible name
-def get_member_of_profile_extension_by_attribute(list_name, profile_extension_name, record_id, query_attribute='c', fields_to_return='all'):
-    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(list_name, record_id, query_attribute, fields_to_return)
+    return get(
+        service_url,
+        parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
+    )
 
-# Delete a member of a profile extension table based on RIID
-def delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid):
+
+def get_member_of_profile_extension_by_attribute(
+    list_name,
+    profile_extension_name,
+    record_id,
+    query_attribute='c',
+    fields_to_return='all'
+):
+    """A more sensible name for
+    retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute."""
+    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(
+        list_name,
+        record_id,
+        query_attribute,
+        fields_to_return
+    )
+
+
+def delete_a_member_of_a_profile_extension_table_based_on_riid(
+    list_name,
+    profile_extension_name,
+    riid
+):
+    """Delete a member of a profile extension table based on RIID."""
     context = get_context()
     auth_token = context["authToken"]
     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions/{profile_extension_name}/members/{riid}'
-    headers = {'Authorization' : auth_token}
+    headers = {'Authorization': auth_token}
     return requests.delete(url=url, headers=headers)
-# Or use a more sensible name
-def delete_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid):
-    return delete_a_member_of_a_profile_extension_table_based_on_riid(list_name, profile_extension_name, riid)
 
-# Create a new supplemental table
-def create_a_new_supplemental_table(supplemental_table_name, folder_name, fields='', default_field_type='STR500', data_extraction_key=None, primary_key=None):
+
+def delete_member_of_profile_extension_by_riid(
+    list_name,
+    profile_extension_name,
+    riid
+):
+    """A more sensible name for
+    delete_a_member_of_a_profile_extension_table_based_on_riid."""
+    return delete_a_member_of_a_profile_extension_table_based_on_riid(
+        list_name,
+        profile_extension_name,
+        riid
+    )
+
+
+def create_a_new_supplemental_table(
+    supplemental_table_name,
+    folder_name,
+    fields='',
+    default_field_type='STR500',
+    data_extraction_key=None,
+    primary_key=None
+):
+    """Create a new supplemental table."""
     context = get_context()
     auth_token = context["authToken"]
     url = f'{context["endPoint"]}/{api_url}/folders/{folder_name}/suppData'
-    if primary_key == None:
+    if primary_key is None:
         primary_key = fields[0]
     data = {
-        "table" : {"objectName" : supplemental_table_name},
-        "fields" : [
+        "table": {"objectName": supplemental_table_name},
+        "fields": [
             {
-                "fieldName" : field,
-                "fieldType" : default_field_type,
-                "dataExtractionKey" : False
+                "fieldName": field,
+                "fieldType": default_field_type,
+                "dataExtractionKey": False
             } for field in fields
         ],
-        "primaryKeys" : [primary_key]
+        "primaryKeys": [primary_key]
     }
     print(json.dumps(data))
     input()
-    headers = {'Authorization' : auth_token, 'Content-Type' : 'application/json'}
+    headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
     return requests.post(url=url, headers=headers, data=json.dumps(data))
-# OR use a more sensible name
-def create_supplemental_table(supplemental_table_name, folder_name, fields='', default_field_type='STR500', data_extraction_key=None):
-    return create_a_new_supplemental_table(supplemental_table_name, folder_name, fields, default_field_type, data_extraction_key)
+
+
+def create_supplemental_table(
+    supplemental_table_name,
+    folder_name, fields='',
+    default_field_type='STR500',
+    data_extraction_key=None
+):
+    """A more sensible name for create_a_new_supplemental_table."""
+    return create_a_new_supplemental_table(
+        supplemental_table_name,
+        folder_name,
+        fields,
+        default_field_type,
+        data_extraction_key
+    )
 
 
 class table:
+    """
+    A table as it relates to an object that will be in Responsys.
+
+    There are three basic types: Profile List, Profile Extension Table,
+    and Supplemental Table. Tables are in Responsys in a specified folder.
+    """
+
     def __init__(self, name, folder, ri_type, fields, records):
-        self.name = name # The name of the table
-        self.folder = folder # The name of the folder it resides in
-        self.ri_type = ri_type # The Responsys Interact type of table. One of: Profile, Profile Extension, or Supplemental
+        """A table exist with these properties."""
+        # The name of the table
+        self.name = name
+        # The name of the folder it resides in
+        self.folder = folder
+        # The Responsys Interact type of table
+        # One of: Profile, Profile Extension, or Supplemental
+        self.ri_type = ri_type
         self.fields = fields
         self.records = records
 
     def create(name, folder, ri_type, records):
+        """Create a table."""
         return
 
     def merge(name, ri_type, fields, records):
+        """Merge records into a table."""
         return
 
     def delete(name):
+        """Delete a table."""
         return
 
+
 class member:
+    """A member of your Responsys Interact or local application."""
+
+    def __init__(self, record_ids, tables):
+        """A member is just the records and tables associated."""
+        self.record_ids = record_ids
+        self.tables = tables
+
+
+class member_of_table:
+    """A member of a table."""
+
     def __init__(self, record_id, table, data):
-        self.record_id = record_id # Responsys provides different methods for accessing records based on their id type, one of RIID, email address, customer id, or mobile number.
+        """
+        Responsys has different access methods for records per id type.
+
+        One of RIID, email address, customer id, or mobile number.
+        """
+        self.record_id = record_id
         self.table = table
         self.data = data
 
-    def create(record_id, table, data):
+    def create(record_id, table, data=None):
+        """Create a member in a table with data."""
         return
 
     def retrieve(record_id, table):
+        """Retrieve the record data for a member of a table in Interact."""
         return
 
     def delete(record_id, table):
+        """Delete the record and data of a member in a specific table."""
         return
 
 ##################
 # Extra features #
 ##################
 
-# Find what lists a record is in by the input RIID, Email Address or Mobile Number
-def get_lists_for_record(riid):
-    all_lists = [list_name["name"] for list_name in profile_lists()] # get a list of all the profile list names
-    member_of = [] # container list
-    for profile_list in all_lists:
-        response = retrieve_a_member_of_a_profile_list_using_riid(profile_list, riid)
-        if "recordData" in response: # if the member (by riid) is in the profile list, add it to the list of profiles all_lists
-            member_of.append(profile_list) 
-    return member_of
 
+def get_lists_for_record(riid):
+    """Find what lists a record is in by RIID."""
+    all_lists = [list_name["name"] for list_name in profile_lists()]
+    # container list
+    member_of = []
+    for profile_list in all_lists:
+        response = retrieve_a_member_of_a_profile_list_using_riid(
+            profile_list,
+            riid
+        )
+        # if the member (by riid) is in the profile list
+        # add it to the list of all profile lists
+        if "recordData" in response:
+            member_of.append(profile_list)
+    return member_of
