@@ -11,6 +11,7 @@ install_requires = (
     'requests'
 )
 tests_require = (
+    'pytest',
     'coverage',
     'mock',
     'nose',
