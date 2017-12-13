@@ -14,4 +14,5 @@ def test_secrets():
 
 def test_profile_lists():
     """Test to see if profile lists has data."""
+    # TODO: what happens if there are no lists defined in Interact?
     assert len(r.profile_lists()) > 0
