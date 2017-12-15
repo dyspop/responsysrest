@@ -277,7 +277,6 @@ def retrieve_a_member_of_a_profile_list_based_on_query_attribute(
     """Retrieve a member of a profile list based on query attribute."""
     service_url = f'lists/{list_name}/members'
     parameters = f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
-    print(service_url, parameters, input())
     return get(service_url, parameters=parameters)
 
 
