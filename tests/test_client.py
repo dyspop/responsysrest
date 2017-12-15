@@ -53,8 +53,7 @@ def test_fixture_profile_list_in_get_profile_lists():
 
 def test_get_member_of_list_by_riid_returns_response():
     """Test if the API responds when we try to get a member."""
-    _heartbeat(
-        r.get_member_of_list_by_riid(
+    _heartbeat(r.get_member_of_list_by_riid(
             fixtures['profile_list'], fixtures['riid']))
 
 
@@ -73,8 +72,7 @@ def test_get_campaigns_not_zero_length():
 def test_get_member_of_list_by_attribute_returns_response():
     """Test if the API responds when we get a member using
     the attribute feature."""
-    _heartbeat(
-        r.get_member_of_list_by_attribute(
+    _heartbeat(r.get_member_of_list_by_attribute(
             fixtures['profile_list'], fixtures['riid']))
 
 
@@ -94,5 +92,4 @@ def test_get_profile_extensions():
 
 def test_create_profile_extension():
     """Test if the API responds when we try to create a profile extension."""
-    _heartbeat(
-        r.create_profile_extension(''))
+    _heartbeat(r.create_profile_extension(''))
