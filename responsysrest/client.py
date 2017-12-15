@@ -247,7 +247,7 @@ def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
 
 
 # Or use a more sensible name
-def list_manage(list_name, **kwargs):
+def manage_profile_list(list_name, **kwargs):
     managed_list = merge_or_update_members_in_a_profile_list_table(
         list_name, **kwargs
     )
