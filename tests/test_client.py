@@ -55,7 +55,7 @@ def test_fixture_profile_list_in_get_profile_lists():
 def test_get_member_of_list_by_riid_returns_response():
     """Test if the API responds when we try to get a member."""
     _heartbeat(r.get_member_of_list_by_riid(
-            fixtures['profile_list'], fixtures['riid']))
+        fixtures['profile_list'], fixtures['riid']))
 
 
 def test_fixture_riid_in_fixture_profile_list():
@@ -74,7 +74,7 @@ def test_get_member_of_list_by_attribute_returns_response():
     """Test if the API responds when we get a member using
     the attribute feature."""
     _heartbeat(r.get_member_of_list_by_attribute(
-            fixtures['profile_list'], fixtures['riid']))
+        fixtures['profile_list'], fixtures['riid']))
 
 
 def test_delete_from_profile_list_returns_response():
@@ -92,8 +92,10 @@ def test_get_profile_extensions():
 
 
 def test_create_profile_extension():
-    """Test if the API responds when we try to create a profile extension."""
-    _heartbeat(r.create_profile_extension(''))
+    """Test if the API responds when we try to create a profile
+    extension. Heartbeat is expected whether create a new one or
+    try to create one that exists."""
+    _heartbeat(r.create_profile_extension(fixtures['profile_list_extension']))
 
 
 def test_get_member_of_profile_extension_by_riid():
