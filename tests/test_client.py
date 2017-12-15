@@ -34,6 +34,13 @@ def test_get_profile_lists_not_zero_length():
     assert len(r.get_profile_lists()) > 0
 
 
+def test_fixture_profile_list_in_get_profile_lists():
+    """Now that we know there are profile lists, test if
+    the fixture list is in Interact."""
+    profile_lists = [list['name'] for list in r.get_profile_lists()] 
+    assert fixtures['profile_list'] in profile_lists
+
+
 def test_get_campaigns_not_zero_length():
     """Test to see if campaigns has data."""
     # TODO: what happens if there are no lists defined in Interact?
@@ -59,5 +66,15 @@ def test_get_member_of_list_by_attribute_returns_response():
         fixtures['profile_list'], fixtures['riid']
     )
     assert '' != r.get_member_of_list_by_attribute(
+        fixtures['profile_list'], fixtures['riid']
+    )
+
+
+def test_delete_from_profile_list_returns_response():
+    """Test if the API responds."""
+    assert None is not r.delete_from_profile_list(
+        fixtures['profile_list'], fixtures['riid']
+    )
+    assert '' != r.delete_from_profile_list(
         fixtures['profile_list'], fixtures['riid']
     )
