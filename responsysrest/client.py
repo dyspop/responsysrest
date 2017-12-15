@@ -23,7 +23,7 @@ import json
 # TODO: proper password prompting/storage
 from secret import secrets as secret
 # our own rules for data objects.
-# from .containers import rules
+from .containers import rules
 
 # TODO: delete this!
 print(secret)
@@ -168,80 +168,90 @@ def campaigns():
     get_all_emd_email_campaigns."""
     return get_all_emd_email_campaigns()
 
+
 # Merge or update members in a profile list table
 # TODO: fix 403 response
-# def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
-#     # load container data
-#     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-#     # process keyword arguments
-#     fields = kwargs.get('fields')
-#     records = kwargs.get('records', None)
-#     merge_rules = kwargs.get('merge_rules', data["mergeRule"])
+def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
+    # load container data
+    data = rules["merge_or_update_members_in_a_profile_list_table"][0]
+    # process keyword arguments
+    fields = kwargs.get('fields')
+    records = kwargs.get('records', None)
+    merge_rules = kwargs.get('merge_rules', data["mergeRule"])
 
-#     # make sure the input fields and records are lists
-#     if isinstance(fields, list) and isinstance(records, list):
-#         # make sure the fields and records have the same amount of columns
-#         if len(fields) == len(records):
-#             # insert our fields into the data
-#             data["recordData"]["fieldNames"] = fields
-#             # insert our records into the data
-#             data["recordData"]["records"] = records
-#         else:
-#             raise ValueError(
-#               "ERROR: List headers count does not match record column count"
-#             )
-#     else:
-#         raise ValueError(
-#             "ARGUMENT ERROR: input fields or records are not list objects.\n
-#             Please specify lists for 'fields' or 'records' arguments."
-#         )
+    # make sure the input fields and records are lists
+    if isinstance(fields, list) and isinstance(records, list):
+        # make sure the fields and records have the same amount of columns
+        if len(fields) == len(records):
+            # insert our fields into the data
+            data["recordData"]["fieldNames"] = fields
+            # insert our records into the data
+            data["recordData"]["records"] = records
+        else:
+            raise ValueError(
+                """ERROR: List headers count does not
+                match record column count"""
+            )
+    else:
+        raise ValueError(
+            """
+            ARGUMENT ERROR: input fields or records are not list objects.\n
+            Please specify lists for 'fields' or 'records' arguments.
+            """
+        )
+    # extract merge rules
+    rules_keys = [key for key in data["mergeRule"]]
+    # extract merge rules default values
+    rules_values = [
+        data["mergeRule"][rule]["default"] for rule in rules_keys
+    ]
+    # assign a new rules object to work on before we insert it into the
+    # request object
+    rules_dict = dict(zip(rules_keys, rules_values))
 
-#     rules_keys = [key for key in data["mergeRule"]] # extract merge rules
-#     # extract merge rules default values
-#     rules_values = [
-#         data["mergeRule"][rule]["default"] for rule in rules_keys
-#     ]
-#     # assign a new rules object to work on before we insert it into the
-#     # request object
-#     rules_dict = dict(zip(rules_keys, rules_values))
+    for merge_rule, merge_value in merge_rules.items():
+        try:
+            # if the user input merge rule value is valid based on the
+            # container data
+            if merge_value in data["mergeRule"][merge_rule]["options"]:
+                # add the new merge rule value to the data
+                data["mergeRule"][merge_rule] = merge_value
+        except KeyError:
+            print(
+                """
+                f'ERROR: Merge rule "{merge_rule}" is not valid.
+                Valid merge rules are:
+                {rules_keys}'
+                """
+            )
+        # print(merge_rule + " : " + merge_value)
+        # assign parameters from merge_rules keyword arguments to new rules
+        rules_dict[merge_rule] = merge_value
 
-#     for merge_rule, merge_value in merge_rules.items():
-#         try:
-#             # if the user input merge rule value is valid based on the
-#             # container data
-#             if merge_value in data["mergeRule"][merge_rule]["options"]:
-#                 # add the new merge rule value to the data
-#                 data["mergeRule"][merge_rule] = merge_value
-#         except KeyError:
-#             print(
-#                 f'ERROR: Merge rule "{merge_rule}" is not valid.
-#                 Valid merge rules are:
-#                 {rules_keys}'
-#             )
-#         # print(merge_rule + " : " + merge_value)
-#         # assign parameters from merge_rules keyword arguments to new rules
-#         rules_dict[merge_rule] = merge_value
-#     data["mergeRule"] = rules_dict # add the merge rules back into the data
+    # add the merge rules back into the data
+    data["mergeRule"] = rules_dict
 
-#     # build post request
-#     context = get_context()
-#     auth_token = context["authToken"]
-#     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
-#     headers = {
-#         'Authorization' : auth_token, 'Content-Type' : 'application/json'
-#     }
-#     print(json.dumps(data))
-#     # make the request
-#     response = requests.post(url, data=json.dumps(data), headers=headers)
-#     # return the data to the container?
-#     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-#     return response
-# # Or use a more sensible name
-# def list_manage(list_name, **kwargs):
-#     managed_list = merge_or_update_members_in_a_profile_list_table(
-#         list_name, **kwargs
-#     )
-#     return managed_list
+    # build post request
+    context = get_context()
+    auth_token = context["authToken"]
+    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
+    headers = {
+        'Authorization': auth_token, 'Content-Type': 'application/json'
+    }
+    print(json.dumps(data))
+    # make the request
+    response = requests.post(url, data=json.dumps(data), headers=headers)
+    # return the data to the container?
+    data = rules["merge_or_update_members_in_a_profile_list_table"][0]
+    return response
+
+
+# Or use a more sensible name
+def list_manage(list_name, **kwargs):
+    managed_list = merge_or_update_members_in_a_profile_list_table(
+        list_name, **kwargs
+    )
+    return managed_list
 
 
 def retrieve_a_member_of_a_profile_list_using_riid(list_name, riid):
