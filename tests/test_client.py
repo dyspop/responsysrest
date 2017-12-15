@@ -84,3 +84,13 @@ def test_delete_from_profile_list_returns_response():
     assert '' != r.delete_from_profile_list(
         fixtures['profile_list'], ''
     )
+
+
+def test_get_profile_extensions():
+    """Test if the API responds."""
+    assert None is not r.get_profile_extensions(
+        fixtures['profile_list']
+    )
+    assert '' != r.get_profile_extensions(
+        fixtures['profile_list']
+    )
