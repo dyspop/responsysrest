@@ -56,12 +56,12 @@ The login itself returns a context with the Interact supplied endpoint for furth
 
 ### Retrieving all profile lists for an account
 
-    r.profile_lists()
+    r.get_profile_lists()
   
 Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
 
-    [list["name"] for list in r.profile_lists()] 
-    [(list["name"], list["folderName"]) for list in r.profile_lists()]
+    [list["name"] for list in r.get_profile_lists()] 
+    [(list["name"], list["folderName"]) for list in r.get_profile_lists()]
 
 ### Get all EMD Campaigns
 
