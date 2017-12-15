@@ -152,7 +152,7 @@ def retrieving_all_profile_lists_for_an_account():
     return get('lists')
 
 
-def profile_lists():
+def get_profile_lists():
     """A more sensible name for
     retrieving_all_profile_lists_for_an_account."""
     return retrieving_all_profile_lists_for_an_account()
@@ -163,7 +163,7 @@ def get_all_emd_email_campaigns():
     return get('campaigns')
 
 
-def campaigns():
+def get_campaigns():
     """A more sensible name for
     get_all_emd_email_campaigns."""
     return get_all_emd_email_campaigns()

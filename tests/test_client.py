@@ -20,7 +20,13 @@ def test_get_context_returns_endpoint():
     assert 'responsys.' in after
 
 
-def test_profile_lists():
+def test_get_profile_lists_not_zero_length():
     """Test to see if profile lists has data."""
     # TODO: what happens if there are no lists defined in Interact?
-    assert len(r.profile_lists()) > 0
+    assert len(r.get_profile_lists()) > 0
+
+
+def test_get_campaigns_not_zero_length():
+    """Test to see if campaigns has data."""
+    # TODO: what happens if there are no lists defined in Interact?
+    assert len(r.get_campaigns()) > 0
