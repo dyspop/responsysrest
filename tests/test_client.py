@@ -5,7 +5,8 @@ import responsysrest as r
 # Fixtures
 fixtures = {
     'riid': '12112123105',
-    'profile_list': 'API_testing'
+    'profile_list': 'API_testing',
+    'profile_list_extension': 'API_testing_pet'
 }
 context = r.get_context()
 
@@ -93,3 +94,23 @@ def test_get_profile_extensions():
 def test_create_profile_extension():
     """Test if the API responds when we try to create a profile extension."""
     _heartbeat(r.create_profile_extension(''))
+
+
+def test_get_member_of_profile_extension_by_riid():
+    """Test if the API responds when we try to get a member of
+     a profile extension table."""
+    _heartbeat(r.get_member_of_profile_extension_by_riid(
+        fixtures['profile_list'],
+        fixtures['profile_list_extension'],
+        fixtures['riid'])
+    )
+
+
+def test_get_member_of_profile_extension_by_attribute():
+    """Test if the API responds when we try to get a member of
+    a profile extension table using the attribute feature."""
+    _heartbeat(r.get_member_of_profile_extension_by_attribute(
+        fixtures['profile_list'],
+        fixtures['profile_list_extension'],
+        fixtures['riid'])
+    )
