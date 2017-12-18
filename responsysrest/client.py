@@ -272,8 +272,7 @@ def retrieve_a_member_of_a_profile_list_based_on_query_attribute(
     list_name,
     record_id,
     query_attribute='c',
-    fields_to_return='all'
-):
+    fields_to_return='all'):
     """Retrieve a member of a profile list based on query attribute."""
     service_url = f'lists/{list_name}/members'
     parameters = f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
@@ -396,7 +395,8 @@ def retrieve_a_member_of_a_profile_extension_table_based_on_riid(
 def get_member_of_profile_extension_by_riid(
     list_name,
     profile_extension_name,
-    riid, fields_to_return='all'
+    riid,
+    fields_to_return='all'
 ):
     """A more sensible name for
     retrieve_a_member_of_a_profile_extension_table_based_on_riid"""
@@ -519,6 +519,12 @@ def create_supplemental_table(
         default_field_type,
         data_extraction_key
     )
+
+
+def retrieve_supplemental_table_records_with_primary_key(
+    supplemental_table_name,
+    ):
+    return
 
 
 class table:
