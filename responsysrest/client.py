@@ -15,6 +15,9 @@ import json
 # used with the login with certificate functions
 # from string import ascii_uppercase
 
+# connector config
+from config import pod
+
 # this should get removed, but can be used to store a local password!
 # crazy... but Interact has additional security measures
 # on top of your user login / password and these aren't stored
@@ -26,7 +29,7 @@ from secret import secrets as secret
 from .containers import rules
 
 api_url = 'rest/api/v1.3'
-login_url = f'http://login5.responsys.net/{api_url}/'
+login_url = f'http://login{pod}.responsys.net/{api_url}/'
 
 # Helper functions for use with direct implementations of calls as below
 

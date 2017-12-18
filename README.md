@@ -17,8 +17,9 @@ A python library providing access to the Responsys Interact API. Currently suppo
 
 
 
-
 ## Usage ##
+
+Edit `config.py` if necessary. We default to "pod 5" on Interact which you can change here.
 
 Set your username and password as a dictionary data object in `responsysrest/secret.py`
 IMPORTANT: this is ignored by git. If you use another version control you'll need to keep this file out of the way from it!
