@@ -500,9 +500,11 @@ def create_a_new_supplemental_table(
 
 def create_supplemental_table(
     supplemental_table_name,
-    folder_name, fields='',
+    folder_name, 
+    fields='',
     default_field_type='STR500',
-    data_extraction_key=None
+    data_extraction_key=None,
+    primary_key=None
 ):
     """A more sensible name for create_a_new_supplemental_table."""
     return create_a_new_supplemental_table(
