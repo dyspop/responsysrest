@@ -524,7 +524,7 @@ def create_supplemental_table(
 
 def retrieve_supplemental_table_records_with_primary_key(
     supplemental_table_name,
-    ):
+):
     return
 
 
