@@ -151,6 +151,7 @@ def get_campaigns():
 # Merge or update members in a profile list table
 # TODO: fix 403 response
 def manage_profile_list(list_name, **kwargs):
+    """Merge or update members in a profile list table."""
     # load container data
     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
     # process keyword arguments
@@ -237,7 +238,8 @@ def get_member_of_list_by_attribute(
     list_name,
     record_id,
     query_attribute='c',
-    fields_to_return='all'):
+    fields_to_return='all'
+):
     """Retrieve a member of a profile list based on query attribute."""
     service_url = f'lists/{list_name}/members'
     parameters = f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
