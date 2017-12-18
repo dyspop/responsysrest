@@ -15,8 +15,11 @@ context = r.get_context()
 
 # Test related functions.
 def _heartbeat(func):
-    """Instead of inspecting too many responses, we just test
-    to see if there's something on the other end."""
+    """Test if the API responds.
+
+    Instead of inspecting too many responses, we just test
+    to see if there's something on the other end.
+    """
     assert None is not func
     assert '' != func
 
@@ -24,13 +27,17 @@ def _heartbeat(func):
 # The tests.
 def test_get_context_returns_authtoken():
     """Test if get_context returns an authToken.
-    Some responses do warrant inspection."""
+
+    Some responses do warrant inspection.
+    """
     _heartbeat(context['authToken'])
 
 
 def test_get_context_returns_endpoint():
     """Test if get_context returns a responsys https endpoint.
-    Some responses do warrant inspection."""
+
+    Some responses do warrant inspection.
+    """
     _heartbeat(context['endPoint'])
     before, https, after = context['endPoint'].rpartition('https://')
     assert '' == before

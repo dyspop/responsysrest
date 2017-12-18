@@ -48,7 +48,7 @@ def get_context():
     """
     # TODO: figure out how to log out after each log in!
     context = json.loads(
-        login_with_username_and_password(
+        login(
             secret["user_name"],
             secret["password"]
         ).text
@@ -78,7 +78,7 @@ def get(service_url, **kwargs):
 # Many functions are mapped to another name afterwards as well for ease of use.
 
 
-def login_with_username_and_password(user_name, password, url=login_url):
+def login(user_name, password, url=login_url):
     """Login with username and password."""
     url = f'{login_url}auth/token'
     data = {
@@ -89,15 +89,6 @@ def login_with_username_and_password(user_name, password, url=login_url):
     headers = {'content-type': 'application/x-www-form-urlencoded'}
     return requests.post(url, data=data, headers=headers)
 
-
-def login(
-    user_name=secret['user_name'],
-    password=secret['password'],
-    url=login_url
-):
-    """A more sensible name for
-    login_with_username_and_password."""
-    return login_with_username_and_password(user_name, password, url=login_url)
 
 # # TODO: Implement
 # # Login with username and certificates
@@ -147,31 +138,19 @@ def login(
 #     return response
 
 
-def retrieving_all_profile_lists_for_an_account():
+def get_profile_lists():
     """Retrieving all profile lists for an account."""
     return get('lists')
 
 
-def get_profile_lists():
-    """A more sensible name for
-    retrieving_all_profile_lists_for_an_account."""
-    return retrieving_all_profile_lists_for_an_account()
-
-
-def get_all_emd_email_campaigns():
+def get_campaigns():
     """Get all EMD email campaigns."""
     return get('campaigns')
 
 
-def get_campaigns():
-    """A more sensible name for
-    get_all_emd_email_campaigns."""
-    return get_all_emd_email_campaigns()
-
-
 # Merge or update members in a profile list table
 # TODO: fix 403 response
-def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
+def manage_profile_list(list_name, **kwargs):
     # load container data
     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
     # process keyword arguments
@@ -246,15 +225,7 @@ def merge_or_update_members_in_a_profile_list_table(list_name, **kwargs):
     return response
 
 
-# Or use a more sensible name
-def manage_profile_list(list_name, **kwargs):
-    managed_list = merge_or_update_members_in_a_profile_list_table(
-        list_name, **kwargs
-    )
-    return managed_list
-
-
-def retrieve_a_member_of_a_profile_list_using_riid(list_name, riid):
+def get_member_of_list_by_riid(list_name, riid):
     """Retrieve a member of a profile list using RIID."""
     service_url = f'lists/{list_name}/members/{riid}'
     # only support returning all fields for now
@@ -262,13 +233,7 @@ def retrieve_a_member_of_a_profile_list_using_riid(list_name, riid):
     return get(service_url, parameters='fs=all')
 
 
-def get_member_of_list_by_riid(list_name, riid):
-    """A more sensible name for
-    retrieve_a_member_of_a_profile_list_using_riid."""
-    return retrieve_a_member_of_a_profile_list_using_riid(list_name, riid)
-
-
-def retrieve_a_member_of_a_profile_list_based_on_query_attribute(
+def get_member_of_list_by_attribute(
     list_name,
     record_id,
     query_attribute='c',
@@ -279,23 +244,7 @@ def retrieve_a_member_of_a_profile_list_based_on_query_attribute(
     return get(service_url, parameters=parameters)
 
 
-def get_member_of_list_by_attribute(
-    list_name,
-    record_id,
-    query_attribute='c',
-    fields_to_return='all'
-):
-    """A more sensible name for
-    retrieve_a_member_of_a_profile_list_based_on_query_attribute."""
-    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(
-        list_name,
-        record_id,
-        query_attribute='c',
-        fields_to_return='all'
-    )
-
-
-def delete_profile_list_recipients_based_on_riid(list_name, riid):
+def delete_from_profile_list(list_name, riid):
     """Delete Profile List Recipients based on RIID."""
     context = get_context()
     auth_token = context["authToken"]
@@ -305,25 +254,12 @@ def delete_profile_list_recipients_based_on_riid(list_name, riid):
     return requests.delete(url=url, headers=headers)
 
 
-def delete_from_profile_list(list_name, riid):
-    """A more sensible name for
-    delete_profile_list_recipients_based_on_riid."""
-    return delete_profile_list_recipients_based_on_riid(list_name, riid)
-
-
-def retrieve_all_profile_extensions_of_a_profile_list(list_name):
+def get_profile_extensions(list_name):
     """Retrieve all profile extentions of a profile list."""
     return get(f'lists/{list_name}/listExtensions')
 
 
-def get_profile_extensions(list_name):
-    """A more sensible name for
-    retrieve_all_profile_extensions_of_a_profile_list.
-    """
-    return retrieve_all_profile_extensions_of_a_profile_list(list_name)
-
-
-def create_a_new_profile_extension_table(
+def create_profile_extension(
     list_name, fields='',
     folder_name='___api-generated',
     extension_name='_pet',
@@ -353,23 +289,6 @@ def create_a_new_profile_extension_table(
     return requests.post(url=endpoint, headers=headers)
 
 
-def create_profile_extension(
-    list_name,
-    fields='',
-    folder_name='___api-generated',
-    extension_name='_pet',
-    default_field_type='STR4000'
-):
-    """A more sensible name for
-    create_a_new_profile_extension_table."""
-    return create_a_new_profile_extension_table(
-        list_name,
-        folder_name,
-        extension_name,
-        default_field_type
-    )
-
-
 # TODO: Merge or update members in a profile extension table
 # extend/based on merge_or_update_members_in_a_profile_list_table
 # def merge_or_update_members_in_a_profile_extension_table():
@@ -379,7 +298,7 @@ def create_profile_extension(
     # return merge_or_update_members_in_a_profile_extension_table()
 
 
-def retrieve_a_member_of_a_profile_extension_table_based_on_riid(
+def get_member_of_profile_extension_by_riid(
     list_name,
     profile_extension_name,
     riid,
@@ -392,22 +311,7 @@ def retrieve_a_member_of_a_profile_extension_table_based_on_riid(
     )
 
 
-def get_member_of_profile_extension_by_riid(
-    list_name,
-    profile_extension_name,
-    riid,
-    fields_to_return='all'
-):
-    """A more sensible name for
-    retrieve_a_member_of_a_profile_extension_table_based_on_riid"""
-    return retrieve_a_member_of_a_profile_extension_table_based_on_riid(
-        list_name,
-        profile_extension_name,
-        riid, fields_to_return
-    )
-
-
-def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(
+def get_member_of_profile_extension_by_attribute(
     list_name,
     profile_extension_name,
     record_id,
@@ -423,24 +327,7 @@ def retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute(
     )
 
 
-def get_member_of_profile_extension_by_attribute(
-    list_name,
-    profile_extension_name,
-    record_id,
-    query_attribute='c',
-    fields_to_return='all'
-):
-    """A more sensible name for
-    retrieve_a_member_of_a_profile_extension_table_based_on_a_query_attribute."""
-    return retrieve_a_member_of_a_profile_list_based_on_query_attribute(
-        list_name,
-        record_id,
-        query_attribute,
-        fields_to_return
-    )
-
-
-def delete_a_member_of_a_profile_extension_table_based_on_riid(
+def delete_member_of_profile_extension_by_riid(
     list_name,
     profile_extension_name,
     riid
@@ -453,21 +340,7 @@ def delete_a_member_of_a_profile_extension_table_based_on_riid(
     return requests.delete(url=url, headers=headers)
 
 
-def delete_member_of_profile_extension_by_riid(
-    list_name,
-    profile_extension_name,
-    riid
-):
-    """A more sensible name for
-    delete_a_member_of_a_profile_extension_table_based_on_riid."""
-    return delete_a_member_of_a_profile_extension_table_based_on_riid(
-        list_name,
-        profile_extension_name,
-        riid
-    )
-
-
-def create_a_new_supplemental_table(
+def create_supplemental_table(
     supplemental_table_name,
     folder_name,
     fields='',
@@ -504,96 +377,11 @@ def create_a_new_supplemental_table(
     return requests.post(url=url, headers=headers, data=json.dumps(data))
 
 
-def create_supplemental_table(
-    supplemental_table_name,
-    folder_name, 
-    fields='',
-    default_field_type='STR500',
-    data_extraction_key=None,
-    primary_key=None
-):
-    """A more sensible name for create_a_new_supplemental_table."""
-    return create_a_new_supplemental_table(
-        supplemental_table_name,
-        folder_name,
-        fields,
-        default_field_type,
-        data_extraction_key
-    )
+# def retrieve_supplemental_table_records_with_primary_key(
+#     supplemental_table_name,
+# ):
+#     return
 
-
-def retrieve_supplemental_table_records_with_primary_key(
-    supplemental_table_name,
-):
-    return
-
-
-class table:
-    """
-    A table as it relates to an object that will be in Responsys.
-
-    There are three basic types: Profile List, Profile Extension Table,
-    and Supplemental Table. Tables are in Responsys in a specified folder.
-    """
-
-    def __init__(self, name, folder, ri_type, fields, records):
-        """A table exist with these properties."""
-        # The name of the table
-        self.name = name
-        # The name of the folder it resides in
-        self.folder = folder
-        # The Responsys Interact type of table
-        # One of: Profile, Profile Extension, or Supplemental
-        self.ri_type = ri_type
-        self.fields = fields
-        self.records = records
-
-    def create(name, folder, ri_type, records):
-        """Create a table."""
-        return
-
-    def merge(name, ri_type, fields, records):
-        """Merge records into a table."""
-        return
-
-    def delete(name):
-        """Delete a table."""
-        return
-
-
-class member:
-    """A member of your Responsys Interact or local application."""
-
-    def __init__(self, record_ids, tables):
-        """A member is just the records and tables associated."""
-        self.record_ids = record_ids
-        self.tables = tables
-
-
-class member_of_table:
-    """A member of a table."""
-
-    def __init__(self, record_id, table, data):
-        """
-        Responsys has different access methods for records per id type.
-
-        One of RIID, email address, customer id, or mobile number.
-        """
-        self.record_id = record_id
-        self.table = table
-        self.data = data
-
-    def create(record_id, table, data=None):
-        """Create a member in a table with data."""
-        return
-
-    def retrieve(record_id, table):
-        """Retrieve the record data for a member of a table in Interact."""
-        return
-
-    def delete(record_id, table):
-        """Delete the record and data of a member in a specific table."""
-        return
 
 ##################
 # Extra features #
