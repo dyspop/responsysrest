@@ -25,9 +25,6 @@ from secret import secrets as secret
 # our own rules for data objects.
 from .containers import rules
 
-# TODO: delete this!
-print(secret)
-
 api_url = 'rest/api/v1.3'
 login_url = f'http://login5.responsys.net/{api_url}/'
 
