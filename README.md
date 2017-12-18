@@ -255,7 +255,13 @@ To see a list of all campaigns or a list of campaigns and their respective folde
 
 ## Development/Testing ##
 
-None! 😱
+To run configuration and integration tests:
+
+    $pytest
+
+To run configuration tests only:
+
+    $pytest tests/test_0dev_configs.py
 
 ## Acknowledgements ##
 
