@@ -33,5 +33,20 @@ setup(
     install_requires=install_requires,
     setup_requires=tests_require,
     tests_require=tests_require,
-    test_suite='nose.collector',
+    test_suite='pytest',
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Environment :: Console',
+        'Environment :: MacOS X',
+        'Framework :: Flake8',
+        'Framework :: Pytest',
+        'Intended Audience :: Developers',
+        'Intended Audience :: End Users/Desktop',
+        'Intended Audience :: Information Technology',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Communications :: Email',
+        'Topic :: Software Development :: Libraries :: Python Modules'
+    ]
 )
