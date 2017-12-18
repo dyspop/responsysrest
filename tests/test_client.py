@@ -7,7 +7,8 @@ fixtures = {
     'folder': 'API_testing',
     'riid': '12112123105',
     'profile_list': 'API_testing',
-    'profile_list_extension': 'API_testing_pet'
+    'profile_list_extension': 'API_testing_pet',
+    'primary_key': 'api'
 }
 context = r.get_context()
 
@@ -129,4 +130,4 @@ def test_create_supplemental_table():
     supplemental table. We don't use fixtures so that we
     don't delete anything!"""
     _heartbeat(r.create_supplemental_table(
-        fixtures['profile_list'], fixtures['folder'], ['api']))
+        fixtures['profile_list'], fixtures['folder'], fixtures['primary_key']))
