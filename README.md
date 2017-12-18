@@ -281,6 +281,10 @@ To run configuration tests only:
 
     $pytest tests/test_0dev_configs.py
 
+To run client/API integration tests only:
+
+    $pytest tests/test_client.py
+
 ## Acknowledgements ##
 
 This library was developed inspired by the SOAP client on pypi as ```responsys```. 
