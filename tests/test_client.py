@@ -52,14 +52,14 @@ def test_get_profile_lists_not_zero_length():
 
 
 def test_fixture_profile_list_in_get_profile_lists():
-    """Now that we know there are profile lists, test if
-    the fixture list is in Interact."""
+    """Test if the fixture list is in Interact."""
     profile_lists = [list['name'] for list in r.get_profile_lists()]
     assert fixtures['profile_list'] in profile_lists
 
 
 # def test_manage_profile_lists_returns_response():
 #     assert return
+
 
 def test_get_member_of_list_by_riid_returns_response():
     """Test if the API responds when we try to get a member."""
@@ -80,36 +80,47 @@ def test_get_campaigns_not_zero_length():
 
 
 def test_get_member_of_list_by_attribute_returns_response():
-    """Test if the API responds when we get a member using
-    the attribute feature."""
+    """Test if the API responds.
+
+    When we get a member using the attribute feature.
+    """
     _heartbeat(r.get_member_of_list_by_attribute(
         fixtures['profile_list'], fixtures['riid']))
 
 
 def test_delete_from_profile_list_returns_response():
-    """Test if the API responds when we try to delete a member
-    from a list."""
+    """Test if the API responds.
+
+    When we try to delete a member from a list.
+    """
     _heartbeat(
         r.delete_from_profile_list(fixtures['profile_list'], ''))
 
 
 def test_get_profile_extensions():
-    """Test if the API responds when we try to get the profile
-    extensions associated with a list."""
+    """Test if the API responds.
+
+    When we try to get the profile extensions associated with a list.
+    """
     _heartbeat(
         r.get_profile_extensions(fixtures['profile_list']))
 
 
 def test_create_profile_extension():
-    """Test if the API responds when we try to create a profile
-    extension. Heartbeat is expected whether create a new one or
-    try to create one that exists."""
+    """Test if the API responds.
+
+    When we try to create a profile extension.
+    Heartbeat is expected whether create a new one or
+    try to create one that exists.
+    """
     _heartbeat(r.create_profile_extension(fixtures['profile_list_extension']))
 
 
 def test_get_member_of_profile_extension_by_riid():
-    """Test if the API responds when we try to get a member of
-     a profile extension table."""
+    """Test if the API responds.
+
+    When we try to get a member of a profile extension table.
+    """
     _heartbeat(r.get_member_of_profile_extension_by_riid(
         fixtures['profile_list'],
         fixtures['profile_list_extension'],
@@ -118,24 +129,32 @@ def test_get_member_of_profile_extension_by_riid():
 
 
 def test_get_member_of_profile_extension_by_attribute():
-    """Test if the API responds when we try to get a member of
-    a profile extension table using the attribute feature."""
+    """Test if the API responds.
+
+    When we try to get a member of a profile extension table by attribute.
+    """
     _heartbeat(r.get_member_of_profile_extension_by_attribute(
         fixtures['profile_list'],
         fixtures['profile_list_extension'],
         fixtures['riid'])
     )
 
+
 def test_delete_member_of_profile_extension_by_riid():
-    """Test if the API responds when we try to delete a member of
-    a profile extension table using riid.
-    We don't use fixtures so that we don't delete anything!"""
+    """Test if the API responds.
+
+    When we try to delete a member of a profile extension table by riid.
+    We don't use fixtures so that we don't delete anything!
+    """
     _heartbeat(r.delete_member_of_profile_extension_by_riid('', '', ''))
 
+
 def test_create_supplemental_table():
-    """Test if the API responds when we try to create a
-    supplemental table. We don't use fixtures so that we
-    don't delete anything!"""
+    """Test if the API responds.
+
+    When we try to create a supplemental table.
+    We don't use fixtures so that we don't delete anything!
+    """
     _heartbeat(r.create_supplemental_table(
         fixtures['profile_list'],
         fixtures['folder'],
