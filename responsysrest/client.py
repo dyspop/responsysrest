@@ -478,9 +478,16 @@ def create_a_new_supplemental_table(
     """Create a new supplemental table."""
     context = get_context()
     auth_token = context["authToken"]
+    if type(fields) == str:
+        raise TypeError('Fields must be a list.')
     url = f'{context["endPoint"]}/{api_url}/folders/{folder_name}/suppData'
     if primary_key is None:
-        primary_key = fields[0]
+        try:
+            primary_key = fields[0]
+        except:
+            raise ValueError(
+                """Cannot create supplemental table with no fields.
+                Primary key field is required.""")
     data = {
         "table": {"objectName": supplemental_table_name},
         "fields": [
@@ -492,8 +499,6 @@ def create_a_new_supplemental_table(
         ],
         "primaryKeys": [primary_key]
     }
-    print(json.dumps(data))
-    input()
     headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
     return requests.post(url=url, headers=headers, data=json.dumps(data))
 

@@ -4,6 +4,7 @@ import responsysrest as r
 
 # Fixtures
 fixtures = {
+    'folder': 'API_testing',
     'riid': '12112123105',
     'profile_list': 'API_testing',
     'profile_list_extension': 'API_testing_pet'
@@ -122,3 +123,10 @@ def test_delete_member_of_profile_extension_by_riid():
     a profile extension table using riid.
     We don't use fixtures so that we don't delete anything!"""
     _heartbeat(r.delete_member_of_profile_extension_by_riid('', '', ''))
+
+def test_create_supplemental_table():
+    """Test if the API responds when we try to create a
+    supplemental table. We don't use fixtures so that we
+    don't delete anything!"""
+    _heartbeat(r.create_supplemental_table(
+        fixtures['profile_list'], fixtures['folder'], ['api']))
