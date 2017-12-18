@@ -130,4 +130,7 @@ def test_create_supplemental_table():
     supplemental table. We don't use fixtures so that we
     don't delete anything!"""
     _heartbeat(r.create_supplemental_table(
-        fixtures['profile_list'], fixtures['folder'], fixtures['primary_key']))
+        fixtures['profile_list'],
+        fixtures['folder'],
+        [fixtures['primary_key']])
+    )

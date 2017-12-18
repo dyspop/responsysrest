@@ -489,6 +489,7 @@ def create_a_new_supplemental_table(
                 """Cannot create supplemental table with no fields.
                 Primary key field is required.""")
     data = {
+        # TODO: Use field types per field
         "table": {"objectName": supplemental_table_name},
         "fields": [
             {

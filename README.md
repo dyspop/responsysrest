@@ -219,30 +219,29 @@ Deletes a member of a profile extension table based on RIID if it exists.
 
 
 
+### Managing Supplemental Tables
+
+
+#### Create a new supplemental table
+
+Creates a new supplemental table in the folder specified. You must specify either a list of at least one field or a primary key that is one of the Responsys internal field names. If you do not specify a primary key the wrapper will use the first field in the input list. This is because the API requires a primary key field. You can also specify an optional data extraction key.
+
+    r.create_supplemental_table(supplemental_table_name, folder_name, fields=fields)
+    r.create_supplemental_table(supplemental_table_name, folder_name, primary_key=primary_key)
+
+The wrapper writes all fields with a default field type, which is `STR500` unless another type is specified. 
+
+Examples:
+
+    r.create_supplemental_table('my_supp_table', 'API_testing', fields=['field1', 'field2'], default_field_type='STR25', data_extraction_key='field2', primary_key='field1')
 
 
 
 
+### Managing Campaigns
 
 
-
-
-
-
-
-
-
-
-
-### Get lists for record
-
-    r.get_lists_for_record(riid)
-
-Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
-
-
-
-### Get all EMD Campaigns
+#### Get all EMD Campaigns
 
     r.campaigns()
 
@@ -252,6 +251,25 @@ To see a list of all campaigns or a list of campaigns and their respective folde
 
     [campaign['name'] for campaign in r.campaigns()['campaigns']]
     [(campaign['name'], campaign['folderName']) for campaign in r.campaigns()['campaigns']]
+
+
+
+
+
+
+
+### Non-native features
+
+There are a few things you might want to do with the API that are a little hard based on arbitrary endpoint calls. The wrapper provides a few pieces of candy.
+
+
+#### Get lists for record
+
+    r.get_lists_for_record(riid)
+
+Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
+
+
 
 ## Development/Testing ##
 
