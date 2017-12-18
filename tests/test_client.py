@@ -116,3 +116,9 @@ def test_get_member_of_profile_extension_by_attribute():
         fixtures['profile_list_extension'],
         fixtures['riid'])
     )
+
+def test_delete_member_of_profile_extension_by_riid():
+    """Test if the API responds when we try to get a member of
+    a profile extension table using the attribute feature. 
+    We don't use fixtures so that we don't delete anything!"""
+    _heartbeat(r.delete_member_of_profile_extension_by_riid('', '', ''))
