@@ -1,14 +1,26 @@
 """Tests for each individual function in the Client."""
 import responsysrest as r
+import random
 
+config = {
+    'test_list': 'API_testing',
+    'riid_length': 11
+}
 
 # Fixtures
+# Set the riid once before execution outside the fixtures dict
+fixture_riid = ''.join(
+    [
+        str(n) for n in
+        [random.randint(0, 9) for x in range(0, config['riid_length'])]
+    ]
+)
 fixtures = {
-    'folder': 'API_testing',
-    'riid': '12112123105',
-    'profile_list': 'API_testing',
-    'profile_list_extension': 'API_testing_pet',
-    'primary_key': 'api'
+    'folder': config['test_list'],
+    'riid': fixture_riid,
+    'profile_list': f'{config["test_list"]}',
+    'profile_list_extension': f'{config["test_list"]}_pet',
+    'primary_key': f'{config["test_list"]}_primary_key',
 }
 context = r.get_context()
 
@@ -57,6 +69,12 @@ def test_fixture_profile_list_in_get_profile_lists():
     assert fixtures['profile_list'] in profile_lists
 
 
+def test_get_campaigns_not_zero_length():
+    """Test to see if campaigns has data."""
+    # TODO: what happens if there are no campaigns defined in Interact?
+    assert len(r.get_campaigns()) > 0
+
+
 # def test_manage_profile_lists_returns_response():
 #     assert return
 
@@ -69,14 +87,11 @@ def test_get_member_of_list_by_riid_returns_response():
 
 def test_fixture_riid_in_fixture_profile_list():
     """Test if the test riid is in the test profile list."""
+    # Add the record to the test list
+    print(fixtures['riid'])
+    r.manage_profile_list(fixtures['profile_list'], records=[fixtures['riid']])
     assert 'recordData' in r.get_member_of_list_by_riid(
         fixtures['profile_list'], fixtures['riid'])
-
-
-def test_get_campaigns_not_zero_length():
-    """Test to see if campaigns has data."""
-    # TODO: what happens if there are no lists defined in Interact?
-    assert len(r.get_campaigns()) > 0
 
 
 def test_get_member_of_list_by_attribute_returns_response():
