@@ -16,6 +16,7 @@ import json
 # from string import ascii_uppercase
 
 # connector config
+import config
 from config import pod
 
 # this should get removed, but can be used to store a local password!
@@ -262,8 +263,8 @@ def get_profile_extensions(list_name):
 
 def create_profile_extension(
     list_name, fields='',
-    folder_name='___api-generated',
-    extension_name='_pet',
+    folder_name=config.api_folder,
+    extension_name=config.profile_extension_table_alias,
     default_field_type='STR500'
 ):
     """Create a new profile extension table."""
@@ -343,7 +344,7 @@ def delete_member_of_profile_extension_by_riid(
 
 def create_supplemental_table(
     supplemental_table_name,
-    folder_name,
+    folder_name=config.api_folder,
     fields='',
     default_field_type='STR500',
     data_extraction_key=None,
