@@ -8,7 +8,8 @@ A python library providing access to the Responsys Interact API. Currently suppo
 
 ## Install ##
 
-1. Install Python3 and Python Package Index. I recommend installing Python3 this way: http://docs.python-guide.org/en/latest/starting/install3/osx/ which should alias your Python3 and pip to separate commands `python3` and `pip3`.
+1. Install Python3 and Python Package Index. 
+  * OS X: It is recommended to install Python3 this way: http://docs.python-guide.org/en/latest/starting/install3/osx/ which should alias your Python3 and pip to separate commands `python3` and `pip3`.
 2. Clone this repo and install via source package:
 ```
     cd responsysrest/
@@ -258,7 +259,7 @@ To see a list of all campaigns or a list of campaigns and their respective folde
 
 ### Non-native features
 
-There are a few things you might want to do with the API that are a little hard based on arbitrary endpoint calls. The wrapper provides a few pieces of candy.
+There are a few things you might want to do with the API that are a little hard based on arbitrary endpoint calls. The wrapper provides you this piece of candy.
 
 
 #### Get lists for record
