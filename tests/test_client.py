@@ -32,8 +32,7 @@ def _heartbeat(func):
     Instead of inspecting too many responses, we just test
     to see if there's something on the other end.
     """
-    assert None is not func
-    assert '' != func
+    return (None is not func and '' != func)
 
 
 # The tests.
@@ -42,15 +41,16 @@ def test_get_context_returns_authtoken():
 
     Some responses do warrant inspection.
     """
-    _heartbeat(context['authToken'])
+    assert _heartbeat(context['authToken'])
 
 
 def test_get_context_returns_endpoint():
-    """Test if get_context returns a responsys https endpoint.
+    """Test if get_context returns a responsys https endpoint."""
+    assert _heartbeat(context['endPoint'])
 
-    Some responses do warrant inspection.
-    """
-    _heartbeat(context['endPoint'])
+
+def test_get_context_endpoint_is_https_and_responsys():
+    """Some responses do warrant inspection."""
     before, https, after = context['endPoint'].rpartition('https://')
     assert '' == before
     assert 'https://' == https
@@ -81,7 +81,7 @@ def test_get_campaigns_not_zero_length():
 
 def test_get_member_of_list_by_riid_returns_response():
     """Test if the API responds when we try to get a member."""
-    _heartbeat(r.get_member_of_list_by_riid(
+    assert _heartbeat(r.get_member_of_list_by_riid(
         fixtures['profile_list'], fixtures['riid']))
 
 
@@ -99,7 +99,7 @@ def test_get_member_of_list_by_attribute_returns_response():
 
     When we get a member using the attribute feature.
     """
-    _heartbeat(r.get_member_of_list_by_attribute(
+    assert _heartbeat(r.get_member_of_list_by_attribute(
         fixtures['profile_list'], fixtures['riid']))
 
 
@@ -108,7 +108,7 @@ def test_delete_from_profile_list_returns_response():
 
     When we try to delete a member from a list.
     """
-    _heartbeat(
+    assert _heartbeat(
         r.delete_from_profile_list(fixtures['profile_list'], ''))
 
 
@@ -117,7 +117,7 @@ def test_get_profile_extensions():
 
     When we try to get the profile extensions associated with a list.
     """
-    _heartbeat(
+    assert _heartbeat(
         r.get_profile_extensions(fixtures['profile_list']))
 
 
@@ -128,7 +128,7 @@ def test_create_profile_extension():
     Heartbeat is expected whether create a new one or
     try to create one that exists.
     """
-    _heartbeat(r.create_profile_extension(fixtures['profile_list_extension']))
+    assert _heartbeat(r.create_profile_extension(fixtures['profile_list_extension']))
 
 
 def test_get_member_of_profile_extension_by_riid():
@@ -136,7 +136,7 @@ def test_get_member_of_profile_extension_by_riid():
 
     When we try to get a member of a profile extension table.
     """
-    _heartbeat(r.get_member_of_profile_extension_by_riid(
+    assert _heartbeat(r.get_member_of_profile_extension_by_riid(
         fixtures['profile_list'],
         fixtures['profile_list_extension'],
         fixtures['riid'])
@@ -148,7 +148,7 @@ def test_get_member_of_profile_extension_by_attribute():
 
     When we try to get a member of a profile extension table by attribute.
     """
-    _heartbeat(r.get_member_of_profile_extension_by_attribute(
+    assert _heartbeat(r.get_member_of_profile_extension_by_attribute(
         fixtures['profile_list'],
         fixtures['profile_list_extension'],
         fixtures['riid'])
@@ -161,7 +161,7 @@ def test_delete_member_of_profile_extension_by_riid():
     When we try to delete a member of a profile extension table by riid.
     We don't use fixtures so that we don't delete anything!
     """
-    _heartbeat(r.delete_member_of_profile_extension_by_riid('', '', ''))
+    assert _heartbeat(r.delete_member_of_profile_extension_by_riid('', '', ''))
 
 
 def test_create_supplemental_table():
@@ -170,7 +170,7 @@ def test_create_supplemental_table():
     When we try to create a supplemental table.
     We don't use fixtures so that we don't delete anything!
     """
-    _heartbeat(r.create_supplemental_table(
+    assert _heartbeat(r.create_supplemental_table(
         fixtures['profile_list'],
         fixtures['folder'],
         [fixtures['primary_key']])
