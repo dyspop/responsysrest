@@ -1,26 +1,22 @@
 """Tests for each individual function in the Client."""
 import responsysrest as r
 import random
-
-config = {
-    'test_list': 'API_testing',
-    'riid_length': 11
-}
+import config
 
 # Fixtures
 # Set the riid once before execution outside the fixtures dict
 fixture_riid = ''.join(
     [
         str(n) for n in
-        [random.randint(0, 9) for x in range(0, config['riid_length'])]
+        [random.randint(0, 9) for x in range(0, config.riid_length)]
     ]
 )
 fixtures = {
-    'folder': config['test_list'],
+    'folder': config.api_folder,
     'riid': fixture_riid,
-    'profile_list': f'{config["test_list"]}',
-    'profile_list_extension': f'{config["test_list"]}_pet',
-    'primary_key': f'{config["test_list"]}_primary_key',
+    'profile_list': config.api_list,
+    'profile_list_extension': f'{config.api_list}{config.profile_extension_table_alias}',
+    'primary_key': f'{config.api_list}{config.primary_key_alias}'
 }
 context = r.get_context()
 
