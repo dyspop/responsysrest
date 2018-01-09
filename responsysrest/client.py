@@ -69,13 +69,12 @@ def get(service_url, **kwargs):
     return json.loads(requests.get(url=endpoint, headers=headers).text)
 
 
-# Direct implentations of calls from Responsys Interact REST API documentation
-# https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
-# All function names and comment descriptions are directly from the
-# v1.3 REST API documentation, except some English-language inconsistencies
-# are modified from their documentation and code-comment style to match PEP-8
-# for their corresponding function/method names.
-# Many functions are mapped to another name afterwards as well for ease of use.
+"""Direct implentations of calls from Responsys Interact REST API documentation
+https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
+All comment descriptions are directly from the v1.3 REST API documentation,
+except some English-language grammar and syntax inconsistencies are modified
+from their documentation and code-comment style to match PEP-8.
+"""
 
 
 def login(user_name, password, url=login_url):
