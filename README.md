@@ -215,12 +215,19 @@ Deletes a member of a profile extension table based on RIID if it exists.
 
 #### Create a new supplemental table
 
-Creates a new supplemental table in the folder specified. You must specify either a list of at least one field or a primary key that is one of the Responsys internal field names. If you do not specify a primary key the wrapper will use the first field in the input list. This is because the API requires a primary key field. You can also specify an optional data extraction key.
+
+Creates a new supplemental table. Requires only a table name, but this will create a blank supplemental table using default a folder location and name.
+
+Examples:
+
+    r.create_supplemental_table('CONTACTS_LIST', folder_name='test', fields=fields)
+
+This creates a `CONTACTS_LIST_supp` supplemental table in a folder named `___api-generated` with no records and no non-default fields. You must specify either a list of at least one field or a primary key that is one of the Responsys internal field names. If you do not specify a primary key the wrapper will use the first field in the input list. This is because the API requires a primary key field. You can also specify an optional data extraction key.
 
     r.create_supplemental_table(supplemental_table_name, folder_name, fields=fields)
     r.create_supplemental_table(supplemental_table_name, folder_name, primary_key=primary_key)
 
-The wrapper writes all fields with a default field type, which is `STR500` unless another type is specified. 
+The wrapper writes all fields with a default field type, which is `STR500` unless another type is specified. If the default type is specified it will use that type for all fields.
 
 Examples:
 
