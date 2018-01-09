@@ -240,14 +240,14 @@ Examples:
 
 #### Get all EMD Campaigns
 
-    r.campaigns()
+    r.get_campaigns()
 
 Returns a dictionary of campaigns and their data, along with links and their data.
 
 To see a list of all campaigns or a list of campaigns and their respective folders use:
 
-    [campaign['name'] for campaign in r.campaigns()['campaigns']]
-    [(campaign['name'], campaign['folderName']) for campaign in r.campaigns()['campaigns']]
+    [campaign['name'] for campaign in r.get_campaigns()['campaigns']]
+    [(campaign['name'], campaign['folderName']) for campaign in r.get_campaigns()['campaigns']]
 
 
 
