@@ -274,7 +274,7 @@ Loops through every list and checks to see if the record is in the list. If the 
 
 To run configuration and integration tests:
 
-    $pytest
+    $python3 -m pytest tests/
 
 To run configuration tests only:
 
