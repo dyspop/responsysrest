@@ -148,6 +148,11 @@ def get_campaigns():
     return get('campaigns')
 
 
+def get_push_campaigns():
+    """Get all Push campaigns."""
+    return get('campaigns?type=push')
+
+
 # Merge or update members in a profile list table
 # TODO: fix 403 response
 def manage_profile_list(list_name, **kwargs):
