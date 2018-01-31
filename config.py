@@ -7,4 +7,4 @@ api_list = 'API_testing'
 profile_extension_table_alias = '_pet'
 supplemental_table_alias = '_supp'
 primary_key_alias = '_primary_key'
-riid_length = 11
+riid_generator_length = 11

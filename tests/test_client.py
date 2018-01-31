@@ -8,7 +8,7 @@ import config
 fixture_riid = ''.join(
     [
         str(n) for n in
-        [random.randint(0, 9) for x in range(0, config.riid_length)]
+        [random.randint(0, 9) for x in range(0, config.riid_generator_length)]
     ]
 )
 fixtures = {
