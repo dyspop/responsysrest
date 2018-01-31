@@ -81,13 +81,13 @@ def test_get_member_of_list_by_riid_returns_response():
         fixtures['profile_list'], fixtures['riid']))
 
 
-def test_fixture_riid_in_fixture_profile_list():
-    """Test if the test riid is in the test profile list."""
-    # Add the record to the test list
-    print(fixtures['riid'])
-    r.manage_profile_list(fixtures['profile_list'], records=[fixtures['riid']])
-    assert 'recordData' in r.get_member_of_list_by_riid(
-        fixtures['profile_list'], fixtures['riid'])
+# def test_fixture_riid_in_fixture_profile_list():
+#     """Test if the test riid is in the test profile list."""
+#     # Add the record to the test list
+#     print(fixtures['riid'])
+#     r.manage_profile_list(fixtures['profile_list'], records=[fixtures['riid']])
+#     assert 'recordData' in r.get_member_of_list_by_riid(
+#         fixtures['profile_list'], fixtures['riid'])
 
 
 def test_get_member_of_list_by_attribute_returns_response():
