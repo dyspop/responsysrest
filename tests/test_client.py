@@ -171,3 +171,11 @@ def test_create_supplemental_table():
         fixtures['folder'],
         [fixtures['primary_key']])
     )
+
+
+def test_get_push_campaigns_returns_response():
+    """Test if the API responds.
+
+    When we try to list all push campaigns.
+    """
+    assert _heartbeat(r.get_push_campaigns())
