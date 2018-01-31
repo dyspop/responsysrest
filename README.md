@@ -252,6 +252,11 @@ To see a list of all campaigns or a list of campaigns and their respective folde
     [(campaign['name'], campaign['folderName']) for campaign in r.get_campaigns()['campaigns']]
 
 
+#### Get all Push Campaigns
+
+    r.get_push_campaigns()
+
+Returns a list of push campaigns and their associated data.
 
 
 
