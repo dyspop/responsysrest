@@ -64,7 +64,7 @@ This can be called individually but isn't necessary since any function that requ
 The login itself returns a context with the Interact supplied endpoint for further requests for that user, an auth token, and a timestamp. Typically this is passed to whatever other request you make each time you do so.
 
 
-#### Login with username and certificate
+#### Login with username and certificates
 
 Not implemented.
 

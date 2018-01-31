@@ -257,7 +257,7 @@ def delete_from_profile_list(list_name, riid):
 
 
 def get_profile_extensions(list_name):
-    """Retrieve all profile extentions of a profile list."""
+    """Retrieve all profile extensions of a profile list."""
     return get(f'lists/{list_name}/listExtensions')
 
 
@@ -377,12 +377,6 @@ def create_supplemental_table(
     }
     headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
     return requests.post(url=url, headers=headers, data=json.dumps(data))
-
-
-# def retrieve_supplemental_table_records_with_primary_key(
-#     supplemental_table_name,
-# ):
-#     return
 
 
 ##################
