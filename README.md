@@ -184,7 +184,7 @@ Not implemented.
 
 Returns a full record if it's in the profile extension table.
 
-    r.get_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid)
+    r.get_member_of_profile_extension_by_riid(list_name, pet_name, riid)
 
 Also takes an optional argument `fields_to_return` which defaults to `all` if not specified. Examples:
 
@@ -194,9 +194,9 @@ Also takes an optional argument `fields_to_return` which defaults to `all` if no
 
 #### Retrieve a member of a profile extension table based on a query attribute
 
-    r.get_member_of_profile_extension_by_attribute(list_name, profile_extension_name record_id, query_attribute, fields_to_return)
+    r.get_member_of_profile_extension_by_attribute(list_name, pet_name record_id, query_attribute, fields_to_return)
 
-Takes five arguments, but requires `list_name`, `profile_extension_name` and `record_id`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
+Takes five arguments, but requires `list_name`, `pet_name` and `record_id`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
 
 Examples:
 
@@ -207,7 +207,7 @@ Examples:
 
 Deletes a member of a profile extension table based on RIID if it exists.
 
-    r.delete_member_of_profile_extension_by_riid(list_name, profile_extension_name, riid):
+    r.delete_member_of_profile_extension_by_riid(list_name, pet_name, riid):
 
 
 
@@ -287,7 +287,15 @@ To run configuration tests only:
 
 To run client/API integration tests only:
 
-    $pytest tests/test_client.py
+    $pytest tests/test_2client.py
+
+To run extra features tests only:
+
+    $pytest tests/test_3extras.py
+
+To run tests against the installed package distribution:
+
+    $pytest
 
 ## Acknowledgements ##
 
