@@ -10,3 +10,4 @@ primary_key_alias = '_primary_key'
 riid_generator_length = 11
 test_email_address = 'dblack+test@shutterstock.com'
 test_campaign_name = 'test_api_classic'
+test_content_library_folder = '___api-generated-test'
