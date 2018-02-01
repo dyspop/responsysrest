@@ -153,6 +153,30 @@ def get_push_campaigns():
     return get('campaigns?type=push')
 
 
+def send_email_message(email_address, folder_name, campaign_name):
+    """Trigger email message."""
+    data = {
+        "recipientData": [
+            {
+                "recipient": {
+                    "emailAddress": email_address,
+                    "listName": {
+                        "folderName": folder_name,
+                        "objectName": campaign_name
+                    },
+                    "recipientId": None,
+                    "mobileNumber": None,
+                    "emailFormat": "HTML_FORMAT"
+                }
+            }
+        ]
+    }
+    context = get_context()
+    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
+    url = f'{context["endPoint"]}/{api_url}/campaigns/{campaign_name}/email'
+    return requests.post(data=json.dumps(data), headers=headers, url=url)
+
+
 # Merge or update members in a profile list table
 # TODO: fix 403 response
 def manage_profile_list(list_name, **kwargs):
