@@ -271,12 +271,11 @@ Returns a list of push campaigns and their associated data.
 
 #### Create Folder
 
-Creates a folder in the content library (`/contentlibary/').
+Creates a folder in the content library (`/contentlibary/`).
 
     r.create_folder('new_folder')
 
-Creates a folder in the Content Library:
-    /contentlibarary/new_folder
+Creates a folder `/contentlibarary/new_folder` in the Content Library.
 
 
 
