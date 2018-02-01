@@ -266,6 +266,18 @@ To see a list of all campaigns or a list of campaigns and their respective folde
 Returns a list of push campaigns and their associated data.
 
 
+### Managing Content
+
+
+#### Create Folder
+
+Creates a folder in the content library (`/contentlibary/').
+
+    r.create_folder('new_folder')
+
+Creates a folder in the Content Library:
+    /contentlibarary/new_folder
+
 
 
 
