@@ -179,3 +179,16 @@ def test_get_push_campaigns_returns_response():
     When we try to list all push campaigns.
     """
     assert _heartbeat(r.get_push_campaigns())
+
+
+def test_send_email_message_returns_response():
+    """Test if the API responds.
+
+    When we try to send a message, good or bad.
+    """
+    assert _heartbeat(r.send_email_message(
+        fixtures['email_address'],
+        fixtures['folder'],
+        fixtures['campaign_name']
+        )
+    )
