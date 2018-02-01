@@ -277,6 +277,8 @@ Creates a folder in the content library (`/contentlibary/`).
 
 Creates a folder `/contentlibarary/new_folder` in the Content Library.
 
+If you don't specify a folder the wrapper will default to the API folder name set in the user configuration `config.py`. By default that is `___api-generated` but can be changed. 
+
 
 
 
