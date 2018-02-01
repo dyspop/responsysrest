@@ -57,3 +57,8 @@ def test_riid_generator_length():
 def test_test_email_address_exists():
     """Test if we loaded something in the test email address."""
     assert config.test_email_address
+
+
+def test_test_campaign_name_exists():
+    """Test if we loaded something in the test campaign name."""
+    assert config.test_campaign_name
