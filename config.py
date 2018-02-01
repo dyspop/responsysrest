@@ -8,3 +8,5 @@ profile_extension_table_alias = '_pet'
 supplemental_table_alias = '_supp'
 primary_key_alias = '_primary_key'
 riid_generator_length = 11
+test_email_address = 'dblack+test@shutterstock.com'
+test_campaign_name = 'test_api_classic'

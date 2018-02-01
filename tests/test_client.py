@@ -16,7 +16,9 @@ fixtures = {
     'riid': fixture_riid,
     'profile_list': config.api_list,
     'profile_list_extension': f'{config.api_list}{config.profile_extension_table_alias}',
-    'primary_key': f'{config.api_list}{config.primary_key_alias}'
+    'primary_key': f'{config.api_list}{config.primary_key_alias}',
+    'email_address': config.test_email_address,
+    'campaign_name': config.test_campaign_name
 }
 context = r.get_context()
 
@@ -189,6 +191,5 @@ def test_send_email_message_returns_response():
     assert _heartbeat(r.send_email_message(
         fixtures['email_address'],
         fixtures['folder'],
-        fixtures['campaign_name']
-        )
+        fixtures['campaign_name'])
     )
