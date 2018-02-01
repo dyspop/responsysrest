@@ -195,3 +195,12 @@ def test_send_email_message_returns_response():
         fixtures['folder'],
         fixtures['campaign_name'])
     )
+
+
+def test_create_folder_returns_response():
+    """Test if the API responds.
+
+    When we try to list all push campaigns.
+    """
+    assert _heartbeat(r.create_folder(
+        config.test_content_library_folder))
