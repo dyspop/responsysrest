@@ -52,3 +52,8 @@ def test_riid_generator_length():
     """The RIID generator length should be a non-zero length string."""
     assert isinstance(config.riid_generator_length, int)
     assert 0 < config.riid_generator_length
+
+
+def test_test_email_address_exists():
+    """Test if we loaded something in the test email address."""
+    assert config.test_email_address
