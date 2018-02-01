@@ -413,6 +413,19 @@ def create_supplemental_table(
     return requests.post(url=url, headers=headers, data=json.dumps(data))
 
 
+def create_folder(folder_path=config.api_folder):
+    """Create a new folder in /contentlibrary/."""
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = context["endPoint"]
+    headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
+    url = f'{endpoint}/{api_url}/clFolders/'
+    data = {
+        "folderPath": f'/contentlibrary/{folder_path}'
+    }
+    return requests.post(url=url, data=json.dumps(data), headers=headers)
+
+
 ##################
 # Extra features #
 ##################
