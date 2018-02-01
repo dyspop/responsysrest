@@ -172,7 +172,10 @@ def send_email_message(email_address, folder_name, campaign_name):
         ]
     }
     context = get_context()
-    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
+    headers = {
+        'Authorization': context["authToken"],
+        'Content-Type': 'application/json'
+    }
     url = f'{context["endPoint"]}/{api_url}/campaigns/{campaign_name}/email'
     return requests.post(data=json.dumps(data), headers=headers, url=url)
 
@@ -315,9 +318,9 @@ def create_profile_extension(
         ]
     context = get_context()
     auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions'
+    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions'
     headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
-    return requests.post(url=endpoint, headers=headers)
+    return requests.post(url=url, headers=headers)
 
 
 # TODO: Merge or update members in a profile extension table
@@ -331,27 +334,28 @@ def create_profile_extension(
 
 def get_member_of_profile_extension_by_riid(
     list_name,
-    profile_extension_name,
+    pet_name,
     riid,
     fields_to_return='all'
 ):
     """Retrieve a member of a profile extension table based on RIID."""
     return get(
-        f'lists/{list_name}/listExtensions/{profile_extension_name}/members/{riid}',
+        f'lists/{list_name}/listExtensions/{pet_name}/members/{riid}',
         parameters=f'fs={fields_to_return}'
     )
 
 
 def get_member_of_profile_extension_by_attribute(
     list_name,
-    profile_extension_name,
+    pet_name,
     record_id,
     query_attribute='c',
     fields_to_return='all'
 ):
-    """Retrieve a member of a profile extension table based on a query attribute."""
-
-    service_url = f'lists/{list_name}/listExtensions/{profile_extension_name}/members'
+    """Retrieve a member of a profile extension table
+    based on a query attribute.
+    """
+    service_url = f'lists/{list_name}/listExtensions/{pet_name}/members'
     return get(
         service_url,
         parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
@@ -360,13 +364,14 @@ def get_member_of_profile_extension_by_attribute(
 
 def delete_member_of_profile_extension_by_riid(
     list_name,
-    profile_extension_name,
+    pet_name,
     riid
 ):
     """Delete a member of a profile extension table based on RIID."""
     context = get_context()
     auth_token = context["authToken"]
-    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions/{profile_extension_name}/members/{riid}'
+    endpoint = context["endPoint"]
+    url = f'{endpoint}/{api_url}/lists/{list_name}/listExtensions/{pet_name}/members/{riid}'
     headers = {'Authorization': auth_token}
     return requests.delete(url=url, headers=headers)
 
@@ -415,14 +420,11 @@ def create_supplemental_table(
 
 def get_lists_for_record(riid):
     """Find what lists a record is in by RIID."""
-    all_lists = [list_name["name"] for list_name in profile_lists()]
+    all_lists = [list_name["name"] for list_name in get_profile_lists()]
     # container list
     member_of = []
     for profile_list in all_lists:
-        response = retrieve_a_member_of_a_profile_list_using_riid(
-            profile_list,
-            riid
-        )
+        response = get_member_of_list_by_riid(profile_list, riid)
         # if the member (by riid) is in the profile list
         # add it to the list of all profile lists
         if "recordData" in response:

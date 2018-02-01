@@ -87,7 +87,8 @@ def test_get_member_of_list_by_riid_returns_response():
 #     """Test if the test riid is in the test profile list."""
 #     # Add the record to the test list
 #     print(fixtures['riid'])
-#     r.manage_profile_list(fixtures['profile_list'], records=[fixtures['riid']])
+#     r.manage_profile_list(
+        # fixtures['profile_list'], records=[fixtures['riid']])
 #     assert 'recordData' in r.get_member_of_list_by_riid(
 #         fixtures['profile_list'], fixtures['riid'])
 
@@ -126,7 +127,8 @@ def test_create_profile_extension():
     Heartbeat is expected whether create a new one or
     try to create one that exists.
     """
-    assert _heartbeat(r.create_profile_extension(fixtures['profile_list_extension']))
+    assert _heartbeat(
+        r.create_profile_extension(fixtures['profile_list_extension']))
 
 
 def test_get_member_of_profile_extension_by_riid():
