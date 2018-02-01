@@ -16,6 +16,13 @@ A python library providing access to the Responsys Interact API. Currently suppo
     pip3 install .
 ```
 
+## Development Install
+
+1. Clone this repo and install via source package in edit mode:
+```
+    cd responsysrest/
+    pip3 install -e .
+```
 
 
 ## Usage ##
