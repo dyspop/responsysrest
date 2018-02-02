@@ -426,6 +426,16 @@ def create_folder(folder_path=config.api_folder):
     return requests.post(url=url, data=json.dumps(data), headers=headers)
 
 
+def delete_folder(folder_path=config.api_folder):
+    """Delete a folder in /contentlibrary/."""
+    context = get_context()
+    auth_token = context["authToken"]
+    endpoint = context["endPoint"]
+    headers = {'Authorization': auth_token }
+    url = f'{endpoint}/{api_url}/clFolders/contentlibrary/{folder_path}'
+    return requests.delete(url=url, headers=headers)
+
+
 ##################
 # Extra features #
 ##################
