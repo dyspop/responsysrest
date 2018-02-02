@@ -62,3 +62,8 @@ def test_test_email_address_exists():
 def test_test_campaign_name_exists():
     """Test if we loaded something in the test campaign name."""
     assert config.test_campaign_name
+
+
+def test_test_content_library_folder_exists():
+    """Test if we loaded something in the test content library folder."""
+    assert config.test_content_library_folder
