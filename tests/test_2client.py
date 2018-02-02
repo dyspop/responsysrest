@@ -209,6 +209,7 @@ def test_create_folder_returns_response():
 def test_delete_folder_returns_response():
     """Test if the API responds.
 
-    When we try to list all push campaigns.
+    When we try to delete a content library folder.
     """
-    assert _heartbeat(r.delete_folder())
+    assert _heartbeat(r.delete_folder(
+        config.test_content_library_folder))
