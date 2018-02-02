@@ -8,6 +8,8 @@ import requests
 # Interact API returns a lot of json-like text objects
 # we use this to bind them to python objects
 import json
+# For stripping comments from our json
+from jsmin import jsmin
 
 # used with the login with certificate functions
 # from random import choice
@@ -39,6 +41,15 @@ login_url = f'http://login{pod}.responsys.net/{api_url}/'
 #     return base64.b64encode(
 #         bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8')
 #     )
+
+
+def __get_config():
+    """Get data from the config file."""
+    with open("config.json", "r") as f:
+        raw = f.read()
+        minified = jsmin(raw)
+        data = json.loads(minified)
+    return data
 
 
 def get_context():
