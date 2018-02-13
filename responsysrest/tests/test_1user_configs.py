@@ -1,5 +1,6 @@
 """Test configuration."""
-from .responsysrest import responsysrest as r
+import responsysrest as r
+
 
 def test_configuration_class():
     """Test that the class instantiates."""

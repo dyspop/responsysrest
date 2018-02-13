@@ -1,7 +1,9 @@
 """Tests for each individual function in the Client."""
 import responsysrest as r
 import random
-import config
+
+config = r.config.Configuration()
+secret = r.config.Secret()
 
 # Fixtures
 # Set the riid once before execution outside the fixtures dict

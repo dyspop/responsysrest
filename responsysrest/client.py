@@ -19,19 +19,12 @@ from jsmin import jsmin
 
 from . import config
 
-# this should get removed, but can be used to store a local password!
-# crazy... but Interact has additional security measures
-# on top of your user login / password and these aren't stored
-# anywhere else than your local machine or app server.
-# If you can encrypt/decrypt them yourself... please do!
-# TODO: proper password prompting/storage
-from secret import secrets as secret
 # our own rules for data objects.
 from .containers import rules
 
 # Configure the client
-
 _config = config.Configuration()
+_secret = config.Secret()
 
 api_url = 'rest/api/v1.3'
 login_url = f'http://login{_config.pod}.responsys.net/{api_url}/'
@@ -54,8 +47,8 @@ def get_context():
     # TODO: figure out how to log out after each log in!
     context = json.loads(
         login(
-            secret["user_name"],
-            secret["password"]
+            _secret.user_name,
+            _secret.password
         ).text
     )
     return context
