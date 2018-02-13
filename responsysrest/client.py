@@ -103,10 +103,12 @@ class Configuration:
     def api_folder(self, api_folder):
         """Set the API folder."""
         if isinstance(api_folder, str):
-            if len(api_folder) < 256:
+            if 1 < len(api_folder) < 256:
                 self.__api_folder = api_folder
             else:
                 raise ValueError('Must be shorter than 256 characters.')
+
+
 
 
 def get_context():
