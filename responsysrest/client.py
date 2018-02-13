@@ -17,9 +17,7 @@ from jsmin import jsmin
 # used with the login with certificate functions
 # from string import ascii_uppercase
 
-# connector config
-import config
-from config import pod
+from . import config
 
 # this should get removed, but can be used to store a local password!
 # crazy... but Interact has additional security measures
@@ -31,8 +29,12 @@ from secret import secrets as secret
 # our own rules for data objects.
 from .containers import rules
 
+# Configure the client
+
+_config = config.Configuration()
+
 api_url = 'rest/api/v1.3'
-login_url = f'http://login{pod}.responsys.net/{api_url}/'
+login_url = f'http://login{_config.pod}.responsys.net/{api_url}/'
 
 # Helper functions for use with direct implementations of calls as below
 
@@ -297,8 +299,8 @@ def get_profile_extensions(list_name):
 
 def create_profile_extension(
     list_name, fields='',
-    folder_name=config.api_folder,
-    extension_name=config.profile_extension_table_alias,
+    folder_name=_config.api_folder,
+    extension_name=_config.profile_extension_table_alias,
     default_field_type='STR500'
 ):
     """Create a new profile extension table."""
@@ -380,7 +382,7 @@ def delete_member_of_profile_extension_by_riid(
 
 def create_supplemental_table(
     supplemental_table_name,
-    folder_name=config.api_folder,
+    folder_name=_config.api_folder,
     fields='',
     default_field_type='STR500',
     data_extraction_key=None,
@@ -415,7 +417,7 @@ def create_supplemental_table(
     return requests.post(url=url, headers=headers, data=json.dumps(data))
 
 
-def create_folder(folder_path=config.api_folder):
+def create_folder(folder_path=_config.api_folder):
     """Create a new folder in /contentlibrary/."""
     context = get_context()
     auth_token = context["authToken"]
@@ -428,7 +430,7 @@ def create_folder(folder_path=config.api_folder):
     return requests.post(url=url, data=json.dumps(data), headers=headers)
 
 
-def delete_folder(folder_path=config.api_folder):
+def delete_folder(folder_path=_config.api_folder):
     """Delete a folder in /contentlibrary/."""
     context = get_context()
     auth_token = context["authToken"]

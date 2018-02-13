@@ -5,3 +5,4 @@ __keywords__ = "responsys interact client rest api"
 
 from .client import *
 from .containers import *
+from .config import *

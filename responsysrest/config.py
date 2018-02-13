@@ -1,3 +1,6 @@
+"""How we configure our Interact Client connection."""
+
+
 class Configuration:
     """How our client is configured."""
 
