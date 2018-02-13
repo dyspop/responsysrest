@@ -71,13 +71,6 @@ class Configuration:
         self.test_campaign_name = test_campaign_name
         self.test_content_library_folder = test_content_library_folder
 
-    def __get_config(self):
-        """Get data from the config file."""
-        with open("config.json", "r") as f:
-            raw = f.read()
-            minified = jsmin(raw)
-            data = json.loads(minified)[0]
-
     @property
     def pod(self):
         """Get pod."""
