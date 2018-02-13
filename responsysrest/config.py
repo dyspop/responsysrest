@@ -1,27 +1,13 @@
 """How we configure our Interact Client connection."""
 
-import json
-from jsmin import jsmin
-
-
-def _get_secret():
-    """Get data from the config file."""
-    with open("secret.json", "r") as f:
-        raw = f.read()
-        minified = jsmin(raw)
-        data = json.loads(minified)[0]
-    return data
-
 
 class Secret:
     """Load secret information like passwords."""
 
-    secret = _get_secret()
-
     def __init__(
         self,
-        user_name=secret['user_name'],
-        password=secret['password']
+        user_name=None,
+        password=None
     ):
         """Initialize the secrets."""
         self.user_name = user_name
@@ -35,8 +21,7 @@ class Secret:
     @user_name.setter
     def user_name(self, user_name):
         """Set Username."""
-        if len(str(user_name)) > 0:
-            self.__user_name = str(user_name)
+        self.__user_name = user_name
 
     @property
     def password(self):
@@ -46,8 +31,7 @@ class Secret:
     @password.setter
     def password(self, password):
         """Set Username."""
-        if len(str(password)) > 0:
-            self.__password = str(password)
+        self.__password = password
 
 
 class Configuration:
