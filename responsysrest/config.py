@@ -131,5 +131,3 @@ class Configuration:
     def test_content_library_folder(self, test_content_library_folder):
         """Set test content library folder."""
         self.__test_content_library_folder = test_content_library_folder
-
-
