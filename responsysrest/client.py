@@ -43,13 +43,56 @@ login_url = f'http://login{pod}.responsys.net/{api_url}/'
 #     )
 
 
-def __get_config():
-    """Get data from the config file."""
-    with open("config.json", "r") as f:
-        raw = f.read()
-        minified = jsmin(raw)
-        data = json.loads(minified)
-    return data
+class Configuration:
+    """How our client is configured."""
+
+    def __init__(
+            self,
+            pod='5',
+            api_folder='___api-generated',
+            api_list='API_testing',
+            profile_extension_table_alias='_pet',
+            supplemental_table_alias='_supp',
+            primary_key_alias='_primary_key',
+            riid_generator_length=11,
+            test_email_address='',
+            test_campaign_name='',
+            test_content_library_folder=''
+    ):
+        """Initialize the Configuration."""
+        self.pod = pod
+        self.api_folder = api_folder
+        self.api_list = api_list
+        self.profile_extension_table_alias = profile_extension_table_alias
+        self.supplemental_table_alias = supplemental_table_alias
+        self.primary_key_alias = primary_key_alias
+        self.riid_generator_length = riid_generator_length
+        self.test_email_address = test_email_address
+        self.test_campaign_name = test_campaign_name
+        self.test_content_library_folder = test_content_library_folder
+
+    def __get_config(self):
+        """Get data from the config file."""
+        with open("config.json", "r") as f:
+            raw = f.read()
+            minified = jsmin(raw)
+            data = json.loads(minified)
+
+    @property
+    def pod(self):
+        """Get pod."""
+        return self.__pod
+
+    @pod.setter
+    def pod(self, pod):
+        """Set the pod.
+
+        Only known pods are 2 and 5.
+        """
+        if str(int(pod)) in ['2', '5']:
+            self.__pod = pod
+        else:
+            raise ValueError('Only pods 2 and 5 are supported.')
 
 
 def get_context():
