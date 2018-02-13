@@ -48,7 +48,7 @@ class Configuration:
 
     def __init__(
             self,
-            pod='5',
+            pod='',
             api_folder='___api-generated',
             api_list='API_testing',
             profile_extension_table_alias='_pet',
@@ -93,6 +93,20 @@ class Configuration:
             self.__pod = pod
         else:
             raise ValueError('Only pods 2 and 5 are supported.')
+
+    @property
+    def api_folder(self):
+        """Get API folder."""
+        return self.__api_folder
+
+    @api_folder.setter
+    def api_folder(self, api_folder):
+        """Set the API folder."""
+        if isinstance(api_folder, str):
+            if len(api_folder) < 256:
+                self.__api_folder = api_folder
+            else:
+                raise ValueError('Must be shorter than 256 characters.')
 
 
 def get_context():
