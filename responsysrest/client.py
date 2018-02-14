@@ -44,6 +44,7 @@ def get_context(user_name, password, url):
             url
         ).text
     )
+    context['api_url'] = config.Interact().api_url
     return context
 
 
