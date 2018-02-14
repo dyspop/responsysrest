@@ -258,10 +258,10 @@ def get_member_of_list_by_riid(list_name, riid, context, api_url):
 def get_member_of_list_by_attribute(
     list_name,
     record_id,
-    query_attribute='c',
-    fields_to_return='all',
     context,
-    api_url
+    api_url,
+    query_attribute='c',
+    fields_to_return='all'
 ):
     """Retrieve a member of a profile list based on query attribute."""
     service_url = f'lists/{list_name}/members'
@@ -327,9 +327,9 @@ def get_member_of_profile_extension_by_riid(
     list_name,
     pet_name,
     riid,
-    fields_to_return='all',
     context,
-    api_url
+    api_url,
+    fields_to_return='all'
 ):
     """Retrieve a member of a profile extension table based on RIID."""
     return get(
@@ -342,10 +342,10 @@ def get_member_of_profile_extension_by_attribute(
     list_name,
     pet_name,
     record_id,
-    query_attribute='c',
-    fields_to_return='all',
     context,
-    api_url
+    api_url,
+    query_attribute='c',
+    fields_to_return='all'
 ):
     """Retrieve a member of a profile extension table
     based on a query attribute.
