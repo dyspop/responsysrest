@@ -212,6 +212,11 @@ class Interact:
         self.__login_url = f'http://login{self.pod}.responsys.net/rest/api/v{self.api_version}/auth/token'
 
     @property
+    def api_url(self):
+        """API url partial."""
+        return f'rest/api/v{self.api_version}'
+
+    @property
     def api_version(self):
         """Get the API version."""
         return self.__api_version

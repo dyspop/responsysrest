@@ -37,7 +37,6 @@ def get_context(user_name, password, url):
 
     Used with each individual call to Responsys API.
     """
-    print(user_name, password, url)
     context = json.loads(
         login(
             user_name,
@@ -48,9 +47,8 @@ def get_context(user_name, password, url):
     return context
 
 
-def get(service_url, **kwargs):
+def get(service_url, context, api_url, **kwargs):
     """General purpose build for GET requests to Interact API."""
-    context = get_context()
     auth_token = context["authToken"]
     endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
     headers = kwargs.get('headers', {'Authorization': auth_token})
@@ -128,21 +126,21 @@ def login(user_name, password, url):
 #     return response
 
 
-def get_profile_lists():
+def get_profile_lists(context, api_url):
     """Retrieving all profile lists for an account."""
-    return get('lists')
+    return get('lists', context, api_url)
 
 
-def get_campaigns():
+def get_campaigns(context, api_url):
     """Get all EMD email campaigns."""
-    return get('campaigns')
+    return get('campaigns', context, api_url)
 
 
-def get_push_campaigns():
+def get_push_campaigns(context, api_url):
     """Get all Push campaigns."""
-    return get('campaigns?type=push')
+    return get('campaigns?type=push', context, api_url)
 
-
+# TODO: implement context and api url with post
 def send_email_message(email_address, folder_name, campaign_name):
     """Trigger email message."""
     data = {
@@ -172,6 +170,7 @@ def send_email_message(email_address, folder_name, campaign_name):
 
 # Merge or update members in a profile list table
 # TODO: fix 403 response
+# TODO: implement context and api_url with post
 def manage_profile_list(list_name, **kwargs):
     """Merge or update members in a profile list table."""
     # load container data
@@ -248,26 +247,28 @@ def manage_profile_list(list_name, **kwargs):
     return response
 
 
-def get_member_of_list_by_riid(list_name, riid):
+def get_member_of_list_by_riid(list_name, riid, context, api_url):
     """Retrieve a member of a profile list using RIID."""
     service_url = f'lists/{list_name}/members/{riid}'
     # only support returning all fields for now
     # TODO: implement other fields
-    return get(service_url, parameters='fs=all')
+    return get(service_url, context, api_url, parameters='fs=all')
 
 
 def get_member_of_list_by_attribute(
     list_name,
     record_id,
     query_attribute='c',
-    fields_to_return='all'
+    fields_to_return='all',
+    context,
+    api_url
 ):
     """Retrieve a member of a profile list based on query attribute."""
     service_url = f'lists/{list_name}/members'
     parameters = f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
-    return get(service_url, parameters=parameters)
+    return get(service_url, context, api_url, parameters=parameters)
 
-
+# TODO implement context, api_url with delete
 def delete_from_profile_list(list_name, riid):
     """Delete Profile List Recipients based on RIID."""
     context = get_context()
@@ -278,11 +279,11 @@ def delete_from_profile_list(list_name, riid):
     return requests.delete(url=url, headers=headers)
 
 
-def get_profile_extensions(list_name):
+def get_profile_extensions(list_name, context, api_url):
     """Retrieve all profile extensions of a profile list."""
-    return get(f'lists/{list_name}/listExtensions')
+    return get(f'lists/{list_name}/listExtensions', context, api_url)
 
-
+# TODO implement context, api_url with post
 def create_profile_extension(
     list_name, fields='',
     folder_name=config.Interact.api_folder,
@@ -326,7 +327,9 @@ def get_member_of_profile_extension_by_riid(
     list_name,
     pet_name,
     riid,
-    fields_to_return='all'
+    fields_to_return='all',
+    context,
+    api_url
 ):
     """Retrieve a member of a profile extension table based on RIID."""
     return get(
@@ -340,7 +343,9 @@ def get_member_of_profile_extension_by_attribute(
     pet_name,
     record_id,
     query_attribute='c',
-    fields_to_return='all'
+    fields_to_return='all',
+    context,
+    api_url
 ):
     """Retrieve a member of a profile extension table
     based on a query attribute.
@@ -348,14 +353,18 @@ def get_member_of_profile_extension_by_attribute(
     service_url = f'lists/{list_name}/listExtensions/{pet_name}/members'
     return get(
         service_url,
+        context,
+        api_url,
         parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
     )
 
-
+# TODO implement context, api_url with delete
 def delete_member_of_profile_extension_by_riid(
     list_name,
     pet_name,
-    riid
+    riid,
+    context,
+    api_url
 ):
     """Delete a member of a profile extension table based on RIID."""
     context = get_context()
@@ -365,7 +374,7 @@ def delete_member_of_profile_extension_by_riid(
     headers = {'Authorization': auth_token}
     return requests.delete(url=url, headers=headers)
 
-
+# TODO: implement context, api_url with post
 def create_supplemental_table(
     supplemental_table_name,
     folder_name=config.Interact.api_folder,
@@ -403,6 +412,7 @@ def create_supplemental_table(
     return requests.post(url=url, headers=headers, data=json.dumps(data))
 
 
+# TODO: implement context, api_url with post
 def create_folder(folder_path=config.Interact.api_folder):
     """Create a new folder in /contentlibrary/."""
     context = get_context()
@@ -416,6 +426,7 @@ def create_folder(folder_path=config.Interact.api_folder):
     return requests.post(url=url, data=json.dumps(data), headers=headers)
 
 
+# TODO: implement context, api_url with delete
 def delete_folder(folder_path=config.Interact.api_folder):
     """Delete a folder in /contentlibrary/."""
     context = get_context()
@@ -437,7 +448,8 @@ def get_lists_for_record(riid):
     # container list
     member_of = []
     for profile_list in all_lists:
-        response = get_member_of_list_by_riid(profile_list, riid)
+        response = get_member_of_list_by_riid(
+            profile_list, riid, context, api_url)
         # if the member (by riid) is in the profile list
         # add it to the list of all profile lists
         if "recordData" in response:
