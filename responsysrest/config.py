@@ -1,5 +1,6 @@
 """How we configure our Interact Client connection."""
 
+import getpass
 
 class Secret:
     """Load secret information like passwords."""
@@ -21,6 +22,9 @@ class Secret:
     @user_name.setter
     def user_name(self, user_name):
         """Set Username."""
+        # cli-style
+        self.__user_name = input('Username:\n')
+        # non-cli-style
         self.__user_name = user_name
 
     @property
@@ -31,7 +35,10 @@ class Secret:
     @password.setter
     def password(self, password):
         """Set Username."""
-        self.__password = password
+        # cli-style
+        self.__password = getpass.getpass()
+        # non-cli-style
+        # self.__password = password
 
 
 class Configuration:

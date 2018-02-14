@@ -23,8 +23,8 @@ from . import config
 from .containers import rules
 
 # Configure the client
-_config = config.Configuration()
-_secret = config.Secret()
+# _config = config.Configuration()
+# _secret = config.Secret()
 
 api_url = 'rest/api/v1.3'
 login_url = f'http://login{_config.pod}.responsys.net/{api_url}/'
@@ -38,7 +38,7 @@ login_url = f'http://login{_config.pod}.responsys.net/{api_url}/'
 #     )
 
 
-def get_context():
+def get_context(user_name, password):
     """
     Return the login response as context.
 
@@ -47,8 +47,8 @@ def get_context():
     # TODO: figure out how to log out after each log in!
     context = json.loads(
         login(
-            _secret.user_name,
-            _secret.password
+            user_name,
+            password
         ).text
     )
     return context
