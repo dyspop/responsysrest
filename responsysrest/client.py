@@ -31,17 +31,18 @@ from .containers import rules
 #     )
 
 
-def get_context(user_name, password):
+def get_context(user_name, password, url):
     """
     Return the login response as context.
 
     Used with each individual call to Responsys API.
     """
-    # TODO: figure out how to log out after each log in!
+    print(user_name, password, url)
     context = json.loads(
         login(
             user_name,
-            password
+            password,
+            url
         ).text
     )
     return context
@@ -68,7 +69,7 @@ from their documentation and code-comment style to match PEP-8.
 """
 
 
-def login(user_name, password, url=config.Interact.login_url):
+def login(user_name, password, url):
     """Login with username and password."""
     data = {
         "user_name": user_name,

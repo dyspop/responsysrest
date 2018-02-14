@@ -6,12 +6,14 @@ class Credentials:
     """Load credentials information like passwords."""
 
     def __init__(
-        self, 
-        user_name=None, 
-        password=None, 
-        email_address=None,
-        mode=None):
+        self,
+        mode='',
+        user_name=None,
+        password=None,
+        email_address=None
+    ):
         """Initialize the secrets."""
+        self.mode = mode
         self.user_name = user_name
         self.password = password
         self.email_address = email_address
@@ -25,9 +27,11 @@ class Credentials:
     def user_name(self, user_name):
         """Set Username."""
         # cli-style
-        self.__user_name = input('Username:\n')
+        if self.mode.lower() == 'cli':
+            self.__user_name = input('Username:\n')
         # non-cli-style
-        # self.__user_name = user_name
+        else:
+            self.__user_name = user_name
 
     @property
     def password(self):
@@ -38,7 +42,7 @@ class Credentials:
     def password(self, password):
         """Set Username."""
         # cli-style
-        if mode.lower() == 'cli':
+        if self.mode.lower() == 'cli':
             self.__password = getpass.getpass()
         # non-cli-style
         else:
@@ -53,7 +57,7 @@ class Credentials:
     def email_address(self, email_address):
         """Set Username."""
         # cli-style
-        if mode.lower() == 'cli':
+        if self.mode.lower() == 'cli':
             self.__email_address = input(
                 'Email Address (for account and testing):\n')
         # non-cli-style
@@ -66,7 +70,6 @@ class Interact:
 
     def __init__(
             self,
-            login_url=None,
             pod='5',
             api_folder='___api-generated',
             api_list='___api-list',
@@ -76,7 +79,8 @@ class Interact:
             riid_generator_length=11,
             test_campaign_name='___api-testing-campaign',
             content_library_folder='___api-generated-cl',
-            api_version='1.3'
+            api_version='1.3',
+            login_url=None
     ):
         """Initialize the Interact Configuration."""
         self.pod = pod
@@ -88,6 +92,7 @@ class Interact:
         self.riid_generator_length = riid_generator_length
         self.test_campaign_name = test_campaign_name
         self.content_library_folder = content_library_folder
+        self.api_version = api_version
         self.login_url = login_url
 
     @property
@@ -204,7 +209,7 @@ class Interact:
     @login_url.setter
     def login_url(self, login_url):
         """Set the login URL."""
-        self.__login_url = f'http://login{__self.pod}.responsys.net/rest/api/v{self.__api_version}/'
+        self.__login_url = f'http://login{self.pod}.responsys.net/rest/api/v{self.api_version}/auth/token'
 
     @property
     def api_version(self):
@@ -215,3 +220,5 @@ class Interact:
     def api_version(self, api_version):
         """Set the API version."""
         self.__api_version = api_version
+
+    # login_url = f'http://login{pod}.responsys.net/rest/api/v{api_version}/'
