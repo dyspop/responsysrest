@@ -29,14 +29,21 @@ A python library providing access to the Responsys Interact API. Currently suppo
 
 1. Import Responsys Rest
 2. Add credentials (for cli-mode)
-3. Configure Interact connection settings
+3. Configure your Interact connection settings (optional)
 4. Get context from Interact remote
 5. Use client
+
+Here's a basic boilerplate:
 
     import responsysrest as r
     creds = r.config.Credentials(mode='cli')
     interact = r.config.Interact()
     context = r.get_context(creds.user_name, creds.password, interact.login_url)
+
+If you happen to be on pod 5 and are looking to try this out quickly you can just do:
+
+    import responsysrest as r
+    context = r.get_context('user_name', 'password', r.config.Interact().login_url)
 
 Now you are ready to go!
 
@@ -62,22 +69,7 @@ Passing them in will instantiate Interact configuration differently, but other t
     interact = r.config.Interact(pod='2')
 
 
-## Specific functions usage:
-
-
-
-### Authenticating
-
-
-
-#### Login with username and certificates
-
-Not implemented.
-
-
-#### Refresh token
-
-Not implemented.
+## Client functions usage:
 
 
 ### Managing Profile List Tables
@@ -89,8 +81,9 @@ Not implemented.
   
 Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
 
-    [list["name"] for list in r.get_profile_lists()] 
-    [(list["name"], list["folderName"]) for list in r.get_profile_lists()]
+    profile_lists = r.get_profile_lists(context, interact.api_url)
+    [list["name"] for list in profile_lists] 
+    [(list["name"], list["folderName"]) for list in profile_lists]
 
 
 #### Merge or update members in a profile list table
@@ -107,14 +100,24 @@ Returns a full record if it's in the list.
 
 #### Retrieve a member of a profile list based on query attribute
 
-    r.get_member_of_list_by_id(list_name, record_id, query_attribute, fields_to_return)
+    r.get_member_of_list_by_id(list_name, record_id, context, interact.api_url, query_attribute, fields_to_return)
 
-Takes four arguments, but requires `list_name` and `record_id`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
+Returns the record data for the record provided. Takes six arguments, but requires `list_name`, `record_id`, `context` and `interact.api_url`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are:
 
-Examples:
+| Option  | Meaning  |
+|---|---|
+| r  | RIID  |
+| e  | Email Address  |
+| c  | Customer ID  |
+| m  | Mobile Number  |
 
-    r.get_member_of_list_by_id('CONTACTS_LIST', 'a@b.c')
-    r.get_member_of_list_by_id('AFFILIATES', '901210', 'c', 'email_address_,first_name')
+The fields to return can be a comma-separated list-like-string of the fields in the list, if left blank it will return all the fields:
+
+    fields_to_return = 'EMAIL_DOMAIN_,FIRST_NAME'
+    r.get_member_of_list_by_id(list_name, record_id, context, interact.api_url, query_attribute, fields_to_return)
+
+
+While a nuisance, there's no built in at the moment for converting python lists to the api's expected format.
 
 
 #### Delete Profile List Recipients based on RIID
@@ -137,8 +140,9 @@ Examples:
 
 Returns the profile extension tables (also known as profile extensions, profile extenion lists, or PETs) associated with a given list. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use:
 
-    [list['profileExtension']['objectName'] for list in r.get_profile_extensions(list_name')]
-    [(list['profileExtension']['objectName'], list['profileExtension']['folderName']) for list in r.get_profile_extensions(list_name)]
+    pets = r.get_profile_extensions(list_name, context, interact.api_url)
+    [list['profileExtension']['objectName'] for list in pets]
+    [(list['profileExtension']['objectName'], list['profileExtension']['folderName']) for list in pets]
 
 
 #### Create a new profile extension table
@@ -289,7 +293,7 @@ There are a few things you might want to do with the API that are a little hard 
 
     r.get_lists_for_record(riid, context, interact.api_url)
 
-Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
+Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow, but sometimes you want to know what lists a member is in.
 
 
 

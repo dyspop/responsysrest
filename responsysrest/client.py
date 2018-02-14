@@ -334,6 +334,8 @@ def get_member_of_profile_extension_by_riid(
     """Retrieve a member of a profile extension table based on RIID."""
     return get(
         f'lists/{list_name}/listExtensions/{pet_name}/members/{riid}',
+        context,
+        api_url,
         parameters=f'fs={fields_to_return}'
     )
 
@@ -442,9 +444,9 @@ def delete_folder(folder_path=config.Interact.api_folder):
 ##################
 
 
-def get_lists_for_record(riid):
+def get_lists_for_record(riid, context, api_url):
     """Find what lists a record is in by RIID."""
-    all_lists = [list_name["name"] for list_name in get_profile_lists()]
+    all_lists = [list_name["name"] for list_name in get_profile_lists(context, api_url)]
     # container list
     member_of = []
     for profile_list in all_lists:
