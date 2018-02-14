@@ -33,13 +33,10 @@ A python library providing access to the Responsys Interact API. Currently suppo
 4. Get context from Interact remote
 5. Use client
 
-```
-import responsysrest as r
-creds = r.config.Credentials(mode='cli')
-interact = r.config.Interact()
-context = r.get_context(creds.user_name, creds.password, interact.login_url)
-
-```
+    import responsysrest as r
+    creds = r.config.Credentials(mode='cli')
+    interact = r.config.Interact()
+    context = r.get_context(creds.user_name, creds.password, interact.login_url)
 
 Now you are ready to go!
 
@@ -72,14 +69,6 @@ Passing them in will instantiate Interact configuration differently, but other t
 ### Authenticating
 
 
-#### Login with username and password
-
-This can be called individually but isn't necessary since any function that requires it will call it.
-
-    r.login(user_name, password)
-
-The login itself returns a context with the Interact supplied endpoint for further requests for that user, an auth token, and a timestamp. Typically this is passed to whatever other request you make each time you do so.
-
 
 #### Login with username and certificates
 
@@ -91,13 +80,12 @@ Not implemented.
 Not implemented.
 
 
-
 ### Managing Profile List Tables
 
 
 #### Retrieving all profile lists for an account
 
-    r.get_profile_lists()
+    r.get_profile_lists(context, interact.api_url)
   
 Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
 
@@ -112,7 +100,7 @@ Not implemented.
 
 #### Retrieve a member of a profile list using RIID
 
-    r.get_member_of_list_by_riid(list_name, riid)
+    r.get_member_of_list_by_riid(list_name, riid, context, interact.api_url)
 
 Returns a full record if it's in the list.
 
@@ -145,7 +133,7 @@ Examples:
 
 #### Retrieve all profile extentions of a profile list
 
-    r.get_profile_extensions(list_name)
+    r.get_profile_extensions(list_name, context, interact.api_url)
 
 Returns the profile extension tables (also known as profile extensions, profile extenion lists, or PETs) associated with a given list. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use:
 
@@ -157,11 +145,11 @@ Returns the profile extension tables (also known as profile extensions, profile 
 
 Creates a new profile extension table. Requires only the list name you wish to extend, but this will create a blank profile extension table using default a folder locations and name.
 
-    r.create_profile_extension(list_name)
+    r.create_profile_extension(list_name, context, interact.api_url)
 
 Examples:
 
-    r.create_profile_extension('CONTACTS_LIST')
+    r.create_profile_extension('CONTACTS_LIST', context, interact.api_url)
 
 This creates a `CONTACTS_LIST_pet` profile extension table extending `CONTACTS_LIST` in a folder named `___api-generated` with no records and no non-default fields.
 
@@ -177,19 +165,19 @@ You can specify the folder to place it in as `___api-generated` isn't particular
 
 Additionally you can supply fields as a list:
 
-    r.create_profile_extension('CONTACTS_LIST', fields=['LTV_v1', 'LTV_v2', 'decile'])
+    r.create_profile_extension('CONTACTS_LIST', context, interact.api_url, fields=['LTV_v1', 'LTV_v2', 'decile'])
 
 If you don't specify a (Responsys Interact) data type for each it will default to `STR4000`. This default data type can be overridden with one of `STR500`, `STR4000`, `INTEGER`, `NUMBER`, or `TIMESTAMP`:
 
-    r.create_profile_extension('CONTACTS_LIST', fields=['last_purchased_date', 'first_purchased_date'], default_field_type='TIMESTAMP')
+    r.create_profile_extension('CONTACTS_LIST', context, interact.api_url, fields=['last_purchased_date', 'first_purchased_date'], default_field_type='TIMESTAMP')
 
 You can also specify the field type of each within the list if you supply it as a list or tuple:
 
-    r.create_profile_extension('CONTACTS_LIST', fields=[('last_purchased_date','TIMESTAMP'),('lifetime_purchases', 'INTEGER')])
+    r.create_profile_extension('CONTACTS_LIST', context, interact.api_url, fields=[('last_purchased_date','TIMESTAMP'),('lifetime_purchases', 'INTEGER')])
 
 The default field type override can be supplied alongside individual fields without their own field type specifications:
 
-    r.create_profile_extension('CONTACTS_LIST', fields=[('probability_of_login', 'NUMBER'), 'CUSTOMER_ID_', ('ARTICLE_CONTENTS','STR4000')], default_field_type='STR500')
+    r.create_profile_extension('CONTACTS_LIST', context, interact.api_url, fields=[('probability_of_login', 'NUMBER'), 'CUSTOMER_ID_', ('ARTICLE_CONTENTS','STR4000')], default_field_type='STR500')
 
 
 #### Merge or update members in a profile extension table
@@ -201,7 +189,7 @@ Not implemented.
 
 Returns a full record if it's in the profile extension table.
 
-    r.get_member_of_profile_extension_by_riid(list_name, pet_name, riid)
+    r.get_member_of_profile_extension_by_riid(list_name, pet_name, riid, context, interact.api_url)
 
 Also takes an optional argument `fields_to_return` which defaults to `all` if not specified. Examples:
 
@@ -259,7 +247,7 @@ Examples:
 
 #### Get all EMD Campaigns
 
-    r.get_campaigns()
+    r.get_campaigns(context, interact.api_url)
 
 Returns a dictionary of campaigns and their data, along with links and their data.
 
@@ -271,7 +259,7 @@ To see a list of all campaigns or a list of campaigns and their respective folde
 
 #### Get all Push Campaigns
 
-    r.get_push_campaigns()
+    r.get_push_campaigns(context, interact.api_url)
 
 Returns a list of push campaigns and their associated data.
 
@@ -299,7 +287,7 @@ There are a few things you might want to do with the API that are a little hard 
 
 #### Get lists for record
 
-    r.get_lists_for_record(riid)
+    r.get_lists_for_record(riid, context, interact.api_url)
 
 Loops through every list and checks to see if the record is in the list. If the record is in the list it adds it to the returned object. This is very slow.
 
