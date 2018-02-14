@@ -22,13 +22,6 @@ from . import config
 # our own rules for data objects.
 from .containers import rules
 
-# Configure the client
-# _config = config.Configuration()
-# _secret = config.Secret()
-
-api_url = 'rest/api/v1.3'
-login_url = f'http://login{_config.pod}.responsys.net/{api_url}/'
-
 # Helper functions for use with direct implementations of calls as below
 
 # # Helps with Login with username and certificates

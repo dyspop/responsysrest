@@ -65,7 +65,9 @@ class Interact:
             primary_key_alias='_primary_key',
             riid_generator_length=11,
             test_campaign_name='___api-testing-campaign',
-            content_library_folder='___api-generated-cl'
+            content_library_folder='___api-generated-cl',
+            login_url,
+            api_version='1.3'
     ):
         """Initialize the Interact Configuration."""
         self.pod = pod
@@ -77,6 +79,7 @@ class Interact:
         self.riid_generator_length = riid_generator_length
         self.test_campaign_name = test_campaign_name
         self.content_library_folder = content_library_folder
+        self.login_url = login_url
 
     @property
     def pod(self):
@@ -183,3 +186,18 @@ class Interact:
     def content_library_folder(self, content_library_folder):
         """Set content library folder."""
         self.__content_library_folder = content_library_folder
+
+    @property
+    def login_url(self):
+        """Get the login URL."""
+        return f'http://login{__self.pod}.responsys.net/rest/api/v{self.__api_version}/'
+
+    @property
+    def api_version(self):
+        """Get the API version."""
+        return self.__api_version
+
+    @api_version.setter
+    def api_version(self, api_version):
+        """Set the API version."""
+        self.__api_version = api_version
