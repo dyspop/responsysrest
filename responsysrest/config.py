@@ -2,8 +2,8 @@
 
 import getpass
 
-class Secret:
-    """Load secret information like passwords."""
+class Credentials:
+    """Load credentials information like passwords."""
 
     def __init__(
         self,
@@ -41,23 +41,23 @@ class Secret:
         # self.__password = password
 
 
-class Configuration:
+class Interact:
     """How our client is configured."""
 
     def __init__(
             self,
             pod='5',
             api_folder='___api-generated',
-            api_list='API_testing',
+            api_list='___api-list',
             profile_extension_table_alias='_pet',
             supplemental_table_alias='_supp',
             primary_key_alias='_primary_key',
             riid_generator_length=11,
             test_email_address='',
-            test_campaign_name='',
-            test_content_library_folder=''
+            test_campaign_name='___api-testing-campaign',
+            test_content_library_folder='___api-generated-cl'
     ):
-        """Initialize the Configuration."""
+        """Initialize the Interact Configuration."""
         self.pod = pod
         self.api_folder = api_folder
         self.api_list = api_list
