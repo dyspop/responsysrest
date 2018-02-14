@@ -5,7 +5,7 @@ import getpass
 class Credentials:
     """Load credentials information like passwords."""
 
-    def __init__(self, user_name, password, email_address):
+    def __init__(self, user_name=None, password=None, email_address=None):
         """Initialize the secrets."""
         self.user_name = user_name
         self.password = password
@@ -47,7 +47,7 @@ class Credentials:
         """Set Username."""
         # cli-style
         self.__email_address = input(
-            'Email Address\n(for same account and test delivery):\n')
+            'Email Address (for account and testing):\n')
         # non-cli-style
         # self.__email_address = email_address
 
@@ -57,7 +57,7 @@ class Interact:
 
     def __init__(
             self,
-            login_url,
+            login_url=None,
             pod='5',
             api_folder='___api-generated',
             api_list='___api-list',
@@ -190,7 +190,12 @@ class Interact:
     @property
     def login_url(self):
         """Get the login URL."""
-        return f'http://login{__self.pod}.responsys.net/rest/api/v{self.__api_version}/'
+        return self.__login_url
+
+    @login_url.setter
+    def login_url(self, login_url):
+        """Set the login URL."""
+        self.__login_url = f'http://login{__self.pod}.responsys.net/rest/api/v{self.__api_version}/'
 
     @property
     def api_version(self):

@@ -70,7 +70,6 @@ from their documentation and code-comment style to match PEP-8.
 
 def login(user_name, password, url=config.Interact.login_url):
     """Login with username and password."""
-    url = f'{login_url}auth/token'
     data = {
         "user_name": user_name,
         "password": password,
