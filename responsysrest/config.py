@@ -5,7 +5,12 @@ import getpass
 class Credentials:
     """Load credentials information like passwords."""
 
-    def __init__(self, user_name=None, password=None, email_address=None):
+    def __init__(
+        self, 
+        user_name=None, 
+        password=None, 
+        email_address=None,
+        mode=None):
         """Initialize the secrets."""
         self.user_name = user_name
         self.password = password
@@ -33,9 +38,11 @@ class Credentials:
     def password(self, password):
         """Set Username."""
         # cli-style
-        self.__password = getpass.getpass()
+        if mode.lower() == 'cli':
+            self.__password = getpass.getpass()
         # non-cli-style
-        # self.__password = password
+        else:
+            self.__password = password
 
     @property
     def email_address(self):
@@ -46,10 +53,12 @@ class Credentials:
     def email_address(self, email_address):
         """Set Username."""
         # cli-style
-        self.__email_address = input(
-            'Email Address (for account and testing):\n')
+        if mode.lower() == 'cli':
+            self.__email_address = input(
+                'Email Address (for account and testing):\n')
         # non-cli-style
-        # self.__email_address = email_address
+        else:
+            self.__email_address = email_address
 
 
 class Interact:
