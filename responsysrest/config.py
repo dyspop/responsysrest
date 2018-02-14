@@ -216,6 +216,11 @@ class Interact:
         """API url partial."""
         return f'rest/api/v{self.api_version}'
 
+    @api_url.setter
+    def api_url(self, api_url):
+        """API url partial setter."""
+        return self.__api_url
+
     @property
     def api_version(self):
         """Get the API version."""
