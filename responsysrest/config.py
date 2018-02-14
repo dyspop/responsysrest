@@ -57,6 +57,7 @@ class Interact:
 
     def __init__(
             self,
+            login_url,
             pod='5',
             api_folder='___api-generated',
             api_list='___api-list',
@@ -66,7 +67,6 @@ class Interact:
             riid_generator_length=11,
             test_campaign_name='___api-testing-campaign',
             content_library_folder='___api-generated-cl',
-            login_url,
             api_version='1.3'
     ):
         """Initialize the Interact Configuration."""

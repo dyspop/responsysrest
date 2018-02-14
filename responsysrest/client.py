@@ -68,7 +68,7 @@ from their documentation and code-comment style to match PEP-8.
 """
 
 
-def login(user_name, password, url=login_url):
+def login(user_name, password, url=config.Interact.login_url):
     """Login with username and password."""
     url = f'{login_url}auth/token'
     data = {
@@ -285,8 +285,8 @@ def get_profile_extensions(list_name):
 
 def create_profile_extension(
     list_name, fields='',
-    folder_name=_config.api_folder,
-    extension_name=_config.profile_extension_table_alias,
+    folder_name=config.Interact.api_folder,
+    extension_name=config.Interact.profile_extension_table_alias,
     default_field_type='STR500'
 ):
     """Create a new profile extension table."""
@@ -368,7 +368,7 @@ def delete_member_of_profile_extension_by_riid(
 
 def create_supplemental_table(
     supplemental_table_name,
-    folder_name=_config.api_folder,
+    folder_name=config.Interact.api_folder,
     fields='',
     default_field_type='STR500',
     data_extraction_key=None,
@@ -403,7 +403,7 @@ def create_supplemental_table(
     return requests.post(url=url, headers=headers, data=json.dumps(data))
 
 
-def create_folder(folder_path=_config.api_folder):
+def create_folder(folder_path=config.Interact.api_folder):
     """Create a new folder in /contentlibrary/."""
     context = get_context()
     auth_token = context["authToken"]
@@ -416,7 +416,7 @@ def create_folder(folder_path=_config.api_folder):
     return requests.post(url=url, data=json.dumps(data), headers=headers)
 
 
-def delete_folder(folder_path=_config.api_folder):
+def delete_folder(folder_path=config.Interact.api_folder):
     """Delete a folder in /contentlibrary/."""
     context = get_context()
     auth_token = context["authToken"]
