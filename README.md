@@ -40,10 +40,10 @@ Here's a basic boilerplate:
     interact = r.config.Interact()
     context = r.get_context(creds.user_name, creds.password, interact.login_url)
 
-If you happen to be on pod 5 and are looking to try this out quickly you can just do:
+If you happen to be on pod 5 and are looking to try this out quickly you can just do this to check if you are configured properly:
 
     import responsysrest as r
-    context = r.get_context('user_name', 'password', r.config.Interact().login_url)
+    r.get_context('your_user_name', 'your_password', r.config.Interact().login_url)
 
 Now you are ready to go!
 
