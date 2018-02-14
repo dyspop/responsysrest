@@ -9,11 +9,11 @@ A python library providing access to the Responsys Interact API. Currently suppo
 ## Install ##
 
 1. Install Python3 and Python Package Index. 
-  * OS X: It is recommended to install Python3 this way: http://docs.python-guide.org/en/latest/starting/install3/osx/ which should alias your Python3 and pip to separate commands `python3` and `pip3`.
+  * OS X: It is recommended to install Python3 this way: http://docs.python-guide.org/en/latest/starting/install3/osx/ which should alias your Python3 to separate command `python3`.
 2. Clone this repo and install via source package:
 ```
     cd responsysrest/
-    pip3 install .
+    pip install .
 ```
 
 ## Development Install
@@ -21,38 +21,48 @@ A python library providing access to the Responsys Interact API. Currently suppo
 1. Clone this repo and install via source package in edit mode:
 ```
     cd responsysrest/
-    pip3 install -e .
+    pip install -e .
 ```
 
 
 ## Usage ##
 
-Edit `config.py` if necessary. We default to "pod 5" on Interact which you can change here.
-
-Set your username and password as a dictionary data object in `responsysrest/secret.py`
-IMPORTANT: this is ignored by git. If you use another version control you'll need to keep this file out of the way from it!
-
-```
-secrets = {
-    "user_name" : "MyResponsysInteractAPIuserName",
-    "password" : "FillInPasswordHere"
-}
-```
-
-If you were to need to set these manually you'd do it like this:
+1. Import Responsys Rest
+2. Add credentials (for cli-mode)
+3. Configure Interact connection settings
+4. Get context from Interact remote
+5. Use client
 
 ```
 import responsysrest as r
+creds = r.config.Credentials(mode='cli')
+interact = r.config.Interact()
+context = r.get_context(creds.user_name, creds.password, interact.login_url)
 
-username = r.secrets["user_name"]
-password = r.secrets["password"]
-r.login(username, password)
 ```
 
-In general you should not need to call login from a single user command line session. If you are using this API wrapper to build an application on top of the Interact API then the login function is available to you, but it's still probably not as good as calling the API ad-hoc in order to issue context for the call. The wrapper should manage refreshing context for you.
+Now you are ready to go!
 
----
+`mode='cli'` will prompt you for your credentials with `getpass`, but you can of course instead pass your credentials from some other context (directly, a locally loaded file, or an application) if you don't want to use the wrapper like a cli.
 
+Interact will configure automatically as the following:
+
+| Property  | Value  |
+|---|---|
+| pod  | 5  |
+| api_folder  | ___api-generated  |
+| api_list  | ___api-list  |
+| profile_extension_table_alias  | _pet  |
+| supplemental_table_alias  | _supp  |
+| primary_key_alias  | _primary_key  |
+| riid_generator_length  | 11  |
+| test_campaign_name  | ___api-testing-campaign  |
+| content_library_folder  | ___api-generated-cl  |
+| api_version  | 1.3  |
+
+Passing them in will instantiate Interact configuration differently, but other than the pod these are recommended settings. 
+
+    interact = r.config.Interact(pod='2')
 
 
 ## Specific functions usage:
