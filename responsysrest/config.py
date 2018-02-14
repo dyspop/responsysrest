@@ -43,7 +43,7 @@ class Credentials:
         return self.__email_address
 
     @email_address.setter
-    def email_address(self, user_name):
+    def email_address(self, email_address):
         """Set Username."""
         # cli-style
         self.__email_address = input(
@@ -65,7 +65,7 @@ class Interact:
             primary_key_alias='_primary_key',
             riid_generator_length=11,
             test_campaign_name='___api-testing-campaign',
-            test_content_library_folder='___api-generated-cl'
+            content_library_folder='___api-generated-cl'
     ):
         """Initialize the Interact Configuration."""
         self.pod = pod
@@ -76,7 +76,7 @@ class Interact:
         self.primary_key_alias = primary_key_alias
         self.riid_generator_length = riid_generator_length
         self.test_campaign_name = test_campaign_name
-        self.test_content_library_folder = test_content_library_folder
+        self.content_library_folder = content_library_folder
 
     @property
     def pod(self):
@@ -175,11 +175,11 @@ class Interact:
         self.__test_campaign_name = test_campaign_name
 
     @property
-    def test_content_library_folder(self):
-        """Get test content library folder."""
-        return self.__test_content_library_folder
+    def content_library_folder(self):
+        """Get content library folder."""
+        return self.__content_library_folder
 
-    @test_content_library_folder.setter
-    def test_content_library_folder(self, test_content_library_folder):
-        """Set test content library folder."""
-        self.__test_content_library_folder = test_content_library_folder
+    @content_library_folder.setter
+    def content_library_folder(self, content_library_folder):
+        """Set content library folder."""
+        self.__content_library_folder = content_library_folder
