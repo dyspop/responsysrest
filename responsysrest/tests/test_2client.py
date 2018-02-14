@@ -2,27 +2,27 @@
 import responsysrest as r
 import random
 
-config = r.config.Configuration()
-secret = r.config.Secret()
+creds = r.config.Credentials()
+interact = r.config.Interact()
 
 # Fixtures
 # Set the riid once before execution outside the fixtures dict
 fixture_riid = ''.join(
     [
         str(n) for n in
-        [random.randint(0, 9) for x in range(0, config.riid_generator_length)]
+        [random.randint(0, 9) for x in range(0, r.config.Interact().riid_generator_length)]
     ]
 )
 fixtures = {
-    'folder': config.api_folder,
+    'folder': r.config.Interact().api_folder,
     'riid': fixture_riid,
-    'profile_list': config.api_list,
-    'profile_list_extension': f'{config.api_list}{config.profile_extension_table_alias}',
-    'primary_key': f'{config.api_list}{config.primary_key_alias}',
-    'email_address': config.test_email_address,
-    'campaign_name': config.test_campaign_name
+    'profile_list': r.config.Interact().api_list,
+    'profile_list_extension': f'{r.config.Interact().api_list}{r.config.Interact().profile_extension_table_alias}',
+    'primary_key': f'{r.config.Interact().api_list}{r.config.Interact().primary_key_alias}',
+    'email_address': r.config.Credentials().email_address,
+    'campaign_name': r.config.Interact().test_campaign_name
 }
-context = r.get_context()
+context = r.get_context(creds.user_name, creds.password, r.config.Interact().login_url)
 
 
 # Test related functions.
