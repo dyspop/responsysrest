@@ -5,14 +5,11 @@ import getpass
 class Credentials:
     """Load credentials information like passwords."""
 
-    def __init__(
-        self,
-        user_name=None,
-        password=None
-    ):
+    def __init__(self, user_name, password, email_address):
         """Initialize the secrets."""
         self.user_name = user_name
         self.password = password
+        self.email_address = email_address
 
     @property
     def user_name(self):
@@ -25,7 +22,7 @@ class Credentials:
         # cli-style
         self.__user_name = input('Username:\n')
         # non-cli-style
-        self.__user_name = user_name
+        # self.__user_name = user_name
 
     @property
     def password(self):
@@ -40,6 +37,20 @@ class Credentials:
         # non-cli-style
         # self.__password = password
 
+    @property
+    def email_address(self):
+        """Get Email Address."""
+        return self.__email_address
+
+    @email_address.setter
+    def email_address(self, user_name):
+        """Set Username."""
+        # cli-style
+        self.__email_address = input(
+            'Email Address\n(for same account and test delivery):\n')
+        # non-cli-style
+        # self.__email_address = email_address
+
 
 class Interact:
     """How our client is configured."""
@@ -53,7 +64,6 @@ class Interact:
             supplemental_table_alias='_supp',
             primary_key_alias='_primary_key',
             riid_generator_length=11,
-            test_email_address='',
             test_campaign_name='___api-testing-campaign',
             test_content_library_folder='___api-generated-cl'
     ):
@@ -65,7 +75,6 @@ class Interact:
         self.supplemental_table_alias = supplemental_table_alias
         self.primary_key_alias = primary_key_alias
         self.riid_generator_length = riid_generator_length
-        self.test_email_address = test_email_address
         self.test_campaign_name = test_campaign_name
         self.test_content_library_folder = test_content_library_folder
 
