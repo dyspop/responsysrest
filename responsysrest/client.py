@@ -48,10 +48,10 @@ def get_context(user_name, password, url):
     return context
 
 
-def get(service_url, context, api_url, **kwargs):
+def get(service_url, context, **kwargs):
     """General purpose build for GET requests to Interact API."""
     auth_token = context["authToken"]
-    endpoint = f'{context["endPoint"]}/{api_url}/{service_url}'
+    endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
     headers = kwargs.get('headers', {'Authorization': auth_token})
     # use parameters if we got them
     if "parameters" in kwargs:
@@ -127,19 +127,19 @@ def login(user_name, password, url):
 #     return response
 
 
-def get_profile_lists(context, api_url):
+def get_profile_lists(context):
     """Retrieving all profile lists for an account."""
-    return get('lists', context, api_url)
+    return get('lists', context)
 
 
-def get_campaigns(context, api_url):
+def get_campaigns(context):
     """Get all EMD email campaigns."""
-    return get('campaigns', context, api_url)
+    return get('campaigns', context)
 
 
-def get_push_campaigns(context, api_url):
+def get_push_campaigns(context):
     """Get all Push campaigns."""
-    return get('campaigns?type=push', context, api_url)
+    return get('campaigns?type=push', context)
 
 # TODO: implement context and api url with post
 def send_email_message(email_address, folder_name, campaign_name):
@@ -248,12 +248,12 @@ def manage_profile_list(list_name, **kwargs):
     return response
 
 
-def get_member_of_list_by_riid(list_name, riid, context, api_url):
+def get_member_of_list_by_riid(list_name, riid, context):
     """Retrieve a member of a profile list using RIID."""
     service_url = f'lists/{list_name}/members/{riid}'
     # only support returning all fields for now
     # TODO: implement other fields
-    return get(service_url, context, api_url, parameters='fs=all')
+    return get(service_url, context, parameters='fs=all')
 
 
 def get_member_of_list_by_attribute(
@@ -267,7 +267,7 @@ def get_member_of_list_by_attribute(
     """Retrieve a member of a profile list based on query attribute."""
     service_url = f'lists/{list_name}/members'
     parameters = f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
-    return get(service_url, context, api_url, parameters=parameters)
+    return get(service_url, context, parameters=parameters)
 
 # TODO implement context, api_url with delete
 def delete_from_profile_list(list_name, riid):
@@ -280,9 +280,9 @@ def delete_from_profile_list(list_name, riid):
     return requests.delete(url=url, headers=headers)
 
 
-def get_profile_extensions(list_name, context, api_url):
+def get_profile_extensions(list_name, context):
     """Retrieve all profile extensions of a profile list."""
-    return get(f'lists/{list_name}/listExtensions', context, api_url)
+    return get(f'lists/{list_name}/listExtensions', context)
 
 # TODO implement context, api_url with post
 def create_profile_extension(
@@ -445,14 +445,14 @@ def delete_folder(folder_path=config.Interact.api_folder):
 ##################
 
 
-def get_lists_for_record(riid, context, api_url):
+def get_lists_for_record(riid, context):
     """Find what lists a record is in by RIID."""
-    all_lists = [list_name["name"] for list_name in get_profile_lists(context, api_url)]
+    all_lists = [list_name["name"] for list_name in get_profile_lists(context)]
     # container list
     member_of = []
     for profile_list in all_lists:
         response = get_member_of_list_by_riid(
-            profile_list, riid, context, api_url)
+            profile_list, riid, context)
         # if the member (by riid) is in the profile list
         # add it to the list of all profile lists
         if "recordData" in response:

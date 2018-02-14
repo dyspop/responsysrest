@@ -36,14 +36,14 @@ A python library providing access to the Responsys Interact API. Currently suppo
 Here's a basic boilerplate:
 
     import responsysrest as r
-    creds = r.config.Credentials(mode='cli')
-    interact = r.config.Interact()
+    creds = r.Credentials(mode='cli')
+    interact = r.Interact()
     context = r.get_context(creds.user_name, creds.password, interact.login_url)
 
 If you are looking to try this out quickly you can just do this to check if you are configured properly:
 
     import responsysrest as r
-    r.get_context('your_user_name', 'your_password', r.config.Interact(pod='your_pod').login_url)
+    r.get_context('your_user_name', 'your_password', r.Interact(pod='your_pod').login_url)
 
 Now you are ready to go!
 
@@ -66,7 +66,7 @@ Interact will configure automatically as the following:
 
 Passing them in will instantiate Interact configuration differently, but other than the pod these are recommended settings. 
 
-    interact = r.config.Interact(pod='2')
+    interact = r.Interact(pod='2')
 
 
 ## Client functions usage:
@@ -301,11 +301,11 @@ Loops through every list and checks to see if the record is in the list. If the 
 
 To run configuration and integration tests:
 
-    $python3 -m pytest tests/
+    $pytest
 
-To run configuration tests only:
+To run configuration tests:
 
-    $pytest tests/test_0dev_configs.py
+    $pytest tests/test_2client.py
 
 To run client/API integration tests only:
 
