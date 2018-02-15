@@ -244,7 +244,7 @@ def auto():
             if file == 'secret.json':
                 try:
                     with open(file) as f:
-                        user_config = json.load(f)[0]
+                        user_config = json.load(f)
                         creds = Credentials(
                             user_name=user_config['user_name'],
                             password=user_config['password'],
