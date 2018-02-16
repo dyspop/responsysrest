@@ -2,27 +2,27 @@
 import responsysrest as r
 import random
 
-creds = r.config.Credentials()
-interact = r.config.Interact()
+creds = r.credentials.auto()
+config = r.Configuration()
 
 # Fixtures
 # Set the riid once before execution outside the fixtures dict
 fixture_riid = ''.join(
     [
         str(n) for n in
-        [random.randint(0, 9) for x in range(0, r.config.Interact().riid_generator_length)]
+        [random.randint(0, 9) for x in range(0, config.riid_generator_length)]
     ]
 )
 fixtures = {
-    'folder': r.config.Interact().api_folder,
+    'folder': config.api_folder,
     'riid': fixture_riid,
-    'profile_list': r.config.Interact().api_list,
-    'profile_list_extension': f'{r.config.Interact().api_list}{r.config.Interact().profile_extension_table_alias}',
-    'primary_key': f'{r.config.Interact().api_list}{r.config.Interact().primary_key_alias}',
-    'email_address': r.config.Credentials().email_address,
-    'campaign_name': r.config.Interact().test_campaign_name
+    'profile_list': config.api_list,
+    'profile_list_extension': f'{config.api_list}{config.profile_extension_table_alias}',
+    'primary_key': f'{config.api_list}{config.primary_key_alias}',
+    'email_address': creds.email_address,
+    'campaign_name': config.test_campaign_name
 }
-context = r.get_context(creds.user_name, creds.password, r.config.Interact().login_url)
+context = r.get_context(creds.user_name, creds.password, config.login_url)
 
 
 # Test related functions.
@@ -60,19 +60,19 @@ def test_get_context_endpoint_is_https_and_responsys():
 def test_get_profile_lists_not_zero_length():
     """Test to see if profile lists has data."""
     # TODO: what happens if there are no lists defined in Interact?
-    assert len(r.get_profile_lists()) > 0
+    assert len(r.get_profile_lists(context)) > 0
 
 
 def test_fixture_profile_list_in_get_profile_lists():
     """Test if the fixture list is in Interact."""
-    profile_lists = [list['name'] for list in r.get_profile_lists()]
+    profile_lists = [list['name'] for list in r.get_profile_lists(context)]
     assert fixtures['profile_list'] in profile_lists
 
 
 def test_get_campaigns_not_zero_length():
     """Test to see if campaigns has data."""
     # TODO: what happens if there are no campaigns defined in Interact?
-    assert len(r.get_campaigns()) > 0
+    assert len(r.get_campaigns(context)) > 0
 
 
 # def test_manage_profile_lists_returns_response():
@@ -82,7 +82,7 @@ def test_get_campaigns_not_zero_length():
 def test_get_member_of_list_by_riid_returns_response():
     """Test if the API responds when we try to get a member."""
     assert _heartbeat(r.get_member_of_list_by_riid(
-        fixtures['profile_list'], fixtures['riid']))
+        fixtures['profile_list'], fixtures['riid'], context))
 
 
 # def test_fixture_riid_in_fixture_profile_list():
@@ -101,7 +101,7 @@ def test_get_member_of_list_by_attribute_returns_response():
     When we get a member using the attribute feature.
     """
     assert _heartbeat(r.get_member_of_list_by_attribute(
-        fixtures['profile_list'], fixtures['riid']))
+        fixtures['profile_list'], fixtures['riid'], context))
 
 
 def test_delete_from_profile_list_returns_response():
@@ -110,7 +110,7 @@ def test_delete_from_profile_list_returns_response():
     When we try to delete a member from a list.
     """
     assert _heartbeat(
-        r.delete_from_profile_list(fixtures['profile_list'], ''))
+        r.delete_from_profile_list(fixtures['profile_list'], '', context))
 
 
 def test_get_profile_extensions():
@@ -119,7 +119,7 @@ def test_get_profile_extensions():
     When we try to get the profile extensions associated with a list.
     """
     assert _heartbeat(
-        r.get_profile_extensions(fixtures['profile_list']))
+        r.get_profile_extensions(fixtures['profile_list'], context))
 
 
 def test_create_profile_extension():
@@ -130,7 +130,7 @@ def test_create_profile_extension():
     try to create one that exists.
     """
     assert _heartbeat(
-        r.create_profile_extension(fixtures['profile_list_extension']))
+        r.create_profile_extension(fixtures['profile_list_extension'], context))
 
 
 def test_get_member_of_profile_extension_by_riid():
@@ -141,7 +141,8 @@ def test_get_member_of_profile_extension_by_riid():
     assert _heartbeat(r.get_member_of_profile_extension_by_riid(
         fixtures['profile_list'],
         fixtures['profile_list_extension'],
-        fixtures['riid'])
+        fixtures['riid'],
+        context)
     )
 
 
@@ -153,7 +154,8 @@ def test_get_member_of_profile_extension_by_attribute():
     assert _heartbeat(r.get_member_of_profile_extension_by_attribute(
         fixtures['profile_list'],
         fixtures['profile_list_extension'],
-        fixtures['riid'])
+        fixtures['riid'],
+        context)
     )
 
 
@@ -163,7 +165,8 @@ def test_delete_member_of_profile_extension_by_riid():
     When we try to delete a member of a profile extension table by riid.
     We don't use fixtures so that we don't delete anything!
     """
-    assert _heartbeat(r.delete_member_of_profile_extension_by_riid('', '', ''))
+    assert _heartbeat(
+        r.delete_member_of_profile_extension_by_riid('', '', '', context))
 
 
 def test_create_supplemental_table():
@@ -174,6 +177,7 @@ def test_create_supplemental_table():
     """
     assert _heartbeat(r.create_supplemental_table(
         fixtures['profile_list'],
+        context,
         fixtures['folder'],
         [fixtures['primary_key']])
     )
@@ -184,7 +188,7 @@ def test_get_push_campaigns_returns_response():
 
     When we try to list all push campaigns.
     """
-    assert _heartbeat(r.get_push_campaigns())
+    assert _heartbeat(r.get_push_campaigns(context))
 
 
 def test_send_email_message_returns_response():
@@ -195,7 +199,8 @@ def test_send_email_message_returns_response():
     assert _heartbeat(r.send_email_message(
         fixtures['email_address'],
         fixtures['folder'],
-        fixtures['campaign_name'])
+        fixtures['campaign_name'],
+        context)
     )
 
 
@@ -205,7 +210,8 @@ def test_create_folder_returns_response():
     When we try to list all push campaigns.
     """
     assert _heartbeat(r.create_folder(
-        config.test_content_library_folder))
+        context,
+        config.content_library_folder))
 
 
 def test_delete_folder_returns_response():
@@ -214,4 +220,4 @@ def test_delete_folder_returns_response():
     When we try to delete a content library folder.
     """
     assert _heartbeat(r.delete_folder(
-        config.test_content_library_folder))
+        config.content_library_folder))
