@@ -1,15 +1,13 @@
 """Responsys REST API Client."""
 # used to issue CRUD requests, the meat and 'taters of this thing
 import requests
-
+from functools import wraps
 # used with the login with certificate functions
 # import base64 as base64
 
 # Interact API returns a lot of json-like text objects
 # we use this to bind them to python objects
 import json
-# For stripping comments from our json
-from jsmin import jsmin
 
 # used with the login with certificate functions
 # from random import choice
@@ -17,7 +15,7 @@ from jsmin import jsmin
 # used with the login with certificate functions
 # from string import ascii_uppercase
 
-from . import config
+from . import configuration
 
 # our own rules for data objects.
 from .containers import rules
@@ -29,6 +27,30 @@ from .containers import rules
 #     return base64.b64encode(
 #         bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8')
 #     )
+
+config = configuration.Configuration()
+
+class Client:
+    """The main client."""
+
+    def __init__(self, config, creds):
+        """Initialize."""
+        self.config = config
+        self.creds = creds
+
+    def context(func, *args, **kwargs):
+        @wraps(func)
+        def func_with_context(self, *args, **kwargs):
+            print(f'contextualizing {func.__name__}')
+            print(self.creds.user_name)
+            return (args, kwargs)
+        return func_with_context
+
+    @context
+    def test(self, creds):
+        pass
+
+
 
 
 def get_context(user_name, password, url):
@@ -44,7 +66,7 @@ def get_context(user_name, password, url):
             url
         ).text
     )
-    context['api_url'] = config.Interact().api_url
+    context['api_url'] = config.api_url
     return context
 
 
@@ -142,7 +164,7 @@ def get_push_campaigns(context):
     return get('campaigns?type=push', context)
 
 # TODO: implement context and api url with post
-def send_email_message(email_address, folder_name, campaign_name):
+def send_email_message(email_address, folder_name, campaign_name, context):
     """Trigger email message."""
     data = {
         "recipientData": [
@@ -160,12 +182,11 @@ def send_email_message(email_address, folder_name, campaign_name):
             }
         ]
     }
-    context = get_context()
     headers = {
         'Authorization': context["authToken"],
         'Content-Type': 'application/json'
     }
-    url = f'{context["endPoint"]}/{api_url}/campaigns/{campaign_name}/email'
+    url = f'{context["endPoint"]}/{context["api_url"]}/campaigns/{campaign_name}/email'
     return requests.post(data=json.dumps(data), headers=headers, url=url)
 
 
@@ -260,7 +281,6 @@ def get_member_of_list_by_attribute(
     list_name,
     record_id,
     context,
-    api_url,
     query_attribute='c',
     fields_to_return='all'
 ):
@@ -270,13 +290,10 @@ def get_member_of_list_by_attribute(
     return get(service_url, context, parameters=parameters)
 
 # TODO implement context, api_url with delete
-def delete_from_profile_list(list_name, riid):
+def delete_from_profile_list(list_name, riid, context):
     """Delete Profile List Recipients based on RIID."""
-    context = get_context()
-    auth_token = context["authToken"]
-    print(context["endPoint"])
-    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members/{riid}'
-    headers = {'Authorization': auth_token}
+    url = f'{context["endPoint"]}/{context["api_url"]}/lists/{list_name}/members/{riid}'
+    headers = {'Authorization': context["authToken"]}
     return requests.delete(url=url, headers=headers)
 
 
@@ -286,9 +303,11 @@ def get_profile_extensions(list_name, context):
 
 # TODO implement context, api_url with post
 def create_profile_extension(
-    list_name, fields='',
-    folder_name=config.Interact.api_folder,
-    extension_name=config.Interact.profile_extension_table_alias,
+    list_name,
+    context,
+    fields='',
+    folder_name=config.api_folder,
+    extension_name=config.profile_extension_table_alias,
     default_field_type='STR500'
 ):
     """Create a new profile extension table."""
@@ -308,10 +327,8 @@ def create_profile_extension(
                 "fieldType": default_field_type
             } for field in fields
         ]
-    context = get_context()
-    auth_token = context["authToken"]
-    url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/listExtensions'
-    headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
+    url = f'{context["endPoint"]}/{context["api_url"]}/lists/{list_name}/listExtensions'
+    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
     return requests.post(url=url, headers=headers)
 
 
@@ -329,14 +346,12 @@ def get_member_of_profile_extension_by_riid(
     pet_name,
     riid,
     context,
-    api_url,
     fields_to_return='all'
 ):
     """Retrieve a member of a profile extension table based on RIID."""
     return get(
         f'lists/{list_name}/listExtensions/{pet_name}/members/{riid}',
         context,
-        api_url,
         parameters=f'fs={fields_to_return}'
     )
 
@@ -346,7 +361,6 @@ def get_member_of_profile_extension_by_attribute(
     pet_name,
     record_id,
     context,
-    api_url,
     query_attribute='c',
     fields_to_return='all'
 ):
@@ -357,7 +371,6 @@ def get_member_of_profile_extension_by_attribute(
     return get(
         service_url,
         context,
-        api_url,
         parameters=f'fs={fields_to_return}&qa={query_attribute}&id={record_id}'
     )
 
@@ -366,32 +379,27 @@ def delete_member_of_profile_extension_by_riid(
     list_name,
     pet_name,
     riid,
-    context,
-    api_url
+    context
 ):
     """Delete a member of a profile extension table based on RIID."""
-    context = get_context()
-    auth_token = context["authToken"]
-    endpoint = context["endPoint"]
-    url = f'{endpoint}/{api_url}/lists/{list_name}/listExtensions/{pet_name}/members/{riid}'
-    headers = {'Authorization': auth_token}
+    url = f'{context["endPoint"]}/{context["api_url"]}/lists/{list_name}/listExtensions/{pet_name}/members/{riid}'
+    headers = {'Authorization': context["authToken"]}
     return requests.delete(url=url, headers=headers)
 
 # TODO: implement context, api_url with post
 def create_supplemental_table(
     supplemental_table_name,
-    folder_name=config.Interact.api_folder,
+    context,
+    folder_name=config.api_folder,
     fields='',
     default_field_type='STR500',
     data_extraction_key=None,
     primary_key=None
 ):
     """Create a new supplemental table."""
-    context = get_context()
-    auth_token = context["authToken"]
     if type(fields) == str:
         raise TypeError('Fields must be a list.')
-    url = f'{context["endPoint"]}/{api_url}/folders/{folder_name}/suppData'
+    url = f'{context["endPoint"]}/{context["api_url"]}/folders/{folder_name}/suppData'
     if primary_key is None:
         try:
             primary_key = fields[0]
@@ -411,18 +419,15 @@ def create_supplemental_table(
         ],
         "primaryKeys": [primary_key]
     }
-    headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
+    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
     return requests.post(url=url, headers=headers, data=json.dumps(data))
 
 
 # TODO: implement context, api_url with post
-def create_folder(folder_path=config.Interact.api_folder):
+def create_folder(context, folder_path=config.api_folder):
     """Create a new folder in /contentlibrary/."""
-    context = get_context()
-    auth_token = context["authToken"]
-    endpoint = context["endPoint"]
-    headers = {'Authorization': auth_token, 'Content-Type': 'application/json'}
-    url = f'{endpoint}/{api_url}/clFolders/'
+    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
+    url = f'{context["endPoint"]}/{context["api_url"]}/clFolders/'
     data = {
         "folderPath": f'/contentlibrary/{folder_path}'
     }
@@ -430,13 +435,10 @@ def create_folder(folder_path=config.Interact.api_folder):
 
 
 # TODO: implement context, api_url with delete
-def delete_folder(folder_path=config.Interact.api_folder):
+def delete_folder(context, folder_path=config.api_folder):
     """Delete a folder in /contentlibrary/."""
-    context = get_context()
-    auth_token = context["authToken"]
-    endpoint = context["endPoint"]
-    headers = {'Authorization': auth_token }
-    url = f'{endpoint}/{api_url}/clFolders/contentlibrary/{folder_path}'
+    headers = {'Authorization': context["authToken"]}
+    url = f'{context["endPoint"]}/{context["api_url"]}/clFolders/contentlibrary/{folder_path}'
     return requests.delete(url=url, headers=headers)
 
 
