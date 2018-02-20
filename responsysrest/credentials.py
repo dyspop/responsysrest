@@ -2,6 +2,7 @@ import os
 import getpass
 import json
 
+
 class Credentials:
     """Load credentials information like passwords."""
 
@@ -80,5 +81,5 @@ def auto():
                             password=user_config['password'],
                             email_address=user_config['email_address'])
                         return creds
-                except:
+                except(ValueError):
                     raise ValueError(f'Could not open {file}')

@@ -1,5 +1,6 @@
 """How we configure our Interact Client connection."""
 
+
 class Configuration:
     """How our client is configured."""
 
@@ -170,21 +171,3 @@ class Configuration:
         self.__api_version = api_version
 
     # login_url = f'http://login{pod}.responsys.net/rest/api/v{api_version}/'
-
-
-def auto():
-    """Load any secret.json file."""
-    # traverse root directory looking for credentials
-    for root, dirs, files in os.walk("."):
-        for file in files:
-            if file == 'secret.json':
-                try:
-                    with open(file) as f:
-                        user_config = json.load(f)
-                        creds = Credentials(
-                            user_name=user_config['user_name'],
-                            password=user_config['password'],
-                            email_address=user_config['email_address'])
-                        return creds
-                except:
-                    raise ValueError(f'Could not open {file}')

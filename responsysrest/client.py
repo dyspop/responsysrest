@@ -1,7 +1,6 @@
 """Responsys REST API Client."""
 # used to issue CRUD requests, the meat and 'taters of this thing
 import requests
-from functools import wraps
 # used with the login with certificate functions
 # import base64 as base64
 
@@ -15,10 +14,8 @@ import json
 # used with the login with certificate functions
 # from string import ascii_uppercase
 
-from . import configuration
-
 # our own rules for data objects.
-from .containers import rules
+# from .containers import rules
 
 # Helper functions for use with direct implementations of calls as below
 
@@ -28,7 +25,6 @@ from .containers import rules
 #         bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8')
 #     )
 
-config = configuration.Configuration()
 
 class Client:
     """The main client."""
@@ -61,7 +57,7 @@ class Client:
                 self.config.login_url
             ).text
         )
-        context['api_url'] = config.api_url
+        context['api_url'] = self.config.api_url
         return context
 
     def _get(self, service_url, **kwargs):
@@ -231,7 +227,7 @@ class Client:
         if primary_key is None:
             try:
                 primary_key = fields[0]
-            except:
+            except ValueError:
                 raise ValueError(
                     """Cannot create supplemental table with no fields.
                     Primary key field is required.""")
@@ -253,19 +249,18 @@ class Client:
         """Create a new folder in /contentlibrary/."""
         service_url = f'clFolders'
         if folder_path == '':
-            folder_path = config.api_folder
+            folder_path = self.config.api_folder
         data = {
             "folderPath": f'/contentlibrary/{folder_path}'
         }
         return self._post(service_url, data)
 
-    def delete_folder(context, folder_path=''):
+    def delete_folder(self, context, folder_path=''):
         """Delete a folder in /contentlibrary/."""
         if folder_path == '':
             folder_path = self.config.api_folder
         service_url = f'clFolders/contentlibrary/{folder_path}'
         return self._delete(service_url)
-
 
     # TODO: fix client error
     # def create_profile_extension(
@@ -298,8 +293,6 @@ class Client:
     #         ]
     #     service_url = f'lists/{list_name}/listExtensions'
     #     return self._post(service_url, data)
-
-
 
 # # TODO: Implement
 # # Login with username and certificates
@@ -425,7 +418,6 @@ class Client:
 #     # return the data to the container?
 #     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
 #     return response
-
 
 # TODO: Merge or update members in a profile extension table
 # extend/based on merge_or_update_members_in_a_profile_list_table
