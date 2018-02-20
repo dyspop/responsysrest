@@ -38,7 +38,7 @@ class Client:
         self.config = config
         self.creds = creds
 
-    def login(user_name, password, url):
+    def _login(self, user_name, password, url):
         """Login with username and password."""
         data = {
             "user_name": user_name,
@@ -48,44 +48,41 @@ class Client:
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         return requests.post(url, data=data, headers=headers)
 
-    def context(func, *args, **kwargs):
-        """Context to wrap further calls with endpoint from client."""
-        @wraps(func)
-        def func_with_context(self, *args, **kwargs):
-            print(f'contextualizing {func.__name__}')
-            context = json.loads(
-                login(
-                    self.creds.user_name,
-                    self.creds.password,
-                    self.config.login_url
-                ).text)
-            auth_token = context['authToken']
-            end_point = context['endPoint']
-            return (args, kwargs, auth_token, end_point)
-        return func_with_context
+    def _get_context(self):
+        """
+        Return the login response as context.
 
-    @context
-    def test(self):
-        return
+        Used with each individual call to Responsys API.
+        """
+        context = json.loads(
+            self._login(
+                self.creds.user_name,
+                self.creds.password,
+                self.config.login_url
+            ).text
+        )
+        context['api_url'] = config.api_url
+        return context
 
 
+    def _get(self, service_url, **kwargs):
+        context = self._get_context()
+        """General purpose build for GET requests to Interact API."""
+        auth_token = context["authToken"]
+        endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
+        headers = kwargs.get('headers', {'Authorization': auth_token})
+        # use parameters if we got them
+        if "parameters" in kwargs:
+            parameters = kwargs.get('parameters', None)
+            endpoint = f'{endpoint}?{parameters}'
+        response = requests.get(url=endpoint, headers=headers)
+        response_object = json.loads(response.text)
+        return response_object
 
+    def get_profile_lists(self):
+        """Retrieving all profile lists for an account."""
+        return self._get('lists')
 
-def get_context(user_name, password, url):
-    """
-    Return the login response as context.
-
-    Used with each individual call to Responsys API.
-    """
-    context = json.loads(
-        login(
-            user_name,
-            password,
-            url
-        ).text
-    )
-    context['api_url'] = config.api_url
-    return context
 
 
 def get(service_url, context, **kwargs):
