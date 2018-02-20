@@ -64,10 +64,9 @@ class Client:
         context['api_url'] = config.api_url
         return context
 
-
     def _get(self, service_url, **kwargs):
-        context = self._get_context()
         """General purpose build for GET requests to Interact API."""
+        context = self._get_context()
         auth_token = context["authToken"]
         endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
         headers = kwargs.get('headers', {'Authorization': auth_token})
@@ -76,6 +75,26 @@ class Client:
             parameters = kwargs.get('parameters', None)
             endpoint = f'{endpoint}?{parameters}'
         response = requests.get(url=endpoint, headers=headers)
+        response_object = json.loads(response.text)
+        return response_object
+
+    def _post(self, service_url, data, **kwargs):
+        context = self._get_context()
+        data = json.dumps(data)
+        headers = {
+            'Authorization': context["authToken"],
+            'Content-Type': 'application/json'
+        }
+        endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
+        response = requests.post(data=data, headers=headers, url=endpoint)
+        response_object = json.loads(response.text)
+        return response_object
+
+    def _delete(self, service_url):
+        context = self._get_context()
+        headers = {'Authorization': context["authToken"]}
+        endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
+        response = requests.delete(url=endpoint, headers=headers)
         response_object = json.loads(response.text)
         return response_object
 
@@ -125,7 +144,6 @@ class Client:
         """Retrieve all profile extensions of a profile list."""
         return self._get(f'lists/{list_name}/listExtensions')
 
-
     def get_member_of_profile_extension_by_riid(
         self,
         list_name,
@@ -151,7 +169,6 @@ class Client:
         parameters = f'fs={",".join(fields_to_return)}&qa={query_attribute}&id={record_id}'
         return self._get(service_url, parameters=parameters)
 
-
     def get_lists_for_record(self, riid):
         """Find what lists a record is in by RIID."""
         all_lists = [list_name["name"] for list_name in self.get_profile_lists()]
@@ -166,6 +183,121 @@ class Client:
                 member_of.append(profile_list)
         return member_of
 
+    def send_email_message(self, email_address, folder_name, campaign_name):
+        """Trigger email message."""
+        data = {
+            "recipientData": [{
+                "recipient": {
+                    "emailAddress": email_address,
+                    "listName": {
+                        "folderName": folder_name,
+                        "objectName": campaign_name},
+                    "recipientId": None,
+                    "mobileNumber": None,
+                    "emailFormat": "HTML_FORMAT"}}]}  # Damn that's ugly
+        service_url = f'campaigns/{campaign_name}/email'
+        return self._post(service_url, data)
+
+    def delete_from_profile_list(self, list_name, riid):
+        """Delete Profile List Recipients based on RIID."""
+        service_url = f'lists/{list_name}/members/{riid}'
+        return self._delete(service_url)
+
+    def delete_member_of_profile_extension_by_riid(
+        self,
+        list_name,
+        pet_name,
+        riid
+    ):
+        """Delete a member of a profile extension table based on RIID."""
+        service_url = f'lists/{list_name}/listExtensions/{pet_name}/members/{riid}'
+        return self._delete(service_url)
+
+    def create_supplemental_table(
+        self,
+        supplemental_table_name,
+        folder_name='',
+        fields='',
+        default_field_type='STR500',
+        data_extraction_key=None,
+        primary_key=None
+    ):
+        """Create a new supplemental table."""
+        if type(fields) == str:
+            raise TypeError('Fields must be a list.')
+        if folder_name == '':
+            folder_name = self.config.api_folder
+        service_url = f'folders/{folder_name}/suppData'
+        if primary_key is None:
+            try:
+                primary_key = fields[0]
+            except:
+                raise ValueError(
+                    """Cannot create supplemental table with no fields.
+                    Primary key field is required.""")
+        data = {
+            # TODO: Use field types per field
+            "table": {"objectName": supplemental_table_name},
+            "fields": [
+                {
+                    "fieldName": field,
+                    "fieldType": default_field_type,
+                    "dataExtractionKey": False
+                } for field in fields
+            ],
+            "primaryKeys": [primary_key]
+        }
+        return self._post(service_url, data)
+
+    def create_folder(self, folder_path=''):
+        """Create a new folder in /contentlibrary/."""
+        service_url = f'clFolders'
+        if folder_path == '':
+            folder_path = config.api_folder
+        data = {
+            "folderPath": f'/contentlibrary/{folder_path}'
+        }
+        return self._post(service_url, data)
+
+    def delete_folder(context, folder_path=''):
+        """Delete a folder in /contentlibrary/."""
+        if folder_path == '':
+            folder_path = self.config.api_folder
+        service_url = f'clFolders/contentlibrary/{folder_path}'
+        return self._delete(service_url)
+
+
+    # TODO: fix client error
+    # def create_profile_extension(
+    #     self,
+    #     list_name,
+    #     fields='',
+    #     folder_name='',
+    #     extension_name='',
+    #     default_field_type='STR500'
+    # ):
+    #     """Create a new profile extension table."""
+    #     if folder_name == None or folder_name == '':
+    #         folder_name = self.config.api_folder
+    #     if extension_name == None or extension_name == '':
+    #         extension_name = f'{list_name}{self.config.profile_extension_table_alias}'
+    #     # field_types = ['STR500', 'STR4000', 'INTEGER', 'NUMBER', 'TIMESTAMP']
+    #     data = {
+    #         "profileExtension": {
+    #             "objectName": extension_name,
+    #             "folderName": folder_name
+    #         }
+    #     }
+    #     # TODO: override default field type with fields from input list
+    #     if fields != '':
+    #         data["profileExtension"]["fields"] = [
+    #             {
+    #                 "fieldName": field,
+    #                 "fieldType": default_field_type
+    #             } for field in fields
+    #         ]
+    #     service_url = f'lists/{list_name}/listExtensions'
+    #     return self._post(service_url, data)
 
 
 
@@ -215,33 +347,6 @@ class Client:
 #     headers = {'Authorization' : auth_token}
 #     response = requests.post(url, data=data, headers=headers)
 #     return response
-
-# TODO: implement context and api url with post
-def send_email_message(email_address, folder_name, campaign_name, context):
-    """Trigger email message."""
-    data = {
-        "recipientData": [
-            {
-                "recipient": {
-                    "emailAddress": email_address,
-                    "listName": {
-                        "folderName": folder_name,
-                        "objectName": campaign_name
-                    },
-                    "recipientId": None,
-                    "mobileNumber": None,
-                    "emailFormat": "HTML_FORMAT"
-                }
-            }
-        ]
-    }
-    headers = {
-        'Authorization': context["authToken"],
-        'Content-Type': 'application/json'
-    }
-    url = f'{context["endPoint"]}/{context["api_url"]}/campaigns/{campaign_name}/email'
-    return requests.post(data=json.dumps(data), headers=headers, url=url)
-
 
 # # Merge or update members in a profile list table
 # # TODO: fix 403 response
@@ -321,43 +426,6 @@ def send_email_message(email_address, folder_name, campaign_name, context):
 #     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
 #     return response
 
-# TODO implement context, api_url with delete
-def delete_from_profile_list(list_name, riid, context):
-    """Delete Profile List Recipients based on RIID."""
-    url = f'{context["endPoint"]}/{context["api_url"]}/lists/{list_name}/members/{riid}'
-    headers = {'Authorization': context["authToken"]}
-    return requests.delete(url=url, headers=headers)
-
-# TODO implement context, api_url with post
-def create_profile_extension(
-    list_name,
-    context,
-    fields='',
-    folder_name=config.api_folder,
-    extension_name=config.profile_extension_table_alias,
-    default_field_type='STR500'
-):
-    """Create a new profile extension table."""
-    extension_name = f'{list_name}{extension_name}'
-    # field_types = ['STR500', 'STR4000', 'INTEGER', 'NUMBER', 'TIMESTAMP']
-    data = {
-        "profileExtension": {
-            "objectName": extension_name,
-            "folderName": folder_name
-        }
-    }
-    # TODO: override default field type with fields from input list
-    if fields != '':
-        data["profileExtension"]["fields"] = [
-            {
-                "fieldName": field,
-                "fieldType": default_field_type
-            } for field in fields
-        ]
-    url = f'{context["endPoint"]}/{context["api_url"]}/lists/{list_name}/listExtensions'
-    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
-    return requests.post(url=url, headers=headers)
-
 
 # TODO: Merge or update members in a profile extension table
 # extend/based on merge_or_update_members_in_a_profile_list_table
@@ -366,73 +434,3 @@ def create_profile_extension(
 # Or use a more sensible name
 # def profile_list_manage():
     # return merge_or_update_members_in_a_profile_extension_table()
-
-
-
-# TODO implement context, api_url with delete
-def delete_member_of_profile_extension_by_riid(
-    list_name,
-    pet_name,
-    riid,
-    context
-):
-    """Delete a member of a profile extension table based on RIID."""
-    url = f'{context["endPoint"]}/{context["api_url"]}/lists/{list_name}/listExtensions/{pet_name}/members/{riid}'
-    headers = {'Authorization': context["authToken"]}
-    return requests.delete(url=url, headers=headers)
-
-# TODO: implement context, api_url with post
-def create_supplemental_table(
-    supplemental_table_name,
-    context,
-    folder_name=config.api_folder,
-    fields='',
-    default_field_type='STR500',
-    data_extraction_key=None,
-    primary_key=None
-):
-    """Create a new supplemental table."""
-    if type(fields) == str:
-        raise TypeError('Fields must be a list.')
-    url = f'{context["endPoint"]}/{context["api_url"]}/folders/{folder_name}/suppData'
-    if primary_key is None:
-        try:
-            primary_key = fields[0]
-        except:
-            raise ValueError(
-                """Cannot create supplemental table with no fields.
-                Primary key field is required.""")
-    data = {
-        # TODO: Use field types per field
-        "table": {"objectName": supplemental_table_name},
-        "fields": [
-            {
-                "fieldName": field,
-                "fieldType": default_field_type,
-                "dataExtractionKey": False
-            } for field in fields
-        ],
-        "primaryKeys": [primary_key]
-    }
-    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
-    return requests.post(url=url, headers=headers, data=json.dumps(data))
-
-
-# TODO: implement context, api_url with post
-def create_folder(context, folder_path=config.api_folder):
-    """Create a new folder in /contentlibrary/."""
-    headers = {'Authorization': context["authToken"], 'Content-Type': 'application/json'}
-    url = f'{context["endPoint"]}/{context["api_url"]}/clFolders/'
-    data = {
-        "folderPath": f'/contentlibrary/{folder_path}'
-    }
-    return requests.post(url=url, data=json.dumps(data), headers=headers)
-
-
-# TODO: implement context, api_url with delete
-def delete_folder(context, folder_path=config.api_folder):
-    """Delete a folder in /contentlibrary/."""
-    headers = {'Authorization': context["authToken"]}
-    url = f'{context["endPoint"]}/{context["api_url"]}/clFolders/contentlibrary/{folder_path}'
-    return requests.delete(url=url, headers=headers)
-
