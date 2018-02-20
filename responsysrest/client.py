@@ -38,17 +38,35 @@ class Client:
         self.config = config
         self.creds = creds
 
+    def login(user_name, password, url):
+        """Login with username and password."""
+        data = {
+            "user_name": user_name,
+            "password": password,
+            "auth_type": "password"
+        }
+        headers = {'content-type': 'application/x-www-form-urlencoded'}
+        return requests.post(url, data=data, headers=headers)
+
     def context(func, *args, **kwargs):
+        """Context to wrap further calls with endpoint from client."""
         @wraps(func)
         def func_with_context(self, *args, **kwargs):
             print(f'contextualizing {func.__name__}')
-            print(self.creds.user_name)
-            return (args, kwargs)
+            context = json.loads(
+                login(
+                    self.creds.user_name,
+                    self.creds.password,
+                    self.config.login_url
+                ).text)
+            auth_token = context['authToken']
+            end_point = context['endPoint']
+            return (args, kwargs, auth_token, end_point)
         return func_with_context
 
     @context
-    def test(self, creds):
-        pass
+    def test(self):
+        return
 
 
 
