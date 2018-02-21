@@ -27,46 +27,79 @@ A python library providing access to the Responsys Interact API. Currently suppo
 
 ## Usage ##
 
-1. Import Responsys Rest
-2. Add credentials (for cli-mode)
-3. Configure your Interact connection settings (optional)
-4. Get context from Interact remote
-5. Use client
+1. Import the responsysrest package
+2. Configure your Interact connection settings
+3. Get proper credentials
+4. Instantiate the client
+5. Use the client
 
-Here's a basic boilerplate:
+The quickest way to get started is to create a `config.json` file and a `secret.json` file with your configuration and credentials information in them. The package comes with the `config.json` file but you'll need to create your own `secret.json` file. You can call the auto function from the package sub modules `configuration` and `credentials` which will traverse the root looking for the json files.
+
+config.json boilerplate:
+
+    {
+        "pod": "5",
+        "api_folder": "___api-generated",
+        "api_list": "API_testing",
+        "profile_extension_table_alias": "_pet",
+        "supplemental_table_alias": "_supp",
+        "primary_key_alias": "_primary_key",
+        "riid_generator_length": 11,
+        "test_campaign_name": "test_api_classic",
+        "test_content_library_folder": "___api-generated-test",
+        "content_library_folder": "___api-generated-cl",
+        "api_version": "1.3"
+    }
+
+secret.json boilerplate:
+
+    {
+        "user_name": "team_member",
+        "password": "1!Aa",
+        "email_address": "team_member@compnay.com"
+    }
+
+then if they're local to your imported package:
 
     import responsysrest as r
-    creds = r.Credentials(mode='cli')
-    interact = r.Interact()
-    context = r.get_context(creds.user_name, creds.password, interact.login_url)
+    client = r.Client(r.configuration.auto(), r.credentials.auto())
 
-If you are looking to try this out quickly you can just do this to check if you are configured properly:
+If not then the package can import them into class objects:
 
-    import responsysrest as r
-    r.get_context('your_user_name', 'your_password', r.Interact(pod='your_pod').login_url)
+    config = r.configuration.from_json('path/to/config.json')
+    creds = r.credentials.from_json('path/to/secret.json')
 
-Now you are ready to go!
+Then instantiate the client:
 
-`mode='cli'` will prompt you for your credentials with `getpass`, but you can of course instead pass your credentials from some other context (directly, a locally loaded file, or an application) if you don't want to use the wrapper like a cli.
+    client = r.Client(config, creds)
 
-Interact will configure automatically as the following:
+If you're in an application context you can directly configure your client by passing the following values
 
 | Property  | Value  |
 |---|---|
-| pod  | 5  |
-| api_folder  | ___api-generated  |
-| api_list  | ___api-list  |
-| profile_extension_table_alias  | _pet  |
-| supplemental_table_alias  | _supp  |
-| primary_key_alias  | _primary_key  |
-| riid_generator_length  | 11  |
-| test_campaign_name  | ___api-testing-campaign  |
-| content_library_folder  | ___api-generated-cl  |
-| api_version  | 1.3  |
+| pod  | string, `2` or `5`  |
+| api_folder  | string  |
+| api_list  | string  |
+| profile_extension_table_alias  | string  |
+| supplemental_table_alias  | string  |
+| primary_key_alias  | string  |
+| riid_generator_length  | integer  |
+| test_campaign_name  | string  |
+| content_library_folder  | string  |
+| api_version  | string  |
 
-Passing them in will instantiate Interact configuration differently, but other than the pod these are recommended settings. 
 
-    interact = r.Interact(pod='2')
+    client = r.Client(
+        pod='2',
+        api_folder='folder_name',
+        api_list='api_list',
+        profile_extension_table_alias='pet_alias',
+        supplemental_table_alias='supp_alias',
+        primary_key_alias='pk_alias',
+        riid_generator_length=11,
+        test_campaign_name='testtest',
+        content_library_folder='clsubfolder',
+        api_version='1.3')
 
 
 ## Client functions usage:
@@ -77,11 +110,11 @@ Passing them in will instantiate Interact configuration differently, but other t
 
 #### Retrieving all profile lists for an account
 
-    r.get_profile_lists(context, interact.api_url)
+    client.get_profile_lists()
   
 Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
 
-    profile_lists = r.get_profile_lists(context, interact.api_url)
+    profile_lists = client.get_profile_lists()
     [list["name"] for list in profile_lists] 
     [(list["name"], list["folderName"]) for list in profile_lists]
 
@@ -93,14 +126,14 @@ Not implemented.
 
 #### Retrieve a member of a profile list using RIID
 
-    r.get_member_of_list_by_riid(list_name, riid, context, interact.api_url)
+    client.get_member_of_list_by_riid(list_name, riid)
 
 Returns a full record if it's in the list.
 
 
 #### Retrieve a member of a profile list based on query attribute
 
-    r.get_member_of_list_by_id(list_name, record_id, context, interact.api_url, query_attribute, fields_to_return)
+    r.get_member_of_list_by_id(list_name, record_id, context, interact.api_url, query_attribute, fields)
 
 Returns the record data for the record provided. Takes six arguments, but requires `list_name`, `record_id`, `context` and `interact.api_url`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are:
 
@@ -113,8 +146,8 @@ Returns the record data for the record provided. Takes six arguments, but requir
 
 The fields to return can be a comma-separated list-like-string of the fields in the list, if left blank it will return all the fields:
 
-    fields_to_return = 'EMAIL_DOMAIN_,FIRST_NAME'
-    r.get_member_of_list_by_id(list_name, record_id, context, interact.api_url, query_attribute, fields_to_return)
+    fields = 'EMAIL_DOMAIN_,FIRST_NAME'
+    r.get_member_of_list_by_id(list_name, record_id, context, interact.api_url, query_attribute, fields)
 
 
 While a nuisance, there's no built in at the moment for converting python lists to the api's expected format.
@@ -195,15 +228,15 @@ Returns a full record if it's in the profile extension table.
 
     r.get_member_of_profile_extension_by_riid(list_name, pet_name, riid, context, interact.api_url)
 
-Also takes an optional argument `fields_to_return` which defaults to `all` if not specified. Examples:
+Also takes an optional argument `fields` which defaults to `all` if not specified. Examples:
 
     r.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890')
-    r.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890', fields_to_return='FIRST_NAME, LAST_PURCHASE_DATE')
+    r.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890', fields='FIRST_NAME, LAST_PURCHASE_DATE')
 
 
 #### Retrieve a member of a profile extension table based on a query attribute
 
-    r.get_member_of_profile_extension_by_attribute(list_name, pet_name record_id, query_attribute, fields_to_return)
+    r.get_member_of_profile_extension_by_attribute(list_name, pet_name record_id, query_attribute, fields)
 
 Takes five arguments, but requires `list_name`, `pet_name` and `record_id`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return is a comma-separated list of the fields in the list, if left blank it will return all the fields.
 
