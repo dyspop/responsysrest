@@ -1,22 +1,23 @@
 """How we configure our Interact Client connection."""
-
+import os
+import json
 
 class Configuration:
     """How our client is configured."""
 
     def __init__(
             self,
-            pod='5',
-            api_folder='___api-generated',
-            api_list='___api-list',
-            profile_extension_table_alias='_pet',
-            supplemental_table_alias='_supp',
-            primary_key_alias='_primary_key',
-            riid_generator_length=11,
-            test_campaign_name='___api-testing-campaign',
-            content_library_folder='___api-generated-cl',
-            api_version='1.3',
-            login_url=None
+            pod,
+            api_folder,
+            api_list,
+            profile_extension_table_alias,
+            supplemental_table_alias,
+            primary_key_alias,
+            riid_generator_length,
+            test_campaign_name,
+            content_library_folder,
+            api_version,
+            login_url=''
     ):
         """Initialize the Interact Configuration."""
         self.pod = pod
@@ -32,7 +33,8 @@ class Configuration:
         self.login_url = login_url
 
     def __repre__(self):
-        "Configuration"
+        """Text representation."""
+        return "Configuration"
 
     @property
     def pod(self):
@@ -171,3 +173,35 @@ class Configuration:
         self.__api_version = api_version
 
     # login_url = f'http://login{pod}.responsys.net/rest/api/v{api_version}/'
+
+
+def from_json(f):
+    """Load configuration from json."""
+    with open(f) as f:
+        user_config = json.load(f)
+        config = Configuration(
+            pod=user_config['pod'],
+            api_folder=user_config['api_folder'],
+            api_list=user_config['api_list'],
+            profile_extension_table_alias=user_config['profile_extension_table_alias'],
+            supplemental_table_alias=user_config['supplemental_table_alias'],
+            primary_key_alias=user_config['primary_key_alias'],
+            riid_generator_length=user_config['riid_generator_length'],
+            test_campaign_name=user_config['test_campaign_name'],
+            content_library_folder=user_config['content_library_folder'],
+            api_version=user_config['api_version']
+        )
+        return config
+
+
+def auto():
+    """Load any config.json file."""
+    # traverse root directory looking for credentials
+    for root, dirs, files in os.walk("."):
+        for f in files:
+            if f == 'config.json':
+                try:
+                    return from_json(f)
+                except(ValueError):
+                    raise ValueError(f'Could not open {file}')
+                break
