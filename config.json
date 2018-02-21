@@ -8,5 +8,6 @@
     "riid_generator_length": 11,
     "test_campaign_name": "test_api_classic",
     "test_content_library_folder": "___api-generated-test",
+    "content_library_folder": "___api-generated-cl",
     "api_version": "1.3"
 }
