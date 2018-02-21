@@ -2,7 +2,7 @@
 
 from .client import Client
 from .containers import rules
-from .configuration import Configuration
+from .configuration import Configuration, auto
 from .credentials import Credentials, auto
 
 __version__ = "0.1.0"
