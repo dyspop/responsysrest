@@ -1,5 +1,4 @@
 import os
-import getpass
 import json
 
 
@@ -66,5 +65,5 @@ def auto():
                 try:
                     return from_json(f)
                 except(ValueError):
-                    raise ValueError(f'Could not open {file}')
+                    raise ValueError(f'Could not open {f}')
                 break
