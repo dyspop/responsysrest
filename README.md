@@ -297,10 +297,6 @@ The default field type override can be supplied alongside individual fields with
     client.create_profile_extension('CONTACTS_LIST', fields=[('probability_of_login', 'NUMBER'), 'CUSTOMER_ID_', ('ARTICLE_CONTENTS','STR4000')], default_field_type='STR500')
 
 
-#### Merge or update members in a profile extension table
-
-Not implemented.
-
 
 #### Retrieve a member of a profile extension table based on RIID
 
@@ -438,19 +434,16 @@ To run configuration and integration tests:
 
 To run configuration tests:
 
-    $pytest tests/test_2client.py
+    $pytest responsysrest/tests/test_2client.py
 
 To run client/API integration tests only:
 
-    $pytest tests/test_2client.py
+    $pytest responsysrest/tests/test_2client.py
 
 To run extra features tests only:
 
-    $pytest tests/test_3extras.py
+    $pytest responsysrest/tests/test_3extras.py
 
-To run tests against the installed package distribution:
-
-    $pytest
 
 ## Acknowledgements ##
 
