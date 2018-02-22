@@ -291,7 +291,7 @@ class Client:
             'documentPath': f'/contentlibrary/{path}/{document_name}',
             'content': document_data
         }
-        return {'data': data, 'document_name': document_name}
+        return {'data': data, 'document_name': document_name, 'path': path}
 
     def create_document(self, document, sub_folder_path=None):
         """Create a document in /contentlibrary/."""
@@ -313,6 +313,10 @@ class Client:
         service_url = f'clDocs/contentlibrary/{sub_folder_path}/{prepped["document_name"]}'
         return self._post(service_url, prepped['data'])
 
+    def delete_document(self, path_to_interact_document):
+        """Try to delete a document in /contentlibrary/'."""
+        service_url = f'clDocs/contentlibrary/{path_to_interact_document}'
+        return self._delete(service_url)
 
     # TODO: fix client error
     # def create_profile_extension(
