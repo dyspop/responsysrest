@@ -108,3 +108,6 @@ venv.bak/
 # Responsys REST specific
 secret*.*
 secret*
+
+# OS X
+.DS_Store
