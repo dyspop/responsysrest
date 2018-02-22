@@ -61,7 +61,7 @@ secret.json boilerplate:
     {
         "user_name": "team_member",
         "password": "1!Aa",
-        "email_address": "team_member@compnay.com"
+        "email_address": "team_member@company.com"
     }
 
 then if they're local to your imported package:
