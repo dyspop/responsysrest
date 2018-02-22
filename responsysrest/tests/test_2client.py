@@ -171,7 +171,6 @@ def test_create_supplemental_table():
     """Test if the API responds.
 
     When we try to create a supplemental table.
-    We don't use fixtures so that we don't delete anything!
     """
     assert _heartbeat(client.create_supplemental_table(
         fixtures['profile_list'],
@@ -203,7 +202,7 @@ def test_create_folder_returns_response():
 
     When we try to list all push campaigns.
     """
-    assert _heartbeat(client.create_folder(config.content_library_folder))
+    assert _heartbeat(client.create_folder(config.test_content_library_folder))
 
 
 def test_delete_folder_returns_response():
@@ -211,7 +210,7 @@ def test_delete_folder_returns_response():
 
     When we try to delete a content library folder.
     """
-    assert _heartbeat(client.delete_folder(config.content_library_folder))
+    assert _heartbeat(client.delete_folder(config.test_content_library_folder))
 
 
 def test_create_document_returns_response():

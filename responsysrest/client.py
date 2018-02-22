@@ -258,7 +258,7 @@ class Client:
         """Create a new folder in /contentlibrary/."""
         service_url = 'clFolders'
         if folder_path == '':
-            folder_path = self.config.api_folder
+            folder_path = self.config.content_library_folder
         data = {
             "folderPath": f'/contentlibrary/{folder_path}'
         }
@@ -267,7 +267,7 @@ class Client:
     def delete_folder(self, folder_path=''):
         """Delete a folder in /contentlibrary/."""
         if folder_path == '':
-            folder_path = self.config.api_folder
+            folder_path = self.config.content_library_folder
         service_url = f'clFolders/contentlibrary/{folder_path}'
         return self._delete(service_url)
 

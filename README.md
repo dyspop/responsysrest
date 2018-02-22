@@ -406,7 +406,7 @@ This should create (if you're on pod 5):
 
     https://interact5.responsys.net/suite/c#!liveViewEditor/%2Fcontentlibrary%2Farbitrary%2Ffolder%2Fpath/document%2Ehtm
 
-If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated`. 
+If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated-cl`. 
 
 
 
