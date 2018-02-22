@@ -392,7 +392,7 @@ Creates a folder `/contentlibarary/new_folder` in the Content Library.
 If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated`. 
 
 
-#### Create Document
+#### Create Content Library Document
 
 Creates a document in the content library (`/contentlibary/`). Takes a document system path, not document data or other protocol path.
 
@@ -409,7 +409,44 @@ This should create (if you're on pod 5):
 If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated-cl`. 
 
 
+#### Get Content Library Document
 
+Gets the document path, content, and rest crud links for a content library document:
+
+    client.get_document('document.htm')
+
+returns:
+
+    {
+        'documentPath': '/contentlibrary/___api-generated-cl/document.htm', 
+        'content': '<html>\n    <head>\n        <title>Test Document</title>\n    </head>\n    <body>\n        <h1>Test Document</h1>\n    </body>\n</html>\n', 
+        'links': [
+            {
+                'rel': 'self', 
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/___api-generated-cl/document.htm', 
+                'method': 'GET'
+            }, 
+            {
+                'rel': 'deleteDocument', 
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/___api-generated-cl/document.htm', 
+                'method': 'DELETE'
+            }, 
+            {
+                'rel': 'setDocumentContent', 
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/___api-generated-cl/document.htm', 
+                'method': 'POST'
+            }, 
+            {
+                'rel': 'createDocument', 
+                'href': '/rest/api/v1.3/clDocs', 
+                'method': 'POST'
+            }
+        ]
+    }
+
+You'll notice the file returned uses `.htm` even though it may have been uploaded as `.html`. It is Responsys's nature to change `.html` to `.htm`. It is recommended to simply create all of your files with `.htm` to comply, otherwise you might end up with duplicates in your local copies if you're pulling files out. 
+
+    
 
 
 
