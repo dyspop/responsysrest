@@ -69,7 +69,7 @@ then if they're local to your imported package:
     import responsysrest as r
     client = r.Client(r.configuration.auto(), r.credentials.auto())
 
-If not then the package can import them into class objects:
+If not then the package can import them from json files:
 
     config = r.configuration.from_json('path/to/config.json')
     creds = r.credentials.from_json('path/to/secret.json')
