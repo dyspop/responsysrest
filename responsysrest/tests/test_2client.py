@@ -227,5 +227,12 @@ def test_get_document_returns_response():
 
     When we try to create a content library document.
     """
-    assert _heartbeat(client.get_document(''))
+    assert _heartbeat(client.get_document(fixtures['document']))
 
+
+def test_update_document_returns_response():
+    """Test if the API responds.
+
+    When we try to create a content library document.
+    """
+    assert _heartbeat(client.update_document(fixtures['document']))
