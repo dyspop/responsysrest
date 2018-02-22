@@ -117,16 +117,93 @@ If you're in an application context you can directly configure your client by pa
 
     client.get_profile_lists()
   
-Returns a list of dictionaries of all profile lists. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use
+Returns a list of dictionaries of all profile lists:
+
+    [
+        {
+            'fields': [
+                {'fieldName': 'RIID_', 'fieldType': 'INTEGER'},
+                {'fieldName': 'CREATED_SOURCE_IP_', 'fieldType': 'STR255'},
+                {'fieldName': 'CUSTOMER_ID_', 'fieldType': 'STR255'},
+                {'fieldName': 'EMAIL_ADDRESS_', 'fieldType': 'STR500'},
+                {'fieldName': 'EMAIL_DOMAIN_', 'fieldType': 'STR255'},
+                {'fieldName': 'EMAIL_ISP_', 'fieldType': 'STR255'},
+                {'fieldName': 'EMAIL_FORMAT_', 'fieldType': 'CHAR'},
+                {'fieldName': 'EMAIL_PERMISSION_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'EMAIL_DELIVERABILITY_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'EMAIL_PERMISSION_REASON_', 'fieldType': 'STR255'},
+                {'fieldName': 'MOBILE_NUMBER_', 'fieldType': 'STR25'},
+                {'fieldName': 'MOBILE_COUNTRY_', 'fieldType': 'STR25'},
+                {'fieldName': 'MOBILE_PERMISSION_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'MOBILE_DELIVERABILITY_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'MOBILE_PERMISSION_REASON_', 'fieldType': 'STR255'},
+                {'fieldName': 'POSTAL_STREET_1_', 'fieldType': 'STR255'},
+                {'fieldName': 'POSTAL_STREET_2_', 'fieldType': 'STR255'},
+                {'fieldName': 'CITY_', 'fieldType': 'STR50'},
+                {'fieldName': 'STATE_', 'fieldType': 'STR50'},
+                {'fieldName': 'POSTAL_CODE_', 'fieldType': 'STR25'},
+                {'fieldName': 'COUNTRY_', 'fieldType': 'STR50'},
+                {'fieldName': 'POSTAL_PERMISSION_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'POSTAL_DELIVERABILITY_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'POSTAL_PERMISSION_REASON_', 'fieldType': 'STR255'},
+                {'fieldName': 'CREATED_DATE_', 'fieldType': 'TIMESTAMP'},
+                {'fieldName': 'MODIFIED_DATE_', 'fieldType': 'TIMESTAMP'},
+                {'fieldName': 'MY_CUSTOM_FIELD', 'fieldType': 'STR500'}
+            ],
+            'folderName': 'UIfolderNotContentLibraryFolder',
+            'name': 'LIST_NAME'
+        },
+        {
+            'fields': [
+                {'fieldName': 'RIID_', 'fieldType': 'INTEGER'},
+                {'fieldName': 'CREATED_SOURCE_IP_', 'fieldType': 'STR255'},
+                {'fieldName': 'CUSTOMER_ID_', 'fieldType': 'STR255'},
+                {'fieldName': 'EMAIL_ADDRESS_', 'fieldType': 'STR500'},
+                {'fieldName': 'EMAIL_DOMAIN_', 'fieldType': 'STR255'},
+                {'fieldName': 'EMAIL_ISP_', 'fieldType': 'STR255'},
+                {'fieldName': 'EMAIL_FORMAT_', 'fieldType': 'CHAR'},
+                {'fieldName': 'EMAIL_PERMISSION_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'EMAIL_DELIVERABILITY_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'EMAIL_PERMISSION_REASON_', 'fieldType': 'STR255'},
+                {'fieldName': 'MOBILE_NUMBER_', 'fieldType': 'STR25'},
+                {'fieldName': 'MOBILE_COUNTRY_', 'fieldType': 'STR25'},
+                {'fieldName': 'MOBILE_PERMISSION_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'MOBILE_DELIVERABILITY_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'MOBILE_PERMISSION_REASON_', 'fieldType': 'STR255'},
+                {'fieldName': 'POSTAL_STREET_1_', 'fieldType': 'STR255'},
+                {'fieldName': 'POSTAL_STREET_2_', 'fieldType': 'STR255'},
+                {'fieldName': 'CITY_', 'fieldType': 'STR50'},
+                {'fieldName': 'STATE_', 'fieldType': 'STR50'},
+                {'fieldName': 'POSTAL_CODE_', 'fieldType': 'STR25'},
+                {'fieldName': 'COUNTRY_', 'fieldType': 'STR50'},
+                {'fieldName': 'POSTAL_PERMISSION_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'POSTAL_DELIVERABILITY_STATUS_', 'fieldType': 'CHAR'},
+                {'fieldName': 'POSTAL_PERMISSION_REASON_', 'fieldType': 'STR255'},
+                {'fieldName': 'CREATED_DATE_', 'fieldType': 'TIMESTAMP'},
+                {'fieldName': 'MODIFIED_DATE_', 'fieldType': 'TIMESTAMP'},
+                {'fieldName': 'MY_CUSTOM_FIELD', 'fieldType': 'STR500'}
+            ],
+            'folderName': 'UIfolderNotContentLibraryFolder',
+            'name': 'LIST_NAME_2'
+        }
+    ]
+
+This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists:
 
     profile_lists = client.get_profile_lists()
     [list["name"] for list in profile_lists] 
+
+returns: 
+
+    ['LIST_NAME', 'LIST_NAME_2']
+
+or a list of the lists with their respective folders:
     [(list["name"], list["folderName"]) for list in profile_lists]
 
+returns:
 
-#### Merge or update members in a profile list table
+    [('LIST_NAME', 'UIfolderNotContentLibraryFolder'), ('LIST_NAME_2', 'UIfolderNotContentLibraryFolder')]
 
-Not implemented.
 
 
 #### Retrieve a member of a profile list using RIID
