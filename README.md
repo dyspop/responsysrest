@@ -472,7 +472,7 @@ Loops through every list and checks to see if the record is in the list. If the 
 
 ## Development/Testing ##
 
-Running all tests or just the client tests will attempt to fire a test message. The test message must be configured manually in the Interact UI. It can be any content and the name for it is configured in the `config.json` file:
+Running all tests or just the client tests will attempt to fire a test message to the client's credentials email address. The test message must be configured manually in the Interact UI. It can be any content and the name for it is configured in the `config.json` file:
 
     {
         ...
