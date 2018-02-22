@@ -271,27 +271,47 @@ class Client:
         service_url = f'clFolders/contentlibrary/{folder_path}'
         return self._delete(service_url)
 
-    def create_document(self, document, sub_folder_path=None):
-        """Create a document in /contentlibrary/."""
-        if not sub_folder_path:
-            sub_folder_path = self.config.content_library_folder
-        path = self._trim_path(sub_folder_path)
-        service_url = 'clDocs'
+    def _prep_doc_and_path(self, document, path=None):
+        if not path:
+            path = self.config.content_library_folder
+        path = self._trim_path(path)
         document_data = open(document, 'r').read()
         # just use the filename, omit the path
         document_name = document.split('/')[-1]
+        if document_name.endswith('.html'):
+            raise ValueError("""
+                .html is not allowed in Responsys Interact.
+                It would silently rename your .html files to .htm on upload.
+                Instead the Responsys Interact Python wrapper library doesn't allow it.
+                Rename your .html files to .htm before you upload them.
+                This will prevent mismatches and chaos.
+                You will be happy you did.
+                """)
         data = {
             'documentPath': f'/contentlibrary/{path}/{document_name}',
             'content': document_data
         }
+        return {'data': data, 'document_name': document_name}
+
+    def create_document(self, document, sub_folder_path=None):
+        """Create a document in /contentlibrary/."""
+        service_url = 'clDocs'
+        data = self._prep_doc_and_path(document, sub_folder_path)['data']
         return self._post(service_url, data)
 
     def get_document(self, document, sub_folder_path=None):
         """Get a document from /contentlibrary/."""
         if sub_folder_path == None:
             sub_folder_path = self.config.content_library_folder
-        service_url = f'clDocs/contentlibrary/{sub_folder_path}/{document}'
+        document_name = document
+        service_url = f'clDocs/contentlibrary/{sub_folder_path}/{document_name}'
         return self._get(service_url)
+
+    def update_document(self, document, sub_folder_path=None):
+        """Update a document that's already in /contentlibrary/."""
+        prepped = self._prep_doc_and_path(document, sub_folder_path)
+        service_url = f'clDocs/contentlibrary/{sub_folder_path}/{prepped["document_name"]}'
+        return self._post(service_url, prepped['data'])
 
 
     # TODO: fix client error
