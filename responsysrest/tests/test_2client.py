@@ -21,7 +21,8 @@ fixtures = {
     'profile_list_extension': f'{config.api_list}{config.profile_extension_table_alias}',
     'primary_key': f'{config.api_list}{config.primary_key_alias}',
     'email_address': creds.email_address,
-    'campaign_name': config.test_campaign_name
+    'campaign_name': config.test_campaign_name,
+    'document': './responsysrest/tests/document.html'
 }
 context = client._get_context()
 
@@ -208,6 +209,14 @@ def test_create_folder_returns_response():
 def test_delete_folder_returns_response():
     """Test if the API responds.
 
-    When we try to delete a content library foldeclient.
+    When we try to delete a content library folder.
     """
     assert _heartbeat(client.delete_folder(config.content_library_folder))
+
+
+def test_create_document_returns_response():
+    """Test if the API responds.
+
+    When we try to create a content library document.
+    """
+    assert _heartbeat(client.create_document(fixtures['document']))
