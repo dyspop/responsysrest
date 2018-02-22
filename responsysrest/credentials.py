@@ -48,6 +48,7 @@ class Credentials:
         self.__email_address = email_address
 
 def from_json(f):
+    """Load credentials from json."""
     with open(f) as f:
         user_secrets = json.load(f)
         creds = Credentials(
