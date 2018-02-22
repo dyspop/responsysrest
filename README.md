@@ -452,7 +452,73 @@ returns:
 
 Updates a document in `/contentlibrary/` if it's already there. Takes a document system path, not document data or other protocol path.
 
+    client.update_document('local/path/to/document.htm')
 
+returns:
+
+    {
+        'documentPath': '/contentlibrary/__api-generated-cl/document.htm', 
+        'content': None, 
+        'links': [
+            {
+                'rel': 'self', 
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/__api-generated-cl/document.htm',
+                'method': 'POST'
+            },
+            {
+                'rel': 'getDocumentContent',
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/__api-generated-cl/document.htm',
+                'method': 'GET'
+            },
+            {
+                'rel': 'deleteDocument',
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/__api-generated-cl/document.htm',
+                'method': 'DELETE'
+            },
+            {
+                'rel': 'createDocument',
+                'href': '/rest/api/v1.3/clDocs',
+                'method': 'POST'
+            }
+        ]
+    }
+
+You can also specify the destination contentlibrary subfolder:
+
+    client.update_document('local/path/to/document.htm', 'path/to/interact/contentlibrary/subfolder')
+
+    {
+        'documentPath': '/contentlibrary/path/to/interact/contentlibrary/subfolder/document.htm', 
+        'content': None, 
+        'links': [
+            {
+                'rel': 'self', 
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/path/to/interact/contentlibrary/subfolder/document.htm',
+                'method': 'POST'
+            },
+            {
+                'rel': 'getDocumentContent',
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/path/to/interact/contentlibrary/subfolder/document.htm',
+                'method': 'GET'
+            },
+            {
+                'rel': 'deleteDocument',
+                'href': '/rest/api/v1.3/clDocs/contentlibrary/path/to/interact/contentlibrary/subfolder/document.htm',
+                'method': 'DELETE'
+            },
+            {
+                'rel': 'createDocument',
+                'href': '/rest/api/v1.3/clDocs',
+                'method': 'POST'
+            }
+        ]
+    }
+
+
+
+#### Delete Content Library Document
+
+D
     
 
 
