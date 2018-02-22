@@ -3,7 +3,12 @@
 A python library providing access to the Responsys Interact API. Currently supports version 1.3 Release 6.33 E65150-15.
 
 
+## Requirements
 
+1. A Responsys Interact account.
+2. A valid Responsys Interact API user name and password.
+3. Python 3.6 (see installation instructions)
+4. pip (see installation instructions)
 
 
 ## Install ##
