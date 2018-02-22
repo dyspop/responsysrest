@@ -514,12 +514,17 @@ You can also specify the destination contentlibrary subfolder:
         ]
     }
 
+This method's response from Responsys notably omits the content, you must call the `get_document()` method to get the content.
+
 
 
 #### Delete Content Library Document
 
-D
-    
+Try to delete a document from `/contentlibrary/`. Takes only a full path with the document file name in it. The path is the path of the document in Interact, not a local file path:
+
+    client.delete_document('interact/contentlibrary/external/path/to/document.html')
+
+Unlike the opinionated create and get and update methods, you can try to delete anything from the content library even at the (content library) root. If you've managed to load a file into the content library you should be able to delete it.
 
 
 
