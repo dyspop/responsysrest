@@ -380,6 +380,9 @@ Returns a list of push campaigns and their associated data.
 
 ### Managing Content
 
+You'll notice the files we use are `.htm`. It is Responsys's nature to change `.html` to `.htm` silently on upload. It is recommended to simply create all of your files with `.htm` to comply, otherwise you might end up with duplicates in your local copies if you're pulling files out. In fact, the wrapper won't allow .html files. 
+
+
 
 #### Create Folder
 
@@ -396,11 +399,11 @@ If you don't specify a folder the wrapper will default to the API folder name co
 
 Creates a document in the content library (`/contentlibary/`). Takes a document system path, not document data or other protocol path.
 
-    client.create_document('path/to/document.html')
+    client.create_document('path/to/document.htm')
 
 You can specify a folder but it will become a content library subfolder:
 
-    client.create_document('local/path/to/document.html', 'arbitrary/folder/path')
+    client.create_document('local/path/to/document.htm', 'arbitrary/folder/path')
 
 This should create (if you're on pod 5):
 
@@ -444,7 +447,11 @@ returns:
         ]
     }
 
-You'll notice the file returned uses `.htm` even though it may have been uploaded as `.html`. It is Responsys's nature to change `.html` to `.htm`. It is recommended to simply create all of your files with `.htm` to comply, otherwise you might end up with duplicates in your local copies if you're pulling files out. 
+
+#### Update Content Library Document
+
+Updates a document in `/contentlibrary/` if it's already there. Takes a document system path, not document data or other protocol path.
+
 
     
 
@@ -465,21 +472,30 @@ Loops through every list and checks to see if the record is in the list. If the 
 
 ## Development/Testing ##
 
+Running all tests or just the client tests will attempt to fire a test message. The test message must be configured manually in the Interact UI. It can be any content and the name for it is configured in the `config.json` file:
+
+    {
+        ...
+        "test_campaign_name": "test_api_classic",
+        ...
+    }
+
+
 To run configuration and integration tests:
 
     $pytest
 
 To run configuration tests:
 
-    $pytest responsysrest/tests/test_2client.py
+    $python3 -m pytest responsysrest/tests/test_2client.py
 
 To run client/API integration tests only:
 
-    $pytest responsysrest/tests/test_2client.py
+    $python3 -m pytest responsysrest/tests/test_2client.py
 
 To run extra features tests only:
 
-    $pytest responsysrest/tests/test_3extras.py
+    $python3 -m pytest responsysrest/tests/test_3extras.py
 
 
 ## Acknowledgements ##
