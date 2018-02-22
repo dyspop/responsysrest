@@ -22,7 +22,8 @@ fixtures = {
     'primary_key': f'{config.api_list}{config.primary_key_alias}',
     'email_address': creds.email_address,
     'campaign_name': config.test_campaign_name,
-    'document': './responsysrest/tests/document.html'
+    'document': './responsysrest/tests/document.html',
+    'content_library_folder': '___api-generated-test'
 }
 context = client._get_context()
 
@@ -202,7 +203,7 @@ def test_create_folder_returns_response():
 
     When we try to list all push campaigns.
     """
-    assert _heartbeat(client.create_folder(config.test_content_library_folder))
+    assert _heartbeat(client.create_folder(fixtures['content_library_folder']))
 
 
 def test_delete_folder_returns_response():
@@ -210,7 +211,7 @@ def test_delete_folder_returns_response():
 
     When we try to delete a content library folder.
     """
-    assert _heartbeat(client.delete_folder(config.test_content_library_folder))
+    assert _heartbeat(client.delete_folder(fixtures['content_library_folder']))
 
 
 def test_create_document_returns_response():
