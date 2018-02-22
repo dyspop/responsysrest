@@ -22,7 +22,7 @@ fixtures = {
     'primary_key': f'{config.api_list}{config.primary_key_alias}',
     'email_address': creds.email_address,
     'campaign_name': config.test_campaign_name,
-    'document': './responsysrest/tests/document.html',
+    'document': './responsysrest/tests/document.htm',
     'content_library_folder': '___api-generated-test'
 }
 context = client._get_context()
