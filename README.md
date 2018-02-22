@@ -318,6 +318,25 @@ Creates a folder `/contentlibarary/new_folder` in the Content Library.
 If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated`. 
 
 
+#### Create Document
+
+Creates a document in the content library (`/contentlibary/`). Takes a document system path, not document data or other protocol path.
+
+    client.create_document('path/to/document.html')
+
+You can specify a folder but it will become a content library subfolder:
+
+    client.create_document('local/path/to/document.html', 'arbitrary/folder/path')
+
+This should create (if you're on pod 5):
+
+    https://interact5.responsys.net/suite/c#!liveViewEditor/%2Fcontentlibrary%2Farbitrary%2Ffolder%2Fpath/document%2Ehtm
+
+If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated`. 
+
+
+
+
 
 
 ### Non-native features
