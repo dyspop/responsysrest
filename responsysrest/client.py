@@ -286,6 +286,13 @@ class Client:
         }
         return self._post(service_url, data)
 
+    def get_document(self, document, sub_folder_path=None):
+        """Get a document from /contentlibrary/."""
+        if sub_folder_path == None:
+            sub_folder_path = self.config.content_library_folder
+        service_url = f'clDocs/contentlibrary/{sub_folder_path}/{document}'
+        return self._get(service_url)
+
 
     # TODO: fix client error
     # def create_profile_extension(
