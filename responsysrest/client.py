@@ -94,6 +94,15 @@ class Client:
         response_object = json.loads(response.text)
         return response_object
 
+    def _trim_path(self, path):
+        # chop trailing slash
+        if path[-1] == '/':
+            path = path[:-1]
+        # chop leading slash
+        if path[0] == '/':
+            path = path[1:]
+        return path
+
     """Direct implentations of calls from Responsys Interact REST API documentation
     https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
     All comment descriptions are directly from the v1.3 REST API documentation,
@@ -247,7 +256,7 @@ class Client:
 
     def create_folder(self, folder_path=''):
         """Create a new folder in /contentlibrary/."""
-        service_url = f'clFolders'
+        service_url = 'clFolders'
         if folder_path == '':
             folder_path = self.config.api_folder
         data = {
@@ -255,12 +264,28 @@ class Client:
         }
         return self._post(service_url, data)
 
-    def delete_folder(self, context, folder_path=''):
+    def delete_folder(self, folder_path=''):
         """Delete a folder in /contentlibrary/."""
         if folder_path == '':
             folder_path = self.config.api_folder
         service_url = f'clFolders/contentlibrary/{folder_path}'
         return self._delete(service_url)
+
+    def create_document(self, document, sub_folder_path=None):
+        """Create a document in /contentlibrary/."""
+        if not sub_folder_path:
+            sub_folder_path = self.config.content_library_folder
+        path = self._trim_path(sub_folder_path)
+        service_url = 'clDocs'
+        document_data = open(document, 'r').read()
+        # just use the filename, omit the path
+        document_name = document.split('/')[-1]
+        data = {
+            'documentPath': f'/contentlibrary/{path}/{document_name}',
+            'content': document_data
+        }
+        return self._post(service_url, data)
+
 
     # TODO: fix client error
     # def create_profile_extension(
