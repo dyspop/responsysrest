@@ -46,6 +46,7 @@ class Credentials:
         """Set Username."""
         self.__email_address = email_address
 
+
 def from_json(f):
     """Load credentials from json."""
     with open(f) as f:
@@ -55,6 +56,7 @@ def from_json(f):
             password=user_secrets['password'],
             email_address=user_secrets['email_address'])
         return creds
+
 
 def auto():
     """Look for the secret.json file."""
