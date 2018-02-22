@@ -198,6 +198,7 @@ returns:
     ['LIST_NAME', 'LIST_NAME_2']
 
 or a list of the lists with their respective folders:
+
     [(list["name"], list["folderName"]) for list in profile_lists]
 
 returns:
