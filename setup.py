@@ -26,6 +26,7 @@ setup(
     version=responsysrest.__version__,
     url='https://github.com/dyspop/responsysrest',
     author='Dan Black',
+    author_email='dyspop@gmail.com',
     description='Python client library for the Responsys Interact REST API',
     long_description=long_description,
     packages=find_packages(),
