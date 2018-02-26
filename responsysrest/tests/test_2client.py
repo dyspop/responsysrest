@@ -1,6 +1,7 @@
 """Tests for each individual function in the Client."""
 import responsysrest as r
 import random
+import requests
 
 creds = r.credentials.auto()
 config = r.configuration.auto()
@@ -25,10 +26,9 @@ fixtures = {
     'document': './responsysrest/tests/document.htm',
     'content_library_folder': '___api-generated-test'
 }
-context = client._get_context()
 
 
-# Test related functions.
+# Test-related functions.
 def _heartbeat(func):
     """Test if the API responds.
 
@@ -38,26 +38,55 @@ def _heartbeat(func):
     return (None is not func and '' != func)
 
 
-# The tests.
+def _bad_request(func):
+    return (
+        isinstance(func, requests.models.Response),
+        func.status_code == 404)
+
+
+""" The tests for logging in and getting the client context."""
+
+
+def test_login_returns_response():
+    """Test login."""
+    assert client._login(
+        creds.user_name, creds.password, config.login_url)
+
+
+def test_get_context():
+    assert _heartbeat(client._get_context())
+
+
 def test_get_context_returns_authtoken():
     """Test if get_context returns an authToken.
 
     Some responses do warrant inspection.
     """
-    assert _heartbeat(context['authToken'])
+    assert _heartbeat(client._get_context()['authToken'])
 
 
 def test_get_context_returns_endpoint():
     """Test if get_context returns a responsys https endpoint."""
-    assert _heartbeat(context['endPoint'])
+    assert _heartbeat(client._get_context()['endPoint'])
 
 
 def test_get_context_endpoint_is_https_and_responsys():
     """Some responses do warrant inspection."""
-    before, https, after = context['endPoint'].rpartition('https://')
+    before, https, after = client._get_context()['endPoint'].rpartition('https://')
     assert '' == before
     assert 'https://' == https
     assert 'responsys.' in after
+
+
+"""The tests for the internal CRUD methods bound to context."""
+
+
+def test_get():
+    """Test to see if the server responds when we try to get a bad request."""
+    assert _bad_request(client._get(''))
+
+
+"""Tests for API functions."""
 
 
 def test_get_profile_lists_not_zero_length():

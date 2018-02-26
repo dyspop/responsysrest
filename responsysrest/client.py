@@ -71,8 +71,11 @@ class Client:
             parameters = kwargs.get('parameters', None)
             endpoint = f'{endpoint}?{parameters}'
         response = requests.get(url=endpoint, headers=headers)
-        response_object = json.loads(response.text)
-        return response_object
+        try:
+            response = json.loads(response.text)
+        except:
+            pass
+        return response
 
     def _post(self, service_url, data, **kwargs):
         context = self._get_context()
