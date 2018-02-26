@@ -133,10 +133,6 @@ def test_get_campaigns_not_zero_length():
     assert len(client.get_campaigns()) > 0
 
 
-# def test_manage_profile_lists_returns_response():
-#     assert return
-
-
 def test_get_member_of_list_by_riid_returns_response():
     """Test if the API responds when we try to get a membeclient."""
     assert _heartbeat(client.get_member_of_list_by_riid(
@@ -189,6 +185,11 @@ def test_create_profile_extension():
     """
     assert _heartbeat(
         client.create_profile_extension(fixtures['profile_list_extension']))
+
+
+def test_update_profile_extension():
+    """Test updating a profile list."""
+    assert client.update_profile_extension(None)
 
 
 def test_get_member_of_profile_extension_by_riid():
