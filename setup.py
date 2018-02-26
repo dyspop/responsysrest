@@ -8,7 +8,7 @@ with open(path.join(project_dir, 'README.md')) as f:
     long_description = f.read()
 
 install_requires = (
-    'requests'
+    # 'requests'
 )
 tests_require = (
     'pytest',
