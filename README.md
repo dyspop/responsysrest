@@ -465,7 +465,7 @@ If you don't specify a folder the wrapper will default to the API folder name co
 
 #### Get Content Library Document
 
-Gets the document path, content, and rest crud links for a content library document:
+Gets the document path, content, and REST CRUD links for a content library document:
 
     client.get_document('document.htm')
 

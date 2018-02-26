@@ -629,7 +629,7 @@ name configured for your client. The boilerplate default is
 Get Content Library Document
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Gets the document path, content, and rest crud links for a content
+Gets the document path, content, and REST CRUD links for a content
 library document:
 
 ::
