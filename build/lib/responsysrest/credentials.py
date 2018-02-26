@@ -67,5 +67,5 @@ def auto():
                 try:
                     return from_json(f)
                 except(ValueError):
-                    raise ValueError(f'Could not open {f}')
+                    raise ValueError('Could not open {f}'.format(f=f))
                 break

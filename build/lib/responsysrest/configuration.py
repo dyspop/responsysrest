@@ -2,6 +2,7 @@
 import os
 import json
 
+
 class Configuration:
     """How our client is configured."""
 
@@ -150,12 +151,14 @@ class Configuration:
     @login_url.setter
     def login_url(self, login_url):
         """Set the login URL."""
-        self.__login_url = f'http://login{self.pod}.responsys.net/rest/api/v{self.api_version}/auth/token'
+        self.__login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
+            p=self.pod,
+            a=self.api_version)
 
     @property
     def api_url(self):
         """API url partial."""
-        return f'rest/api/v{self.api_version}'
+        return 'rest/api/v{a}'.format(a=self.api_version)
 
     @api_url.setter
     def api_url(self, api_url):
@@ -203,5 +206,5 @@ def auto():
                 try:
                     return from_json(f)
                 except(ValueError):
-                    raise ValueError(f'Could not open {f}')
+                    raise ValueError('Could not open {f}'.format(f=f))
                 break
