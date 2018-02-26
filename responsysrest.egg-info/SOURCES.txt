@@ -1,4 +1,6 @@
+MANIFEST.in
 README.md
+README.rst
 setup.py
 responsysrest/__init__.py
 responsysrest/client.py

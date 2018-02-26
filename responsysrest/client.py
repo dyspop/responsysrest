@@ -63,8 +63,10 @@ class Client:
     def _get(self, service_url, **kwargs):
         """General purpose build for GET requests to Interact API."""
         context = self._get_context()
-        auth_token = context["authToken"]
-        endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
+        endpoint = '{e}/{a}/{s}'.format(
+            e=context["endPoint"],
+            a=context["api_url"],
+            s=service_url)
         headers = kwargs.get('headers', {'Authorization': auth_token})
         # use parameters if we got them
         if "parameters" in kwargs:
