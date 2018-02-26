@@ -83,7 +83,17 @@ def test_get_context_endpoint_is_https_and_responsys():
 
 def test_get():
     """Test to see if the server responds when we try to get a bad request."""
-    assert _bad_request(client._get(''))
+    assert _bad_request(client._get(None))
+
+
+def test_get():
+    """Test to see if the server responds when we try to post a bad request."""
+    assert _bad_request(client._post(None, None))
+
+
+def test_delete():
+    """Test to see if the server responds when we try to delete nothing."""
+    assert _bad_request(client._delete(None))
 
 
 """Tests for API functions."""
