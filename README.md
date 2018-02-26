@@ -268,7 +268,7 @@ Examples:
 
     client.create_profile_extension('CONTACTS_LIST')
 
-If you've used the defaults from the boilerplate config this creates a `CONTACTS_LIST_pet` profile extension table extending `CONTACTS_LIST` in a folder named `___api-generated` with no records and no non-default fields.
+If you've used the defaults from the boilerplate config this creates a `CONTACTS_LIST_pet` profile extension table extending `CONTACTS_LIST` in the UIfolder specified by your client configuration (default is `___api-generated`) with no records and no non-default fields.
 
 You can also specify the extension you want to use, but this function is opinionated and will only let you create a profile extension table that begins with the name of the profile list that is being extended.
 
@@ -341,7 +341,7 @@ Examples:
 
     client.create_supplemental_table('CONTACTS_LIST', fields=['field1','field2'])
 
-This creates a `CONTACTS_LIST_supp` supplemental table in a folder named `___api-generated` with no records and no non-default fields. You must specify either a list of at least one field or a primary key that is one of the Responsys internal field names. If you do not specify a primary key the wrapper will use the first field in the input list. This is because the API requires a primary key field. You can also specify an optional data extraction key.
+This creates a `CONTACTS_LIST_supp` supplemental table in a folder named from your client configuration (default is `___api-generated`) with no records and no non-default fields. You must specify either a list with at least one field or a primary key that is one of the Responsys internal field names. If you do not specify a primary key the wrapper will use the first field in the input list because the API requires a primary key field. You can also specify an optional data extraction key.
 
     client.create_supplemental_table(supplemental_table_name, folder_name, fields=fields)
     fields.create_supplemental_table(supplemental_table_name, folder_name, primary_key=primary_key)
@@ -362,14 +362,65 @@ Examples:
 
     client.get_campaigns()
 
-Returns a dictionary of campaigns and their data, along with links and their data.
+Returns a dictionary of campaigns and their data, along with links and their data:
 
-To see a list of all campaigns or a list of campaigns and their respective folders use:
+    'campaigns': [
+        {
+            'id': 12345678, 
+            'name': 'API_Test', 
+            'folderName': '___api-generated-cl', 
+            'type': 'EMAIL', 
+            'purpose': 'PROMOTIONAL', 
+            'listName': 'CONTACTS_LIST', 
+            'proofListPath': 'testing/Prooflist', 
+            'seedListPath': 'testing/Seedlist', 
+            'htmlMessagePath': '/contentlibrary/campaigns/___api-generated-cl/document.htm', 
+            'enableLinkTracking': False, 
+            'enableExternalTracking': False, 
+            'subject': 'This is a test message', 
+            'fromName': 'Company', 
+            'fromEmail': 'email@company.com', 
+            'replyToEmail': 'support@company.com', 
+            'useUTF8': True, 
+            'locale': 'en', 
+            'trackHTMLOpens': True, 
+            'trackConversions': True, 
+            'sendTextIfHTMLUnknown': False, 
+            'unsubscribeOption': 'OPTOUT_SINGLE_CLICK', 
+            'autoCloseOption': 'AUTO_CLOSE_X_DAYS_AFTER_LAST_RESPONSE', 
+            'autoCloseValue': '30', 
+            'links': [
+                {
+                'rel': 'self', 
+                'href': '/rest/api/v1.3/campaigns/API_Test', 
+                'method': 'GET'
+                }
+                , 
+                {
+                'rel': 'update', 
+                'href': '/rest/api/v1.3/campaigns/API_Test', 
+                'method': 'PUT'
+                }
+                , 
+                {
+                'rel': 'create', 
+                'href': '/rest/api/v1.3/API_Test', 
+                'method': 'POST'
+                }
+            ]
+        }
+    ]
+
+
+To see a list of just campaigns:
 
     campaigns = client.get_campaigns()['campaigns']
     [campaign['name'] for campaign in campaigns]
-    [(campaign['name'], campaign['folderName']) for campaign in campaigns]
 
+
+or a list of campaigns and their respective folders:
+    campaigns = client.get_campaigns()['campaigns']
+    [(campaign['name'], campaign['folderName']) for campaign in campaigns]
 
 #### Get all Push Campaigns
 
