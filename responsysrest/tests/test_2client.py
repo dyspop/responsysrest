@@ -44,7 +44,7 @@ def _bad_request(func):
         func.status_code == 404)
 
 
-""" The tests for logging in and getting the client context."""
+""" The tests for logging in and managing the client context."""
 
 
 def test_login_returns_response():
@@ -82,6 +82,11 @@ def test_get_context_endpoint_is_https_and_responsys():
     assert '' == before
     assert 'https://' == https
     assert 'responsys.' in after
+
+
+def test_refresh_token():
+    """Test refreshing the token."""
+    assert client._refresh_token(None)
 
 
 """The tests for the internal CRUD methods bound to context."""
