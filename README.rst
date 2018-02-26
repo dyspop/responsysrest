@@ -23,20 +23,20 @@ Install
 
 2. Clone this repo and install via source package:
 
-   ::
+::
 
-           cd responsysrest/
-           pip install .
+        cd responsysrest/
+        pip install .
 
 Development Install
 -------------------
 
 1. Clone this repo and install via source package in edit mode:
 
-   ::
+::
 
-           cd responsysrest/
-           pip install -e .
+        cd responsysrest/
+        pip install -e .
 
 Usage
 -----
@@ -50,7 +50,7 @@ Usage
 The quickest way to get started is to create a ``config.json`` file and
 a ``secret.json`` file with your configuration and credentials
 information in them. The package comes with the ``config.json`` file but
-you'll need to create your own ``secret.json`` file. You can call the
+you’ll need to create your own ``secret.json`` file. You can call the
 auto function from the package sub modules ``configuration`` and
 ``credentials`` which will traverse the root looking for the json files.
 
@@ -82,7 +82,7 @@ secret.json boilerplate:
         "email_address": "team_member@company.com"
     }
 
-then if they're local to your imported package:
+then if they’re local to your imported package:
 
 ::
 
@@ -102,32 +102,32 @@ Then instantiate the client:
 
     client = r.Client(config, creds)
 
-If you're in an application context you can directly configure your
+If you’re in an application context you can directly configure your
 client by passing the following values
 
-+------------------------------------+--------------------------+
-| Property                           | Value                    |
-+====================================+==========================+
-| pod                                | string, ``2`` or ``5``   |
-+------------------------------------+--------------------------+
-| api\_folder                        | string                   |
-+------------------------------------+--------------------------+
-| api\_list                          | string                   |
-+------------------------------------+--------------------------+
-| profile\_extension\_table\_alias   | string                   |
-+------------------------------------+--------------------------+
-| supplemental\_table\_alias         | string                   |
-+------------------------------------+--------------------------+
-| primary\_key\_alias                | string                   |
-+------------------------------------+--------------------------+
-| riid\_generator\_length            | integer                  |
-+------------------------------------+--------------------------+
-| test\_campaign\_name               | string                   |
-+------------------------------------+--------------------------+
-| content\_library\_folder           | string                   |
-+------------------------------------+--------------------------+
-| api\_version                       | string                   |
-+------------------------------------+--------------------------+
++-------------------------------+------------------------+
+| Property                      | Value                  |
++===============================+========================+
+| pod                           | string, ``2`` or ``5`` |
++-------------------------------+------------------------+
+| api_folder                    | string                 |
++-------------------------------+------------------------+
+| api_list                      | string                 |
++-------------------------------+------------------------+
+| profile_extension_table_alias | string                 |
++-------------------------------+------------------------+
+| supplemental_table_alias      | string                 |
++-------------------------------+------------------------+
+| primary_key_alias             | string                 |
++-------------------------------+------------------------+
+| riid_generator_length         | integer                |
++-------------------------------+------------------------+
+| test_campaign_name            | string                 |
++-------------------------------+------------------------+
+| content_library_folder        | string                 |
++-------------------------------+------------------------+
+| api_version                   | string                 |
++-------------------------------+------------------------+
 
 ::
 
@@ -262,7 +262,7 @@ Retrieve a member of a profile list using RIID
 
     client.get_member_of_list_by_riid(list_name, riid)
 
-Returns a full record if it's in the list.
+Returns a full record if it’s in the list.
 
 Retrieve a member of a profile list based on query attribute
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -276,19 +276,19 @@ Returns the record data for the record provided. Requires ``list_name``,
 from within your Responsys Interact instance. The record id is the
 specific id you wish to use to identify the record. The query attribute
 is the type of id that you are using to retreive the record. If you
-don't specify it's assumed to be Customer ID. The available options are:
+don’t specify it’s assumed to be Customer ID. The available options are:
 
-+----------+-----------------+
-| Option   | Meaning         |
-+==========+=================+
-| r        | RIID            |
-+----------+-----------------+
-| e        | Email Address   |
-+----------+-----------------+
-| c        | Customer ID     |
-+----------+-----------------+
-| m        | Mobile Number   |
-+----------+-----------------+
++--------+---------------+
+| Option | Meaning       |
++========+===============+
+| r      | RIID          |
++--------+---------------+
+| e      | Email Address |
++--------+---------------+
+| c      | Customer ID   |
++--------+---------------+
+| m      | Mobile Number |
++--------+---------------+
 
 The fields to return should be a python list data object, if left blank
 it will return all the fields:
@@ -351,7 +351,7 @@ Examples:
 
     client.create_profile_extension('CONTACTS_LIST')
 
-If you've used the defaults from the boilerplate config this creates a
+If you’ve used the defaults from the boilerplate config this creates a
 ``CONTACTS_LIST_pet`` profile extension table extending
 ``CONTACTS_LIST`` in a folder named ``___api-generated`` with no records
 and no non-default fields.
@@ -380,7 +380,7 @@ Additionally you can supply fields as a list:
 
     client.create_profile_extension('CONTACTS_LIST', fields=['LTV_v1', 'LTV_v2', 'decile'])
 
-If you don't specify a (Responsys Interact) data type for each it will
+If you don’t specify a (Responsys Interact) data type for each it will
 default to ``STR4000``. This default data type can be overridden with
 one of ``STR500``, ``STR4000``, ``INTEGER``, ``NUMBER``, or
 ``TIMESTAMP``:
@@ -406,7 +406,7 @@ fields without their own field type specifications:
 Retrieve a member of a profile extension table based on RIID
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Returns a full record if it's in the profile extension table.
+Returns a full record if it’s in the profile extension table.
 
 ::
 
@@ -432,8 +432,8 @@ Takes five arguments, but requires ``list_name``, ``pet_name`` and
 from in your Responsys Interact instance. The record id is the specific
 id you wish to use to identify the record. The query attribute is the
 type of id that you are using to retreive the record. The available
-options are ``r`` for RIID, ``e`` for EMAIL\_ADDRESS, ``c`` for
-CUSTOMER\_ID and ``m`` for MOBILE\_NUMBER. The fields to return python
+options are ``r`` for RIID, ``e`` for EMAIL_ADDRESS, ``c`` for
+CUSTOMER_ID and ``m`` for MOBILE_NUMBER. The fields to return python
 list data object of the fields in the list, if left blank it will return
 all the fields.
 
@@ -526,11 +526,11 @@ Returns a list of push campaigns and their associated data.
 Managing Content
 ~~~~~~~~~~~~~~~~
 
-You'll notice the files we use are ``.htm``. It is Responsys's nature to
+You’ll notice the files we use are ``.htm``. It is Responsys’s nature to
 change ``.html`` to ``.htm`` silently on upload. It is recommended to
 simply create all of your files with ``.htm`` to comply, otherwise you
-might end up with duplicates in your local copies if you're pulling
-files out. In fact, the wrapper won't allow .html files.
+might end up with duplicates in your local copies if you’re pulling
+files out. In fact, the wrapper won’t allow .html files.
 
 Create Folder
 ^^^^^^^^^^^^^
@@ -543,7 +543,7 @@ Creates a folder in the content library (``/contentlibary/``).
 
 Creates a folder ``/contentlibarary/new_folder`` in the Content Library.
 
-If you don't specify a folder the wrapper will default to the API folder
+If you don’t specify a folder the wrapper will default to the API folder
 name configured for your client. The boilerplate default is
 ``___api-generated``.
 
@@ -563,13 +563,13 @@ You can specify a folder but it will become a content library subfolder:
 
     client.create_document('local/path/to/document.htm', 'arbitrary/folder/path')
 
-This should create (if you're on pod 5):
+This should create (if you’re on pod 5):
 
 ::
 
     https://interact5.responsys.net/suite/c#!liveViewEditor/%2Fcontentlibrary%2Farbitrary%2Ffolder%2Fpath/document%2Ehtm
 
-If you don't specify a folder the wrapper will default to the API folder
+If you don’t specify a folder the wrapper will default to the API folder
 name configured for your client. The boilerplate default is
 ``___api-generated-cl``.
 
@@ -617,7 +617,7 @@ returns:
 Update Content Library Document
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Updates a document in ``/contentlibrary/`` if it's already there. Takes
+Updates a document in ``/contentlibrary/`` if it’s already there. Takes
 a document system path, not document data or other protocol path.
 
 ::
@@ -688,7 +688,7 @@ You can also specify the destination contentlibrary subfolder:
         ]
     }
 
-This method's response from Responsys notably omits the content, you
+This method’s response from Responsys notably omits the content, you
 must call the ``get_document()`` method to get the content.
 
 Delete Content Library Document
@@ -704,7 +704,7 @@ document in Interact, not a local file path:
 
 Unlike the opinionated create and get and update methods, you can try to
 delete anything from the content library even at the (content library)
-root. If you've managed to load a file into the content library you
+root. If you’ve managed to load a file into the content library you
 should be able to delete it.
 
 Non-native features
@@ -728,8 +728,15 @@ very slow, but sometimes you want to know what lists a member is in.
 Development/Testing
 -------------------
 
+If you’re looking to contribute then your best best is to get your
+client configured properly (get ``tests/test_1user_configs.py`` passing)
+then get a list of missing features from: $python3 -m pytest
+responsysrest/tests/test_2client.py
+
+Currently there are 25/52 features implemented.
+
 Running all tests or just the client tests will attempt to fire a test
-message to the client's credentials email address. The test message must
+message to the client’s credentials email address. The test message must
 be configured manually in the Interact UI. It can be any content and the
 name for it is configured in the ``config.json`` file:
 
@@ -751,7 +758,7 @@ To run configuration tests:
 
 ::
 
-    $python3 -m pytest responsysrest/tests/test_2client.py
+    $python3 -m pytest responsysrest/tests/test_1user_configs.py
 
 To run client/API integration tests only:
 

@@ -543,6 +543,11 @@ Loops through every list and checks to see if the record is in the list. If the 
 
 ## Development/Testing ##
 
+If you're looking to contribute then your best best is to get your client configured properly (get `tests/test_1user_configs.py` passing) then get a list of missing features from:
+    $python3 -m pytest responsysrest/tests/test_2client.py
+
+Currently there are 25/52 features implemented. 
+
 Running all tests or just the client tests will attempt to fire a test message to the client's credentials email address. The test message must be configured manually in the Interact UI. It can be any content and the name for it is configured in the `config.json` file:
 
     {
@@ -558,7 +563,7 @@ To run configuration and integration tests:
 
 To run configuration tests:
 
-    $python3 -m pytest responsysrest/tests/test_2client.py
+    $python3 -m pytest responsysrest/tests/test_1user_configs.py
 
 To run client/API integration tests only:
 
