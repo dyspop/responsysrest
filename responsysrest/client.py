@@ -86,16 +86,22 @@ class Client:
         }
         endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
         response = requests.post(data=data, headers=headers, url=endpoint)
-        response_object = json.loads(response.text)
-        return response_object
+        try:
+            response = json.loads(response.text)
+        except:
+            pass
+        return response
 
     def _delete(self, service_url):
         context = self._get_context()
         headers = {'Authorization': context["authToken"]}
         endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
         response = requests.delete(url=endpoint, headers=headers)
-        response_object = json.loads(response.text)
-        return response_object
+        try:
+            response = json.loads(response.text)
+        except:
+            pass
+        return response
 
     def _trim_path(self, path):
         # chop trailing slash
