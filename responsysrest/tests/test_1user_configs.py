@@ -6,9 +6,15 @@ config = r.configuration.auto()
 client = r.Client(config, creds)
 
 
+# test the credentials
+
+
 def test_credentials_class():
     """Test that the class instantiates."""
     assert r.Credentials('user', 'password', 'test@')
+
+
+# test the configuration
 
 
 def test_pod_exists():
@@ -63,5 +69,25 @@ def test_test_campaign_name_exists():
 
 
 def test_test_content_library_folder_exists():
-    """Test if we loaded something in the test content library foldeclient."""
+    """Test if we loaded something in the test content library folder."""
     assert config.content_library_folder
+
+
+def test_config_in_client():
+    """Not None."""
+    assert None is not client.config
+
+
+def test_creds_in_client():
+    """Not None."""
+    assert None is not client.creds
+
+
+def test_config_matches_client_config():
+    """The instantiations should match."""
+    assert config == client.config
+
+
+def test_creds_match_client_creds():
+    """The instantiations should match."""
+    assert creds == client.creds
