@@ -53,6 +53,12 @@ def test_login_returns_response():
         creds.user_name, creds.password, config.login_url)
 
 
+def test_login_with_username_and_certificates():
+    """Test login with certificates."""
+    assert client._login_with_username_and_certificates(
+        creds.user_name, creds.certificates)
+
+
 def test_get_context():
     assert _heartbeat(client._get_context())
 
