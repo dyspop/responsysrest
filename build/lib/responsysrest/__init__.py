@@ -5,5 +5,5 @@ from .containers import rules
 from .configuration import Configuration, auto
 from .credentials import Credentials, auto
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __keywords__ = "responsys interact client rest api"
