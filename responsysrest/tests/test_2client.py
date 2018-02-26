@@ -122,6 +122,11 @@ def test_fixture_profile_list_in_get_profile_lists():
     assert fixtures['profile_list'] in profile_lists
 
 
+def test_update_profile_list():
+    """Test updating a profile list."""
+    assert client.update_profile_list(None)
+
+
 def test_get_campaigns_not_zero_length():
     """Test to see if campaigns has data."""
     # TODO: what happens if there are no campaigns defined in Interact?
