@@ -235,12 +235,27 @@ def test_create_supplemental_table():
         [fixtures['primary_key']]))
 
 
+def test_update_supplemental_table():
+    """Test updating a supplemental table."""
+    assert client.update_supplemental_table(None, None, None)
+
+
 def test_get_push_campaigns_returns_response():
     """Test if the API responds.
 
     When we try to list all push campaigns.
     """
     assert _heartbeat(client.get_push_campaigns())
+
+
+def test_get_record_from_supplemental_table():
+    """Test getting a record from a supplemental table."""
+    assert client.get_record_from_supplemental_table(None, None, None)
+
+
+def test_delete_record_from_supplemental_table():
+    """Test deleting a record from a supplemental table."""
+    assert client.delete_record_from_supplemental_table(None, None, None)
 
 
 def test_send_email_message_returns_response():
