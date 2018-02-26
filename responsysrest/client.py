@@ -71,7 +71,7 @@ class Client:
         # use parameters if we got them
         if "parameters" in kwargs:
             parameters = kwargs.get('parameters', None)
-            endpoint = f'{endpoint}?{parameters}'
+            endpoint = '{e}?{p}'.format(e=endpoint, p=paramaters)
         response = requests.get(url=endpoint, headers=headers)
         try:
             response = json.loads(response.text)
@@ -86,7 +86,10 @@ class Client:
             'Authorization': context["authToken"],
             'Content-Type': 'application/json'
         }
-        endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
+        endpoint = '{e}/{a}/{s}'.format(
+            e=context["endPoint"],
+            a=context["api_url"],
+            s=service_url)
         response = requests.post(data=data, headers=headers, url=endpoint)
         try:
             response = json.loads(response.text)
@@ -97,7 +100,10 @@ class Client:
     def _delete(self, service_url):
         context = self._get_context()
         headers = {'Authorization': context["authToken"]}
-        endpoint = f'{context["endPoint"]}/{context["api_url"]}/{service_url}'
+        endpoint = '{e}/{a}/{s}'.format(
+            e=context["endPoint"],
+            a=context["api_url"],
+            s=service_url)
         response = requests.delete(url=endpoint, headers=headers)
         try:
             response = json.loads(response.text)
@@ -140,8 +146,8 @@ class Client:
         fields_to_return=['all']
     ):
         """Retrieve a member of a profile list using RIID."""
-        service_url = f'lists/{list_name}/members/{riid}'
-        parameters = f'fs={",".join(fields_to_return)}'
+        service_url = 'lists/{l}/members/{id}'.format(l=list_name, id=riid)
+        parameters = 'fs={fs}'.format(fs=",".join(fields_to_return))
         return self._get(service_url, parameters=parameters)
 
     def get_member_of_list_by_attribute(
@@ -152,13 +158,16 @@ class Client:
         fields_to_return=['all']
     ):
         """Retrieve a member of a profile list based on query attribute."""
-        service_url = f'lists/{list_name}/members'
-        parameters = f'fs={",".join(fields_to_return)}&qa={query_attribute}&id={record_id}'
+        service_url = 'lists/{l}/members'.format(l=list_name)
+        parameters = 'fs={fs}&qa={}&id={id}'.format(
+            fs=",".join(fields_to_return),
+            qa=query_attribute,
+            id=record_id)
         return self._get(service_url, parameters=parameters)
 
     def get_profile_extensions_for_list(self, list_name):
         """Retrieve all profile extensions of a profile list."""
-        return self._get(f'lists/{list_name}/listExtensions')
+        return self._get('lists/{l}/listExtensions').format(l=list_name)
 
     def get_member_of_profile_extension_by_riid(
         self,
@@ -168,8 +177,11 @@ class Client:
         fields_to_return=['all']
     ):
         """Retrieve a member of a profile extension table based on RIID."""
-        service_url = f'lists/{list_name}/listExtensions/{pet_name}/members/{riid}'
-        parameters = f'fs={",".join(fields_to_return)}'
+        service_url = 'lists/{l}/listExtensions/{p}/members/{id}'.format(
+            l=list_name,
+            p=pet_name,
+            id=riid)
+        parameters = 'fs={fs}'.format(fs=",".join(fields_to_return))
         return self._get(service_url, parameters=parameters)
 
     def get_member_of_profile_extension_by_attribute(
@@ -181,8 +193,13 @@ class Client:
         fields_to_return=['all']
     ):
         """Retrieve a member of a profile extension table based on a query attribute."""
-        service_url = f'lists/{list_name}/listExtensions/{pet_name}/members'
-        parameters = f'fs={",".join(fields_to_return)}&qa={query_attribute}&id={record_id}'
+        service_url = 'lists/{l}/listExtensions/{p}/members'.format(
+            l=list_name,
+            p=pet_name)
+        parameters = 'fs={fs}&qa={qa}&id={id}'.format(
+            fs=",".join(fields_to_return),
+            qa=query_attribute,
+            id=record_id)
         return self._get(service_url, parameters=parameters)
 
     def get_lists_for_record(self, riid):
@@ -211,12 +228,12 @@ class Client:
                     "recipientId": None,
                     "mobileNumber": None,
                     "emailFormat": "HTML_FORMAT"}}]}  # Damn that's ugly
-        service_url = f'campaigns/{campaign_name}/email'
+        service_url = 'campaigns/{c}/email',format(c=campaign_name)
         return self._post(service_url, data)
 
     def delete_from_profile_list(self, list_name, riid):
         """Delete Profile List Recipients based on RIID."""
-        service_url = f'lists/{list_name}/members/{riid}'
+        service_url = 'lists/{l}/members/{id}'.format(l=list_name, id=riid)
         return self._delete(service_url)
 
     def delete_member_of_profile_extension_by_riid(
@@ -226,7 +243,10 @@ class Client:
         riid
     ):
         """Delete a member of a profile extension table based on RIID."""
-        service_url = f'lists/{list_name}/listExtensions/{pet_name}/members/{riid}'
+        service_url = 'lists/{l}/listExtensions/{p}/members/{id}'.format(
+            l=list_name,
+            p=pet_name,
+            id=riid)
         return self._delete(service_url)
 
     def create_supplemental_table(
@@ -243,7 +263,7 @@ class Client:
             raise TypeError('Fields must be a list.')
         if folder_name == '':
             folder_name = self.config.api_folder
-        service_url = f'folders/{folder_name}/suppData'
+        service_url = 'folders/{f}/suppData'.format(f=folder_name)
         if primary_key is None:
             try:
                 primary_key = fields[0]
@@ -271,7 +291,7 @@ class Client:
         if folder_path == '':
             folder_path = self.config.content_library_folder
         data = {
-            "folderPath": f'/contentlibrary/{folder_path}'
+            "folderPath": '/contentlibrary/{}'.format(f=folder_path)
         }
         return self._post(service_url, data)
 
@@ -279,7 +299,7 @@ class Client:
         """Delete a folder in /contentlibrary/."""
         if folder_path == '':
             folder_path = self.config.content_library_folder
-        service_url = f'clFolders/contentlibrary/{folder_path}'
+        service_url = 'clFolders/contentlibrary/{f}'.format(f=folder_path)
         return self._delete(service_url)
 
     def _prep_doc_and_path(self, document, path=None):
@@ -291,15 +311,16 @@ class Client:
         document_name = document.split('/')[-1]
         if document_name.endswith('.html'):
             raise ValueError("""
-                .html is not allowed in Responsys Interact.
-                It would silently rename your .html files to .htm on upload.
-                Instead the Responsys Interact Python wrapper library doesn't allow it.
-                Rename your .html files to .htm before you upload them.
-                This will prevent mismatches and chaos.
-                You will be happy you did.
+.html is not allowed in Responsys Interact.
+It would silently rename your .html files to .htm on upload.
+Instead the Responsys Interact Python wrapper library doesn't allow it.
+Rename your .html files to .htm before you upload them.
+This will prevent mismatches and chaos.
+You will be happy you did.
                 """)
         data = {
-            'documentPath': f'/contentlibrary/{path}/{document_name}',
+            'documentPath': '/contentlibrary/{p}/{d}'.format(
+                p=path, d=document_name),
             'content': document_data
         }
         return {'data': data, 'document_name': document_name, 'path': path}
@@ -312,21 +333,26 @@ class Client:
 
     def get_document(self, document, sub_folder_path=None):
         """Get a document from /contentlibrary/."""
-        if sub_folder_path == None:
+        if sub_folder_path is None:
             sub_folder_path = self.config.content_library_folder
         document_name = document
-        service_url = f'clDocs/contentlibrary/{sub_folder_path}/{document_name}'
+        service_url = 'clDocs/contentlibrary/{sf}/{d}'.format(
+            sf=sub_folder_path,
+            d=document_name)
         return self._get(service_url)
 
     def update_document(self, document, sub_folder_path=None):
         """Update a document that's already in /contentlibrary/."""
         prepped = self._prep_doc_and_path(document, sub_folder_path)
-        service_url = f'clDocs/contentlibrary/{sub_folder_path}/{prepped["document_name"]}'
+        service_url = 'clDocs/contentlibrary/{sf}/{p}'.format(
+            sf=sub_folder_path,
+            p=prepped["document_name"])
         return self._post(service_url, prepped['data'])
 
     def delete_document(self, path_to_interact_document):
         """Try to delete a document in /contentlibrary/'."""
-        service_url = f'clDocs/contentlibrary/{path_to_interact_document}'
+        service_url = 'clDocs/contentlibrary/{p}'.format(
+            p=path_to_interact_document)
         return self._delete(service_url)
 
     # TODO: fix client error
