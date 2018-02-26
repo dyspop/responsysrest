@@ -258,6 +258,17 @@ def test_delete_record_from_supplemental_table():
     assert client.delete_record_from_supplemental_table(None, None, None)
 
 
+def test_update_list_and_send_email_message():
+    """Test update list and send email."""
+    assert client.update_list_and_send_email_message(None, None)
+
+
+def test_update_list_and_send_email_message_with_attachments():
+    """Test update list and send email with attachment."""
+    assert client.update_list_and_send_email_message_with_attachments(
+        None, None, None)
+
+
 def test_send_email_message_returns_response():
     """Test if the API responds.
 
@@ -269,12 +280,57 @@ def test_send_email_message_returns_response():
         fixtures['campaign_name']))
 
 
+def test_update_list_and_send_sms():
+    """Test update list and send SMS."""
+    assert client.update_list_and_send_sms(None, None)
+
+
+def test_send_push_message():
+    """Test sending a push message."""
+    assert client.send_push_message(None, None)
+
+
+def test_trigger_custom_event():
+    """Test triggering a custom event."""
+    assert client.trigger_custom_event(None, None)
+
+
+def test_schedule_campaign():
+    """Test scheduling a campaign."""
+    assert client.schedule_campaign(None, None, None, None)
+
+
+def test_get_schedules_for_campaign():
+    """Test getting the schedules related to a campaign."""
+    assert client.get_schedules_for_campaign()
+
+
+def test_get_campaign_schedule():
+    """Test returning a campaign schedule."""
+    assert client.get_campaign_schedule(None, None)
+
+
+def test_update_campaign_schedule():
+    """Test updating an existing schedule."""
+    assert client.update_campaign_schedule(None, None, None, None)
+
+
+def test_unschedule_campaign():
+    """Test unscheduling a campaign."""
+    assert client.unschedule_campaign(None, None)
+
+
 def test_create_folder_returns_response():
     """Test if the API responds.
 
     When we try to list all push campaigns.
     """
     assert _heartbeat(client.create_folder(fixtures['content_library_folder']))
+
+
+def test_list_folder():
+    """Test listing a content library folder."""
+    assert client.list_folder(None)
 
 
 def test_delete_folder_returns_response():
@@ -308,9 +364,45 @@ def test_update_document_returns_response():
     """
     assert _heartbeat(client.update_document(fixtures['document']))
 
+
 def test_delete_document_returns_response():
     """Test if the API responds.
 
     When we try to create a content library document.
     """
     assert _heartbeat(client.delete_document(fixtures['document']))
+
+
+def test_create_media_file():
+    """Test creating a media file on Responsys Interact."""
+    assert client.create_media_file(None)
+
+
+def test_get_media_file():
+    """Test getting a media file from Responsys Interact."""
+    assert client.get_media_file(None)
+
+
+def test_update_media_file():
+    """Test updating an existing file on Responsys Interact."""
+    assert client.update_media_file(None, None)
+
+
+def test_delete_media_file():
+    """Test deleting a media file on Responsys Interact."""
+    assert client.delete_media_file(None)
+
+
+def test_copy_media_file():
+    """Test generating a copy of a file on Responsys Interact."""
+    assert client.copy_media_file(None, None)
+
+
+def test_set_images_in_document():
+    """Test setting an image in a content library document."""
+    assert client.set_images_in_document(None, None, None, None)
+
+
+def test_get_images_in_document():
+    """Test getting images from a content library document."""
+    assert client.get_images_in_document(None)
