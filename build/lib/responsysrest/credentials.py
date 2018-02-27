@@ -9,12 +9,14 @@ class Credentials:
         self,
         user_name,
         password,
-        email_address
+        email_address,
+        certificates=None
     ):
         """Initialize the credentials."""
         self.user_name = user_name
         self.password = password
         self.email_address = email_address
+        self.certificates = certificates
 
     @property
     def user_name(self):

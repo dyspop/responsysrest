@@ -18,7 +18,7 @@ class Configuration:
             test_campaign_name,
             content_library_folder,
             api_version,
-            login_url=''
+            user_cerficates=False
     ):
         """Initialize the Interact Configuration."""
         self.pod = pod
@@ -31,9 +31,12 @@ class Configuration:
         self.test_campaign_name = test_campaign_name
         self.content_library_folder = content_library_folder
         self.api_version = api_version
-        self.login_url = login_url
+        self.login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
+            p=self.pod,
+            a=self.api_version)
+        self.user_cerficates = user_cerficates
 
-    def __repre__(self):
+    def __repr__(self):
         """Text representation."""
         return "Configuration"
 
@@ -144,18 +147,6 @@ class Configuration:
         self.__content_library_folder = content_library_folder
 
     @property
-    def login_url(self):
-        """Get the login URL."""
-        return self.__login_url
-
-    @login_url.setter
-    def login_url(self, login_url):
-        """Set the login URL."""
-        self.__login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
-            p=self.pod,
-            a=self.api_version)
-
-    @property
     def api_url(self):
         """API url partial."""
         return 'rest/api/v{a}'.format(a=self.api_version)
@@ -174,6 +165,19 @@ class Configuration:
     def api_version(self, api_version):
         """Set the API version."""
         self.__api_version = api_version
+
+    @property
+    def login_url(self):
+        """Get the login URL."""
+        return self.__login_url
+
+    @login_url.setter
+    def login_url(self, login_url):
+        """Set the login URL."""
+        self.__login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
+            p=self.pod,
+            a=self.api_version)
+
 
     # login_url = f'http://login{pod}.responsys.net/rest/api/v{api_version}/'
 
