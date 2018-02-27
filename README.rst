@@ -47,7 +47,7 @@ Standard install for using in your application
 
 1. Contact the author for an access token. It works this way until this
    is on pypi.
-2. ``$pip install git+https://{access_token}:x-oauth-basic@github.com/dyspop/responsysrest.git@0.1.6``
+2. ``$pip install git+https://{access_token}:x-oauth-basic@github.com/dyspop/responsysrest.git@0.1.7``
 
 Usage
 -----
