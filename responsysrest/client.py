@@ -45,7 +45,7 @@ class Client:
         return requests.post(url, data=data, headers=headers)
 
 
-    def _login_with_username_and_certificates(url, user_name):
+    def _login_with_username_and_certificates(self, url, user_name):
         """Login with username and certificates."""
         # # TODO: Implement
         # # Step 1 - Authenticate server by sending the following REST request

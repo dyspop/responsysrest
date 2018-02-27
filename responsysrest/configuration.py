@@ -17,7 +17,8 @@ class Configuration:
             riid_generator_length,
             test_campaign_name,
             content_library_folder,
-            api_version
+            api_version,
+            user_cerficates=False
     ):
         """Initialize the Interact Configuration."""
         self.pod = pod
@@ -33,6 +34,7 @@ class Configuration:
         self.login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
             p=self.pod,
             a=self.api_version)
+        self.user_cerficates = user_cerficates
 
     def __repr__(self):
         """Text representation."""
