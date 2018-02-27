@@ -34,7 +34,7 @@ This package is developed for Python3.x but should work on 2.7 if you're so incl
 ### Standard install for using in your application
 
 1. Contact the author for an access token. It works this way until this is on pypi.
-2. `$pip install git+https://{access_token}:x-oauth-basic@github.com/dyspop/responsysrest.git@0.1.5`
+2. `$pip install git+https://{access_token}:x-oauth-basic@github.com/dyspop/responsysrest.git@0.1.6`
 
 
 ## Usage ##
