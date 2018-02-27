@@ -45,43 +45,43 @@ class Client:
         return requests.post(url, data=data, headers=headers)
 
 
-def login_with_username_and_certificates(url, user_name):
-    """Login with username and certificates."""
-    # # TODO: Implement
-    # # Step 1 - Authenticate server by sending the following REST request
-    # data = {
-    #     "user_name" : user_name,
-    #     "auth_type" : "server",
-    #     "client_challenge" : client_challenge_value
-    # }
-    # service_url = 'auth/token'
-    # url = url + service_url
-    # client_challenge_value = generate_client_challenge_value()
+    def _login_with_username_and_certificates(url, user_name):
+        """Login with username and certificates."""
+        # # TODO: Implement
+        # # Step 1 - Authenticate server by sending the following REST request
+        # data = {
+        #     "user_name" : user_name,
+        #     "auth_type" : "server",
+        #     "client_challenge" : client_challenge_value
+        # }
+        # service_url = 'auth/token'
+        # url = url + service_url
+        # client_challenge_value = generate_client_challenge_value()
 
-    # # Step 2 - Get response from the server and decrypt with RSA and
-    # # Public Key Certificate (downloaded from Interact interface)
-    # response = requests.post(url, data=data, headers=headers)
-    # # TODO: Implement parse response
-    # # Expect:
-    # # {
-    # #     "authToken" : "<TEMP_AUTH_TOKEN>",
-    # #     "serverChallenge" : "<BASE_64_ENCODED_SERVER_CHALLENGE>",
-    # #     "clientChallenge" : "<ENCRYPTED_AND_THEN_BASE_64_ENCODED_CLIENT_CHALLENGE>"
-    # # }
-    # response = parse_response()
-    # # TODO: Implement import certificate
-    # certificate = import_local_public_key_certificate(file)
-    # # TODO: Implement RSA decryption
-    # response = decrypt(response)
-    # # TODO: Implement authorize call
-    # response = login_with_username_and_certificate_authorization(
-    #     user_name,
-    #     auth_type=client,
-    #     server_challenge=encrypt(response["serverChallenge"])
-    # )
+        # # Step 2 - Get response from the server and decrypt with RSA and
+        # # Public Key Certificate (downloaded from Interact interface)
+        # response = requests.post(url, data=data, headers=headers)
+        # # TODO: Implement parse response
+        # # Expect:
+        # # {
+        # #     "authToken" : "<TEMP_AUTH_TOKEN>",
+        # #     "serverChallenge" : "<BASE_64_ENCODED_SERVER_CHALLENGE>",
+        # #     "clientChallenge" : "<ENCRYPTED_AND_THEN_BASE_64_ENCODED_CLIENT_CHALLENGE>"
+        # # }
+        # response = parse_response()
+        # # TODO: Implement import certificate
+        # certificate = import_local_public_key_certificate(file)
+        # # TODO: Implement RSA decryption
+        # response = decrypt(response)
+        # # TODO: Implement authorize call
+        # response = login_with_username_and_certificate_authorization(
+        #     user_name,
+        #     auth_type=client,
+        #     server_challenge=encrypt(response["serverChallenge"])
+        # )
 
-    # return response
-    raise(NotImplementedError)
+        # return response
+        raise(NotImplementedError)
 
     def _get_context(self):
         """
