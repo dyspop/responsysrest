@@ -14,29 +14,36 @@ Description: # Responsys Interact REST API python client #
         
         ## Requirements
         
-        1. A Responsys Interact account.
+        1. A Responsys Interact account (see How-to).
         2. A valid Responsys Interact API user name and password.
-        3. Python 3.6 (see installation instructions)
-        4. pip (see installation instructions)
+        3. Python (see How-to)
+        4. pip (see How-to)
         
+        ### How-to
+        
+        Sign up for Responsys Interact at https://www.oracle.com/marketingcloud/products/cross-channel-orchestration/index.html (not free).
+        
+        Install Python3 and Python Package Index. 
+          * OS X: It is recommended to install Python3 this way: http://docs.python-guide.org/en/latest/starting/install3/osx/ which should alias your Python3 to separate command `python3`.
+        
+        This package is developed for Python3.x but should work on 2.7 if you're so inclined.
         
         ## Install ##
         
-        1. Install Python3 and Python Package Index. 
-          * OS X: It is recommended to install Python3 this way: http://docs.python-guide.org/en/latest/starting/install3/osx/ which should alias your Python3 to separate command `python3`.
-        2. Clone this repo and install via source package:
+        ### Development install via repository clone
+        1. Clone this repo:
+            $git clone git@github.com:dyspop/responsysrest.git
+        2. Create Virtual Environment
+            $cd responsysrest && virtualenv env && source env/bin/activate
+        2. Install via source package in development mode:
         ```
-            cd responsysrest/
-            pip install .
-        ```
-        
-        ## Development Install
-        
-        1. Clone this repo and install via source package in edit mode:
-        ```
-            cd responsysrest/
             pip install -e .
         ```
+        
+        ### Standard install for using in your application
+        
+        1. Contact the author for an access token. It works this way until this is on pypi.
+        2. `$pip install git+https://{access_token}:x-oauth-basic@github.com/dyspop/responsysrest.git@0.1.5`
         
         
         ## Usage ##

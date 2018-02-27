@@ -99,6 +99,97 @@ class Client:
         context['api_url'] = self.config.api_url
         return context
 
+    def _refresh_token(self, token):
+        """Refresh the token. Called when it's expired."""
+        # # TODO: Implement
+        # # Refresh token
+        # def refresh_token(url, old_auth_token):
+        #     service_url = 'auth/token'
+        #     url = url + service_url
+        #     data = {'auth_type' : 'token'}
+        #     headers = {'Authorization' : auth_token}
+        #     response = requests.post(url, data=data, headers=headers)
+        #     return response
+
+        # # Merge or update members in a profile list table
+        # # TODO: fix 403 response
+        # # TODO: implement context and api_url with post
+        # def manage_profile_list(list_name, **kwargs):
+        #     """Merge or update members in a profile list table."""
+        #     # load container data
+        #     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
+        #     # process keyword arguments
+        #     fields = kwargs.get('fields')
+        #     records = kwargs.get('records', None)
+        #     merge_rules = kwargs.get('merge_rules', data["mergeRule"])
+
+        #     # make sure the input fields and records are lists
+        #     if isinstance(fields, list) and isinstance(records, list):
+        #         # make sure the fields and records have the same amount of columns
+        #         if len(fields) == len(records):
+        #             # insert our fields into the data
+        #             data["recordData"]["fieldNames"] = fields
+        #             # insert our records into the data
+        #             data["recordData"]["records"] = records
+        #         else:
+        #             raise ValueError(
+        #                 """ERROR: List headers count does not
+        #                 match record column count"""
+        #             )
+        #     else:
+        #         raise ValueError(
+        #             """
+        #             ARGUMENT ERROR: input fields or records are not list objects.\n
+        #             Please specify lists for 'fields' or 'records' arguments.
+        #             """
+        #         )
+        #     # extract merge rules
+        #     rules_keys = [key for key in data["mergeRule"]]
+        #     # extract merge rules default values
+        #     rules_values = [
+        #         data["mergeRule"][rule]["default"] for rule in rules_keys
+        #     ]
+        #     # assign a new rules object to work on before we insert it into the
+        #     # request object
+        #     rules_dict = dict(zip(rules_keys, rules_values))
+
+        #     for merge_rule, merge_value in merge_rules.items():
+        #         try:
+        #             # if the user input merge rule value is valid based on the
+        #             # container data
+        #             if merge_value in data["mergeRule"][merge_rule]["options"]:
+        #                 # add the new merge rule value to the data
+        #                 data["mergeRule"][merge_rule] = merge_value
+        #         except KeyError:
+        #             print(
+        #                 """
+        #                 f'ERROR: Merge rule "{merge_rule}" is not valid.
+        #                 Valid merge rules are:
+        #                 {rules_keys}'
+        #                 """
+        #             )
+        #         # print(merge_rule + " : " + merge_value)
+        #         # assign parameters from merge_rules keyword arguments to new rules
+        #         rules_dict[merge_rule] = merge_value
+
+        #     # add the merge rules back into the data
+        #     data["mergeRule"] = rules_dict
+
+        #     # build post request
+        #     context = get_context()
+        #     auth_token = context["authToken"]
+        #     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
+        #     headers = {
+        #         'Authorization': auth_token, 'Content-Type': 'application/json'
+        #     }
+        #     print(json.dumps(data))
+        #     # make the request
+        #     response = requests.post(url, data=json.dumps(data), headers=headers)
+        #     # return the data to the container?
+        #     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
+        #     return response
+        raise(NotImplementedError)
+
     def _get(self, service_url, **kwargs):
         """General purpose build for GET requests to Interact API."""
         context = self._get_context()
@@ -106,11 +197,11 @@ class Client:
             e=context["endPoint"],
             a=context["api_url"],
             s=service_url)
-        headers = kwargs.get('headers', {'Authorization': auth_token})
+        headers = kwargs.get('headers', {'Authorization': context['authToken']})
         # use parameters if we got them
         if "parameters" in kwargs:
             parameters = kwargs.get('parameters', None)
-            endpoint = '{e}?{p}'.format(e=endpoint, p=paramaters)
+            endpoint = '{e}?{p}'.format(e=endpoint, p=parameters)
         response = requests.get(url=endpoint, headers=headers)
         try:
             response = json.loads(response.text)
@@ -159,6 +250,30 @@ class Client:
             path = path[1:]
         return path
 
+
+    def _prep_doc_and_path(self, document, path=None):
+        if not path:
+            path = self.config.content_library_folder
+        path = self._trim_path(path)
+        document_data = open(document, 'r').read()
+        # just use the filename, omit the path
+        document_name = document.split('/')[-1]
+        if document_name.endswith('.html'):
+            raise ValueError("""
+.html is not allowed in Responsys Interact.
+It would silently rename your .html files to .htm on upload.
+Instead the Responsys Interact Python wrapper library doesn't allow it.
+Rename your .html files to .htm before you upload them.
+This will prevent mismatches and chaos.
+You will be happy you did.
+                """)
+        data = {
+            'documentPath': '/contentlibrary/{p}/{d}'.format(
+                p=path, d=document_name),
+            'content': document_data
+        }
+        return {'data': data, 'document_name': document_name, 'path': path}
+
     """Direct implentations of calls from Responsys Interact REST API documentation
     https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
     All comment descriptions are directly from the v1.3 REST API documentation,
@@ -169,6 +284,10 @@ class Client:
     def get_profile_lists(self):
         """Retrieving all profile lists for an account."""
         return self._get('lists')
+
+    def update_profile_lists(self):
+        """Update a profile list."""
+        raise(NotImplementedError)
 
     def get_campaigns(self):
         """Get all EMD email campaigns."""
@@ -198,7 +317,7 @@ class Client:
     ):
         """Retrieve a member of a profile list based on query attribute."""
         service_url = 'lists/{l}/members'.format(l=list_name)
-        parameters = 'fs={fs}&qa={}&id={id}'.format(
+        parameters = 'fs={fs}&qa={qa}&id={id}'.format(
             fs=",".join(fields_to_return),
             qa=query_attribute,
             id=record_id)
@@ -206,7 +325,7 @@ class Client:
 
     def get_profile_extensions_for_list(self, list_name):
         """Retrieve all profile extensions of a profile list."""
-        return self._get('lists/{l}/listExtensions').format(l=list_name)
+        return self._get('lists/{l}/listExtensions'.format(l=list_name))
 
     def get_member_of_profile_extension_by_riid(
         self,
@@ -267,7 +386,7 @@ class Client:
                     "recipientId": None,
                     "mobileNumber": None,
                     "emailFormat": "HTML_FORMAT"}}]}  # Damn that's ugly
-        service_url = 'campaigns/{c}/email',format(c=campaign_name)
+        service_url = 'campaigns/{c}/email'.format(c=campaign_name)
         return self._post(service_url, data)
 
     def delete_from_profile_list(self, list_name, riid):
@@ -330,7 +449,7 @@ class Client:
         if folder_path == '':
             folder_path = self.config.content_library_folder
         data = {
-            "folderPath": '/contentlibrary/{}'.format(f=folder_path)
+            "folderPath": '/contentlibrary/{f}'.format(f=folder_path)
         }
         return self._post(service_url, data)
 
@@ -340,29 +459,6 @@ class Client:
             folder_path = self.config.content_library_folder
         service_url = 'clFolders/contentlibrary/{f}'.format(f=folder_path)
         return self._delete(service_url)
-
-    def _prep_doc_and_path(self, document, path=None):
-        if not path:
-            path = self.config.content_library_folder
-        path = self._trim_path(path)
-        document_data = open(document, 'r').read()
-        # just use the filename, omit the path
-        document_name = document.split('/')[-1]
-        if document_name.endswith('.html'):
-            raise ValueError("""
-.html is not allowed in Responsys Interact.
-It would silently rename your .html files to .htm on upload.
-Instead the Responsys Interact Python wrapper library doesn't allow it.
-Rename your .html files to .htm before you upload them.
-This will prevent mismatches and chaos.
-You will be happy you did.
-                """)
-        data = {
-            'documentPath': '/contentlibrary/{p}/{d}'.format(
-                p=path, d=document_name),
-            'content': document_data
-        }
-        return {'data': data, 'document_name': document_name, 'path': path}
 
     def create_document(self, document, sub_folder_path=None):
         """Create a document in /contentlibrary/."""
@@ -389,136 +485,104 @@ You will be happy you did.
         return self._post(service_url, prepped['data'])
 
     def delete_document(self, path_to_interact_document):
-        """Try to delete a document in /contentlibrary/'."""
+        """Delete a document in /contentlibrary/'."""
         service_url = 'clDocs/contentlibrary/{p}'.format(
             p=path_to_interact_document)
         return self._delete(service_url)
 
-    # TODO: fix client error
-    # def create_profile_extension(
-    #     self,
-    #     list_name,
-    #     fields='',
-    #     folder_name='',
-    #     extension_name='',
-    #     default_field_type='STR500'
-    # ):
-    #     """Create a new profile extension table."""
-    #     if folder_name == None or folder_name == '':
-    #         folder_name = self.config.api_folder
-    #     if extension_name == None or extension_name == '':
-    #         extension_name = f'{list_name}{self.config.profile_extension_table_alias}'
-    #     # field_types = ['STR500', 'STR4000', 'INTEGER', 'NUMBER', 'TIMESTAMP']
-    #     data = {
-    #         "profileExtension": {
-    #             "objectName": extension_name,
-    #             "folderName": folder_name
-    #         }
-    #     }
-    #     # TODO: override default field type with fields from input list
-    #     if fields != '':
-    #         data["profileExtension"]["fields"] = [
-    #             {
-    #                 "fieldName": field,
-    #                 "fieldType": default_field_type
-    #             } for field in fields
-    #         ]
-    #     service_url = f'lists/{list_name}/listExtensions'
-    #     return self._post(service_url, data)
+    # NOT IMPLEMENTED GROUP
 
+    def create_profile_extension(self, profile_extension_name, records):
+        """Create a profile extension table."""
 
-# # TODO: Implement
-# # Refresh token
-# def refresh_token(url, old_auth_token):
-#     service_url = 'auth/token'
-#     url = url + service_url
-#     data = {'auth_type' : 'token'}
-#     headers = {'Authorization' : auth_token}
-#     response = requests.post(url, data=data, headers=headers)
-#     return response
+    def update_profile_extension(self, profile_extension_name, records):
+        """Update a profile extension table."""
+        raise(NotImplementedError)
 
-# # Merge or update members in a profile list table
-# # TODO: fix 403 response
-# # TODO: implement context and api_url with post
-# def manage_profile_list(list_name, **kwargs):
-#     """Merge or update members in a profile list table."""
-#     # load container data
-#     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-#     # process keyword arguments
-#     fields = kwargs.get('fields')
-#     records = kwargs.get('records', None)
-#     merge_rules = kwargs.get('merge_rules', data["mergeRule"])
+    def update_supplemental_table(self, supplemental_table_name, records):
+        """Update a supplemental table."""
+        raise(NotImplementedError)
 
-#     # make sure the input fields and records are lists
-#     if isinstance(fields, list) and isinstance(records, list):
-#         # make sure the fields and records have the same amount of columns
-#         if len(fields) == len(records):
-#             # insert our fields into the data
-#             data["recordData"]["fieldNames"] = fields
-#             # insert our records into the data
-#             data["recordData"]["records"] = records
-#         else:
-#             raise ValueError(
-#                 """ERROR: List headers count does not
-#                 match record column count"""
-#             )
-#     else:
-#         raise ValueError(
-#             """
-#             ARGUMENT ERROR: input fields or records are not list objects.\n
-#             Please specify lists for 'fields' or 'records' arguments.
-#             """
-#         )
-#     # extract merge rules
-#     rules_keys = [key for key in data["mergeRule"]]
-#     # extract merge rules default values
-#     rules_values = [
-#         data["mergeRule"][rule]["default"] for rule in rules_keys
-#     ]
-#     # assign a new rules object to work on before we insert it into the
-#     # request object
-#     rules_dict = dict(zip(rules_keys, rules_values))
+    def get_record_from_supplemental_table(self, supplemental_table_name, record):
+        """Get a record from a supplemental table."""
+        raise(NotImplementedError)
 
-#     for merge_rule, merge_value in merge_rules.items():
-#         try:
-#             # if the user input merge rule value is valid based on the
-#             # container data
-#             if merge_value in data["mergeRule"][merge_rule]["options"]:
-#                 # add the new merge rule value to the data
-#                 data["mergeRule"][merge_rule] = merge_value
-#         except KeyError:
-#             print(
-#                 """
-#                 f'ERROR: Merge rule "{merge_rule}" is not valid.
-#                 Valid merge rules are:
-#                 {rules_keys}'
-#                 """
-#             )
-#         # print(merge_rule + " : " + merge_value)
-#         # assign parameters from merge_rules keyword arguments to new rules
-#         rules_dict[merge_rule] = merge_value
+    def delete_record_from_supplemental_table(self, supplemental_table_name, record):
+        """Delete a record from a supplemental table."""
+        raise(NotImplementedError)
 
-#     # add the merge rules back into the data
-#     data["mergeRule"] = rules_dict
+    def update_list_and_send_email_message(
+        self, list, recipients, campaign_name
+    ):
+        """Update a list and then send an email message."""
+        raise(NotImplementedError)
 
-#     # build post request
-#     context = get_context()
-#     auth_token = context["authToken"]
-#     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
-#     headers = {
-#         'Authorization': auth_token, 'Content-Type': 'application/json'
-#     }
-#     print(json.dumps(data))
-#     # make the request
-#     response = requests.post(url, data=json.dumps(data), headers=headers)
-#     # return the data to the container?
-#     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-#     return response
+    def update_list_and_send_email_message_with_attachments(
+        self, list, recipeints, campaign_name, attachments
+    ):
+        """Update a list and send an email message."""
+        raise(NotImplementedError)
 
-# TODO: Merge or update members in a profile extension table
-# extend/based on merge_or_update_members_in_a_profile_list_table
-# def merge_or_update_members_in_a_profile_extension_table():
-    # return
-# Or use a more sensible name
-# def profile_list_manage():
-    # return merge_or_update_members_in_a_profile_extension_table()
+    def update_list_and_send_sms(self, list, recipients, campaign_name):
+        """Update a list and send an sms."""
+        raise(NotImplementedError)
+
+    def send_push_message(self, campaign_name, recipient_id):
+        """Send a push message."""
+        raise(NotImplementedError)
+
+    def trigger_custom_event(self, event_name):
+        """Trigger a custom event."""
+        raise(NotImplementedError)
+
+    def schedule_campaign(self, campaign_name, schedule):
+        """Schedule a campaign."""
+        raise(NotImplementedError)
+
+    def get_schedules_for_campaign(self, campaign_name):
+        """Get the schedule IDs for a campaign."""
+        raise(NotImplementedError)
+
+    def get_campaign_schedule(self, campaign_name):
+        """Get the schedule for a campaign."""
+        raise(NotImplementedError)
+
+    def update_campaign_schedule(self, campaign_name):
+        """Update a campaign schedule."""
+        raise(NotImplementedError)
+
+    def unschedule_campaign(self, campaign_name):
+        """Unschedule a campaign."""
+        raise(NotImplementedError)
+
+    def list_folder(self, path):
+        """List the contents of a folder."""
+        raise(NotImplementedError)
+
+    def create_media_file(self, path_to_media_file, media_file):
+        """Create a media file."""
+        raise(NotImplementedError)
+
+    def get_media_file(self, path_to_media_file):
+        """Get a media file."""
+        raise(NotImplementedError)
+
+    def update_media_file(self, path_to_old_media_file, new_media_file):
+        """Update a media file."""
+        raise(NotImplementedError)
+
+    def delete_media_file(self, path_to_media_file):
+        """Delete a media file."""
+        raise(NotImplementedError)
+
+    def copy_media_file(self, path_to_media_file, new_name=None):
+        """Copy a media file."""
+        raise(NotImplementedError)
+
+    def set_images_in_document(self, path_to_interact_document, images):
+        """Set the image data for media that are referenced in a document."""
+        raise(NotImplementedError)
+
+    def get_images_in_document(self, path_to_interact_document):
+        """Get the image data for media that are referenced in a document."""
+        raise(NotImplementedError)

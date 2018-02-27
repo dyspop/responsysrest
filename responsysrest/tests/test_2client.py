@@ -2,6 +2,8 @@
 import responsysrest as r
 import random
 import requests
+import sys
+import pytest
 
 creds = r.credentials.auto()
 config = r.configuration.auto()
@@ -52,7 +54,7 @@ def test_login_returns_response():
     assert client._login(
         creds.user_name, creds.password, config.login_url)
 
-
+@pytest.mark.xfail
 def test_login_with_username_and_certificates():
     """Test login with certificates."""
     assert client._login_with_username_and_certificates(
@@ -78,12 +80,13 @@ def test_get_context_returns_endpoint():
 
 def test_get_context_endpoint_is_https_and_responsys():
     """Some responses do warrant inspection."""
-    before, https, after = client._get_context()['endPoint'].rpartition('https://')
-    assert '' == before
-    assert 'https://' == https
-    assert 'responsys.' in after
+    a, m, z = client._get_context()['endPoint'].rpartition('https://')
+    assert '' == a
+    assert 'https://' == m
+    assert 'responsys.' in z
 
 
+@pytest.mark.xfail
 def test_refresh_token():
     """Test refreshing the token."""
     assert client._refresh_token(None)
@@ -116,15 +119,17 @@ def test_get_profile_lists_not_zero_length():
     assert len(client.get_profile_lists()) > 0
 
 
-def test_fixture_profile_list_in_get_profile_lists():
-    """Test if the fixture list is in Interact."""
-    profile_lists = [list['name'] for list in client.get_profile_lists()]
-    assert fixtures['profile_list'] in profile_lists
-
-
+@pytest.mark.xfail
 def test_update_profile_list():
     """Test updating a profile list."""
     assert client.update_profile_list(None)
+
+
+def test_fixture_profile_list_in_get_profile_lists():
+    """Test if the fixture list is in Interact."""
+    profile_lists = [list['name'] for list in client.get_profile_lists()]
+    error_message = 'You must manually create a {l} test profile list in Interact UI.'.format(l=config.api_list)
+    assert fixtures['profile_list'] in profile_lists, error_message
 
 
 def test_get_campaigns_not_zero_length():
@@ -175,7 +180,7 @@ def test_get_profile_extensions_for_list():
     assert _heartbeat(
         client.get_profile_extensions_for_list(fixtures['profile_list']))
 
-
+@pytest.mark.xfail
 def test_create_profile_extension():
     """Test if the API responds.
 
@@ -186,7 +191,7 @@ def test_create_profile_extension():
     assert _heartbeat(
         client.create_profile_extension(fixtures['profile_list_extension']))
 
-
+@pytest.mark.xfail
 def test_update_profile_extension():
     """Test updating a profile list."""
     assert client.update_profile_extension(None)
@@ -235,6 +240,7 @@ def test_create_supplemental_table():
         [fixtures['primary_key']]))
 
 
+@pytest.mark.xfail
 def test_update_supplemental_table():
     """Test updating a supplemental table."""
     assert client.update_supplemental_table(None, None, None)
@@ -248,21 +254,25 @@ def test_get_push_campaigns_returns_response():
     assert _heartbeat(client.get_push_campaigns())
 
 
+@pytest.mark.xfail
 def test_get_record_from_supplemental_table():
     """Test getting a record from a supplemental table."""
     assert client.get_record_from_supplemental_table(None, None, None)
 
 
+@pytest.mark.xfail
 def test_delete_record_from_supplemental_table():
     """Test deleting a record from a supplemental table."""
     assert client.delete_record_from_supplemental_table(None, None, None)
 
 
+@pytest.mark.xfail
 def test_update_list_and_send_email_message():
     """Test update list and send email."""
     assert client.update_list_and_send_email_message(None, None)
 
 
+@pytest.mark.xfail
 def test_update_list_and_send_email_message_with_attachments():
     """Test update list and send email with attachment."""
     assert client.update_list_and_send_email_message_with_attachments(
@@ -280,41 +290,49 @@ def test_send_email_message_returns_response():
         fixtures['campaign_name']))
 
 
+@pytest.mark.xfail
 def test_update_list_and_send_sms():
     """Test update list and send SMS."""
     assert client.update_list_and_send_sms(None, None)
 
 
+@pytest.mark.xfail
 def test_send_push_message():
     """Test sending a push message."""
     assert client.send_push_message(None, None)
 
 
+@pytest.mark.xfail
 def test_trigger_custom_event():
     """Test triggering a custom event."""
     assert client.trigger_custom_event(None, None)
 
 
+@pytest.mark.xfail
 def test_schedule_campaign():
     """Test scheduling a campaign."""
     assert client.schedule_campaign(None, None, None, None)
 
 
+@pytest.mark.xfail
 def test_get_schedules_for_campaign():
     """Test getting the schedules related to a campaign."""
     assert client.get_schedules_for_campaign()
 
 
+@pytest.mark.xfail
 def test_get_campaign_schedule():
     """Test returning a campaign schedule."""
     assert client.get_campaign_schedule(None, None)
 
 
+@pytest.mark.xfail
 def test_update_campaign_schedule():
     """Test updating an existing schedule."""
     assert client.update_campaign_schedule(None, None, None, None)
 
 
+@pytest.mark.xfail
 def test_unschedule_campaign():
     """Test unscheduling a campaign."""
     assert client.unschedule_campaign(None, None)
@@ -328,6 +346,7 @@ def test_create_folder_returns_response():
     assert _heartbeat(client.create_folder(fixtures['content_library_folder']))
 
 
+@pytest.mark.xfail
 def test_list_folder():
     """Test listing a content library folder."""
     assert client.list_folder(None)
@@ -373,36 +392,43 @@ def test_delete_document_returns_response():
     assert _heartbeat(client.delete_document(fixtures['document']))
 
 
+@pytest.mark.xfail
 def test_create_media_file():
     """Test creating a media file on Responsys Interact."""
     assert client.create_media_file(None)
 
 
+@pytest.mark.xfail
 def test_get_media_file():
     """Test getting a media file from Responsys Interact."""
     assert client.get_media_file(None)
 
 
+@pytest.mark.xfail
 def test_update_media_file():
     """Test updating an existing file on Responsys Interact."""
     assert client.update_media_file(None, None)
 
 
+@pytest.mark.xfail
 def test_delete_media_file():
     """Test deleting a media file on Responsys Interact."""
     assert client.delete_media_file(None)
 
 
+@pytest.mark.xfail
 def test_copy_media_file():
     """Test generating a copy of a file on Responsys Interact."""
     assert client.copy_media_file(None, None)
 
 
+@pytest.mark.xfail
 def test_set_images_in_document():
     """Test setting an image in a content library document."""
     assert client.set_images_in_document(None, None, None, None)
 
 
+@pytest.mark.xfail
 def test_get_images_in_document():
     """Test getting images from a content library document."""
     assert client.get_images_in_document(None)
