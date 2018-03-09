@@ -1,7 +1,7 @@
 {
     "pod": "5",
     "api_folder": "___api-generated",
-    "api_list": "API_testing",
+    "api_list": "___api-list",
     "profile_extension_table_alias": "_pet",
     "supplemental_table_alias": "_supp",
     "primary_key_alias": "_primary_key",
