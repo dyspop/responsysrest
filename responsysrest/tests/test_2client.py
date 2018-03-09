@@ -392,6 +392,12 @@ def test_delete_document_returns_response():
     assert _heartbeat(client.delete_document(fixtures['document']))
 
 
+def test_update_profile_list_returns_response():
+    """Test if the API responds."""
+    assert _heartbeat(client.update_profile_list(
+        fixtures['profile_list'], ['RIID_'], fixtures['riid']))
+
+
 @pytest.mark.xfail
 def test_create_media_file():
     """Test creating a media file on Responsys Interact."""

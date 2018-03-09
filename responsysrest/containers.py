@@ -1,7 +1,26 @@
 """Containers to expose to client for rules and request processing."""
 # TODO expose as a class with enums
+
+
+class Mergable:
+    """Class container for mergable lists."""
+
+    def __init__(self, fields, records, merge_rules):
+        if len(set([len(r) for r in records])) is not 1:
+            raise ValueError("")
+
+        if len(fields) == len(records):
+            self.fields = fields
+            self.records = records
+        else:
+            raise ValueError("Fields and records counts to not match.")
+        self.merge_rules = merge_rules
+
+
+
+
 rules = {
-    'merge_or_update_members_in_a_profile_list_table':
+    'update_profile_list':
         [
             {
                 'recordData': {
