@@ -111,100 +111,6 @@ class Client:
         #     response = requests.post(url, data=data, headers=headers)
         #     return response
 
-    # Merge or update members in a profile list table
-    # TODO: fix 403 response
-    # TODO: implement context and api_url with post
-    def manage_profile_list(self, list_name, **kwargs):
-        """Merge or update members in a profile list table."""
-        # load container data
-        data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-        # process keyword arguments
-        fields = kwargs.get('fields')
-        records = kwargs.get('records', None)
-        merge_rules = kwargs.get('merge_rules', data["mergeRule"])
-
-        # make sure the input fields and records are lists
-        if isinstance(fields, list) and isinstance(records, list):
-            # make sure the fields and records have the same amount of columns
-            if len(fields) == len(records):
-                # insert our fields into the data
-                data["recordData"]["fieldNames"] = fields
-                # insert our records into the data
-                data["recordData"]["records"] = records
-            else:
-                raise ValueError("""
-ERROR: List headers count does not
-match record column count
-""")
-        else:
-            raise ValueError("""ARGUMENT ERROR: input fields or records are not list objects.\n
-Please specify lists for 'fields' or 'records' arguments.
-""")
-        # extract merge rules
-        rules_keys = [key for key in data["mergeRule"]]
-        # extract merge rules default values
-        rules_values = [
-            data["mergeRule"][rule]["default"] for rule in rules_keys
-        ]
-        # assign a new rules object to work on before we insert it into the
-        # request object
-        rules_dict = dict(zip(rules_keys, rules_values))
-
-        for merge_rule, merge_value in merge_rules.items():
-            try:
-                # if the user input merge rule value is valid based on the
-                # container data
-                if merge_value in data["mergeRule"][merge_rule]["options"]:
-                    # add the new merge rule value to the data
-                    data["mergeRule"][merge_rule] = merge_value
-            except KeyError:
-                print(
-                    """
-                    f'ERROR: Merge rule "{merge_rule}" is not valid.
-                    Valid merge rules are:
-                    {rules_keys}'
-                    """
-                )
-            # print(merge_rule + " : " + merge_value)
-            # assign parameters from merge_rules keyword arguments to new rules
-            rules_dict[merge_rule] = merge_value
-
-        # add the merge rules back into the data
-        data["mergeRule"] = rules_dict
-
-        # build post request
-        context = get_context()
-        auth_token = context["authToken"]
-        url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
-        headers = {
-            'Authorization': auth_token, 'Content-Type': 'application/json'
-        }
-        print(json.dumps(data))
-        # make the request
-        response = requests.post(url, data=json.dumps(data), headers=headers)
-        # return the data to the container?
-        data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-        return response
-        # raise(NotImplementedError)
-
-    def _get(self, service_url, **kwargs):
-        """General purpose build for GET requests to Interact API."""
-        context = self._get_context()
-        endpoint = '{e}/{a}/{s}'.format(
-            e=context["endPoint"],
-            a=context["api_url"],
-            s=service_url)
-        headers = kwargs.get('headers', {'Authorization': context['authToken']})
-        # use parameters if we got them
-        if "parameters" in kwargs:
-            parameters = kwargs.get('parameters', None)
-            endpoint = '{e}?{p}'.format(e=endpoint, p=parameters)
-        response = requests.get(url=endpoint, headers=headers)
-        try:
-            response = json.loads(response.text)
-        except:
-            pass
-        return response
 
     def _post(self, service_url, data, **kwargs):
         context = self._get_context()
@@ -282,9 +188,66 @@ You will be happy you did.
         """Retrieving all profile lists for an account."""
         return self._get('lists')
 
-    def update_profile_lists(self):
-        """Update a profile list."""
-        raise(NotImplementedError)
+    def update_profile_list(self,
+                            list_name,
+                            fields,
+                            records,
+                            html_value='H',
+                            optin_value='I',
+                            text_value='T',
+                            insert_on_no_match=True,
+                            insert_on_match='REPLACE_ALL',
+                            match_column_name1='RIID_',
+                            match_column_name2=None,
+                            match_operator='NONE',
+                            opt_out_value='O',
+                            reject_records_if_channel_empty=None,
+                            default_permission_status='OPTIN'):
+        """Merge or update members in a profile list table."""
+        data = {
+            'recordData': {
+                'fieldNames': fields,
+                'records': [
+                    records
+                ],
+                'mapTemplateName': None
+            },
+            'mergeRule': {
+                'htmlValue': html_value,
+                'optinValue': optin_value,
+                'textValue': text_value,
+                'insertOnNoMatch': insert_on_no_match,
+                'updateOnMatch': insert_on_match,
+                'matchColumnName1': match_column_name1,
+                'matchColumnName2': match_column_name2,
+                'matchOperator': match_operator,
+                'optoutValue': opt_out_value,
+                'rejectRecordIfChannelEmpty': reject_records_if_channel_empty,
+                'defaultPermissionStatus': default_permission_status
+            }
+        }
+        service_url = 'lists/{list_name}/members'.format(list_name=list_name)
+        return self._post(service_url, data)
+        # raise(NotImplementedError)
+
+    def _get(self, service_url, **kwargs):
+        """General purpose build for GET requests to Interact API."""
+        context = self._get_context()
+        endpoint = '{e}/{a}/{s}'.format(
+            e=context["endPoint"],
+            a=context["api_url"],
+            s=service_url)
+        headers = kwargs.get('headers', {'Authorization': context['authToken']})
+        # use parameters if we got them
+        if "parameters" in kwargs:
+            parameters = kwargs.get('parameters', None)
+            endpoint = '{e}?{p}'.format(e=endpoint, p=parameters)
+        response = requests.get(url=endpoint, headers=headers)
+        try:
+            response = json.loads(response.text)
+        except:
+            pass
+        return response
 
     def get_campaigns(self):
         """Get all EMD email campaigns."""
