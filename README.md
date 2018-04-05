@@ -23,7 +23,7 @@ This package is developed for Python3.x but should work on 2.7 if you're so incl
 
 ### Standard install for using in your application
 
-    pip install git+https://8771db9d19f030a47c4bfd40039f37548892b268:x-oauth-basic@github.com/dyspop/responsysrest.git@0.1.7
+    pip install git+https://@github.com/dyspop/responsysrest.git@0.1.7
 
 ### Development install via repository clone
 1. Clone this repo:
