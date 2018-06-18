@@ -99,7 +99,7 @@ def test_get():
     assert _bad_request(client._get(None))
 
 
-def test_get():
+def test_post():
     """Test to see if the server responds when we try to post a bad request."""
     assert _bad_request(client._post(None, None))
 
