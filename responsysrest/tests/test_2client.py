@@ -2,7 +2,6 @@
 import responsysrest as r
 import random
 import requests
-import sys
 import pytest
 
 creds = r.credentials.auto()
@@ -374,6 +373,16 @@ def test_get_document_returns_response():
     When we try to create a content library document.
     """
     assert _heartbeat(client.get_document(fixtures['document']))
+
+
+def test_get_document_returns_document_at_config_path():
+    """Test if the API's response document is at the config path."""
+    assert client.get_document(fixtures['document'])[
+        'documentPath'].startswith(
+            '/contentlibrary/{f}/'.format(
+                f=fixtures['content_library_folder']
+            )
+        )
 
 
 def test_update_document_returns_response():
