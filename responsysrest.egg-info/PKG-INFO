@@ -6,7 +6,6 @@ Home-page: https://github.com/dyspop/responsysrest
 Author: Dan Black
 Author-email: dyspop@gmail.com
 License: GPLv2
-Description-Content-Type: UNKNOWN
 Description: # Responsys Interact REST API python client #
         
         A python library providing access to the Responsys Interact API. Currently supports version 1.3 Release 6.33 E65150-15.
@@ -30,29 +29,26 @@ Description: # Responsys Interact REST API python client #
         
         ## Install ##
         
+        ### Standard install for using in your application
+        
+            pip install git+https://@github.com/dyspop/responsysrest.git@0.1.7
+        
         ### Development install via repository clone
         1. Clone this repo:
-            $git clone git@github.com:dyspop/responsysrest.git
+            git clone git@github.com:dyspop/responsysrest.git
         2. Create Virtual Environment
-            $cd responsysrest && virtualenv env && source env/bin/activate
+            cd responsysrest && virtualenv env && source env/bin/activate
         2. Install via source package in development mode:
         ```
             pip install -e .
         ```
         
-        ### Standard install for using in your application
-        
-        1. Contact the author for an access token. It works this way until this is on pypi.
-        2. `$pip install git+https://{access_token}:x-oauth-basic@github.com/dyspop/responsysrest.git@0.1.7`
-        
-        
         ## Usage ##
         
         1. Import the responsysrest package
-        2. Configure your Interact connection settings
-        3. Get proper credentials
-        4. Instantiate the client
-        5. Use the client
+        2. Configure your Interact connection settings and credentials
+        3. Instantiate the client
+        4. Use the client
         
         The quickest way to get started is to create a `config.json` file and a `secret.json` file with your configuration and credentials information in them. The package comes with the `config.json` file but you'll need to create your own `secret.json` file. You can call the auto function from the package sub modules `configuration` and `credentials` which will traverse the root looking for the json files.
         
@@ -80,7 +76,7 @@ Description: # Responsys Interact REST API python client #
                 "email_address": "team_member@company.com"
             }
         
-        then if they're local to your imported package:
+        then if they're local to where you're running python from:
         
             import responsysrest as r
             client = r.Client(r.configuration.auto(), r.credentials.auto())
@@ -96,6 +92,18 @@ Description: # Responsys Interact REST API python client #
         
         If you're in an application context you can directly configure your client by passing the following values
         
+            client = r.Client(
+                pod='2',
+                api_folder='folder_name',
+                api_list='api_list',
+                profile_extension_table_alias='pet_alias',
+                supplemental_table_alias='supp_alias',
+                primary_key_alias='pk_alias',
+                riid_generator_length=11,
+                test_campaign_name='testtest',
+                content_library_folder='clsubfolder',
+                api_version='1.3')
+        
         | Property  | Value  |
         |---|---|
         | pod  | string, `2` or `5`  |
@@ -110,20 +118,22 @@ Description: # Responsys Interact REST API python client #
         | api_version  | string  |
         
         
-            client = r.Client(
-                pod='2',
-                api_folder='folder_name',
-                api_list='api_list',
-                profile_extension_table_alias='pet_alias',
-                supplemental_table_alias='supp_alias',
-                primary_key_alias='pk_alias',
-                riid_generator_length=11,
-                test_campaign_name='testtest',
-                content_library_folder='clsubfolder',
-                api_version='1.3')
-        
-        
         ## Client functions usage:
+        
+        Generally the library wants lists of records per function call where appropriate. To apply a method to a series of records do this:
+        
+            imported_csv_data = [
+                ['EMAIL_ADDRESS_', 'COUNTRY_'],
+                ['hey@test.com', 'US']
+            ]
+            fields = imported_csv_data[0]
+            records = imported_csv_data[1:]
+            client.some_method(fields, records)
+        
+        Don't do this:
+        
+            for record in records:
+                client.some_method(fields, [record])
         
         
         ### Managing Profile List Tables
@@ -222,6 +232,67 @@ Description: # Responsys Interact REST API python client #
             [('LIST_NAME', 'UIfolderNotContentLibraryFolder'), ('LIST_NAME_2', 'UIfolderNotContentLibraryFolder')]
         
         
+        #### Update profile list
+        
+        This is the "Merge or update members in a profile list table" feature. 
+        
+            list_name = 'myTestList'
+            fields = ['EMAIL_ADDRESS_', 'FIRST_NAME']
+            records = ['bob@somesite.com', 'bob']
+            client.update_profile_list(list_name, fields, records)
+        
+        It requires three positional arguments: `list_name`, `fields`, and `records`. The library doesn't do any checking on the input. If the client can connect to Responsys you'll get a somewhat helpful error from the API:
+        
+        ```
+        client.update_profile_list(
+            'fakelist', ['notafield'], ['notarecord'])
+        ```
+        ```
+        {
+            'type': '', 
+            'title': 'List not found', 
+            'errorCode': 'LIST_NOT_FOUND', 
+            'detail': 'fakelist List Not Found', 
+            'errorDetails': []
+        }
+        ```
+        
+        Responsys wants a lot of contextual information to merge records into an existing list, so this library has chosen defaults for you. 
+        
+        These can be changed with keyword arguments. Here are all the keyword arguments with all of the default values passed in redundantly. You don't need to set any of these unless you're changing them from the default values below:
+        
+            client.update_profile_list(
+                list_name,
+                fields,
+                records)
+                html_value='H',
+                optin_value='I',
+                text_value='T',
+                insert_on_no_match=True,
+                insert_on_match='REPLACE_ALL',
+                match_column_name1='RIID_',
+                match_column_name2=None,
+                match_operator='NONE',
+                opt_out_value='O',
+                reject_records_if_channel_empty=None,
+                default_permission_status='OPTIN')
+        
+        Note that whatever records you send in must contain a field in the fields list equal to the `match_column_name1` value (`RIID_` by default). For that reason a common profile list update might look like:
+        
+            client.update_profile_list(
+                list_name,
+                fields,
+                records,
+                match_column_name1='EMAIL_ADDRESS_')
+        
+        or
+        
+            client.update_profile_list(
+                list_name,
+                fields,
+                records,
+                match_column_name1='CUSTOMER_ID_')    
+        
         
         #### Retrieve a member of a profile list using RIID
         
@@ -232,7 +303,8 @@ Description: # Responsys Interact REST API python client #
         
         #### Retrieve a member of a profile list based on query attribute
         
-            client.get_member_of_list_by_attribute(list_name, record_id, query_attribute, fields)
+            client.get_member_of_list_by_attribute(
+                list_name, record_id, query_attribute, fields)
         
         Returns the record data for the record provided. Requires `list_name`, `record_id`. The list name is that which you want to find the record from within your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. If you don't specify it's assumed to be Customer ID. The available options are:
         
@@ -246,7 +318,10 @@ Description: # Responsys Interact REST API python client #
         The fields to return should be a python list data object, if left blank it will return all the fields:
         
             fields = ['EMAIL_DOMAIN_, FIRST_NAME']
-            client.get_member_of_list_by_attribute(list_name, record_id, query_attribute, fields)
+            query_attribute = 'e'
+            record_id = 'test@test.com'
+            client.get_member_of_list_by_attribute(
+                list_name, record_id, query_attribute, fields)
         
         
         
@@ -265,13 +340,14 @@ Description: # Responsys Interact REST API python client #
         
         #### Retrieve all profile extentions of a profile list
         
-            client.get_profile_extensions(list_name)
+            client.get_profile_extensions_for_list(list_name)
         
         Returns the profile extension tables (also known as profile extensions, profile extenion lists, or PETs) associated with a given list. This comes bundled with the folder location and all of the field names too, so to retrieve just a list of the lists, or a list of the lists with their respective folders use:
         
-            pets = client.get_profile_extensions(list_name)
+            pets = client.get_profile_extensions_for_list(list_name)
             [list['profileExtension']['objectName'] for list in pets]
-            [(list['profileExtension']['objectName'], list['profileExtension']['folderName']) for list in pets]
+            [(list['profileExtension']['objectName'],
+                list['profileExtension']['folderName']) for list in pets]
         
         
         #### Create a new profile extension table
@@ -290,27 +366,43 @@ Description: # Responsys Interact REST API python client #
         
         This example will create an empty profile extension table extending `CONTACTS_LIST` called `CONTACTS_LIST-Profile_Extension`:
         
-            client.create_profile_extension('CONTACTS_LIST', extension_name='-Profile_Extension')
+            client.create_profile_extension(
+                'CONTACTS_LIST', extension_name='-Profile_Extension')
         
         You can specify the folder to place it in to override your client configuration:
         
-            client.create_profile_extension('CONTACTS_LIST', folder_name='OtherFolder')
+            client.create_profile_extension(
+                'CONTACTS_LIST', folder_name='OtherFolder')
         
         Additionally you can supply fields as a list:
         
-            client.create_profile_extension('CONTACTS_LIST', fields=['LTV_v1', 'LTV_v2', 'decile'])
+            client.create_profile_extension(
+                'CONTACTS_LIST', fields=['LTV_v1', 'LTV_v2', 'decile'])
         
         If you don't specify a (Responsys Interact) data type for each it will default to `STR4000`. This default data type can be overridden with one of `STR500`, `STR4000`, `INTEGER`, `NUMBER`, or `TIMESTAMP`:
         
-            client.create_profile_extension('CONTACTS_LIST', fields=['last_purchased_date', 'first_purchased_date'], default_field_type='TIMESTAMP')
+            fields = ['last_purchased_date', 'first_purchased_date']
+            client.create_profile_extension(
+                'CONTACTS_LIST', fields=fields, default_field_type='TIMESTAMP')
         
         You can also specify the field type of each within the list if you supply it as a list or tuple:
         
-            client.create_profile_extension('CONTACTS_LIST', fields=[('last_purchased_date','TIMESTAMP'),('lifetime_purchases', 'INTEGER')])
+            fields = [
+                ('last_purchased_date','TIMESTAMP'),
+                ('lifetime_purchases', 'INTEGER')
+            ]
+            client.create_profile_extension(
+                'CONTACTS_LIST', fields=fields)
         
         The default field type override can be supplied alongside individual fields without their own field type specifications:
         
-            client.create_profile_extension('CONTACTS_LIST', fields=[('probability_of_login', 'NUMBER'), 'CUSTOMER_ID_', ('ARTICLE_CONTENTS','STR4000')], default_field_type='STR500')
+            fields = [
+                ('probability_of_login', 'NUMBER'),
+                'CUSTOMER_ID_',
+                ('ARTICLE_CONTENTS','STR4000')
+            ]
+            client.create_profile_extension(
+                'CONTACTS_LIST', fields=fields, default_field_type='STR500')
         
         
         
@@ -318,30 +410,42 @@ Description: # Responsys Interact REST API python client #
         
         Returns a full record if it's in the profile extension table.
         
-            client.get_member_of_profile_extension_by_riid(list_name, pet_name, riid)
+            client.get_member_of_profile_extension_by_riid(
+                list_name, pet_name, riid)
         
         Also takes an optional argument `fields` which defaults to `all` if not specified. Examples:
         
-            client.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890')
-            client.get_member_of_profile_extension_by_riid('CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890', fields='FIRST_NAME, LAST_PURCHASE_DATE')
+            client.get_member_of_profile_extension_by_riid(
+                'CONTACTS_LIST', 'CONTACTS_LIST_pet', '101234567890')
+        
+        or
+        
+            client.get_member_of_profile_extension_by_riid(
+                'CONTACTS_LIST',
+                'CONTACTS_LIST_pet',
+                '101234567890',
+                fields='FIRST_NAME, LAST_PURCHASE_DATE')
         
         
         #### Retrieve a member of a profile extension table based on a query attribute
         
-            client.get_member_of_profile_extension_by_attribute(list_name, pet_name record_id, query_attribute, fields)
+            client.get_member_of_profile_extension_by_attribute(
+                list_name, pet_name record_id, query_attribute, fields)
         
         Takes five arguments, but requires `list_name`, `pet_name` and `record_id`. The list name is that which you want to find the record from in your Responsys Interact instance. The record id is the specific id you wish to use to identify the record. The query attribute is the type of id that you are using to retreive the record. The available options are `r` for RIID, `e` for EMAIL_ADDRESS, `c` for CUSTOMER_ID and `m` for MOBILE_NUMBER. The fields to return python list data object of the fields in the list, if left blank it will return all the fields.
         
         Examples:
         
-            client.get_member_of_profile_extension_by_attribute('AFFILIATES', '1234251', 'c', ['email_address_', 'first_name'])
+            client.get_member_of_profile_extension_by_attribute(
+                'AFFILIATES', '1234251', 'c', ['email_address_', 'first_name'])
         
         
         #### Delete a member of a profile extension table based on RIID
         
         Deletes a member of a profile extension table based on RIID if it exists.
         
-            client.delete_member_of_profile_extension_by_riid(list_name, pet_name, riid):
+            client.delete_member_of_profile_extension_by_riid(
+                list_name, pet_name, riid):
         
         
         
@@ -355,18 +459,30 @@ Description: # Responsys Interact REST API python client #
         
         Examples:
         
-            client.create_supplemental_table('CONTACTS_LIST', fields=['field1','field2'])
+            client.create_supplemental_table(
+                'CONTACTS_LIST', fields=['field1','field2'])
         
         This creates a `CONTACTS_LIST_supp` supplemental table in a folder named from your client configuration (default is `___api-generated`) with no records and no non-default fields. You must specify either a list with at least one field or a primary key that is one of the Responsys internal field names. If you do not specify a primary key the wrapper will use the first field in the input list because the API requires a primary key field. You can also specify an optional data extraction key.
         
-            client.create_supplemental_table(supplemental_table_name, folder_name, fields=fields)
-            fields.create_supplemental_table(supplemental_table_name, folder_name, primary_key=primary_key)
+            client.create_supplemental_table(
+                supplemental_table_name, folder_name, fields=fields)
+        
+        or
+        
+            client.create_supplemental_table(
+                supplemental_table_name, folder_name, primary_key=primary_key)
         
         The wrapper writes all fields with a default field type, which is `STR500` unless another type is specified. If the default type is specified it will use that type for all fields.
         
         Examples:
         
-            client.create_supplemental_table('my_supp_table', 'API_testing', fields=['field1', 'field2'], default_field_type='STR25', data_extraction_key='field2', primary_key='field1')
+            client.create_supplemental_table(
+                'my_supp_table',
+                'API_testing',
+                fields=['field1', 'field2'],
+                default_field_type='STR25',
+                data_extraction_key='field2',
+                primary_key='field1')
         
         
         
@@ -552,7 +668,9 @@ Description: # Responsys Interact REST API python client #
         
         You can also specify the destination contentlibrary subfolder:
         
-            client.update_document('local/path/to/document.htm', 'path/to/interact/contentlibrary/subfolder')
+            client.update_document(
+                'local/path/to/document.htm',
+                'path/to/interact/contentlibrary/subfolder')
         
             {
                 'documentPath': '/contentlibrary/path/to/interact/contentlibrary/subfolder/document.htm', 
@@ -589,7 +707,8 @@ Description: # Responsys Interact REST API python client #
         
         Try to delete a document from `/contentlibrary/`. Takes only a full path with the document file name in it. The path is the path of the document in Interact, not a local file path:
         
-            client.delete_document('interact/contentlibrary/external/path/to/document.html')
+            client.delete_document(
+                'interact/contentlibrary/external/path/to/document.html')
         
         Unlike the opinionated create and get and update methods, you can try to delete anything from the content library even at the (content library) root. If you've managed to load a file into the content library you should be able to delete it.
         
@@ -611,7 +730,7 @@ Description: # Responsys Interact REST API python client #
         ## Development/Testing ##
         
         If you're looking to contribute then your best best is to get your client configured properly (get `tests/test_1user_configs.py` passing) then get a list of missing features from:
-            $python3 -m pytest responsysrest/tests/test_2client.py
+            python3 -m pytest responsysrest/tests/test_2client.py
         
         Currently there are 25/52 features implemented. 
         
@@ -626,19 +745,19 @@ Description: # Responsys Interact REST API python client #
         
         To run configuration and integration tests:
         
-            $pytest
+            pytest
         
         To run configuration tests:
         
-            $python3 -m pytest responsysrest/tests/test_1user_configs.py
+            python -m pytest responsysrest/tests/test_1user_configs.py
         
         To run client/API integration tests only:
         
-            $python3 -m pytest responsysrest/tests/test_2client.py
+            python -m pytest responsysrest/tests/test_2client.py
         
         To run extra features tests only:
         
-            $python3 -m pytest responsysrest/tests/test_3extras.py
+            python -m pytest responsysrest/tests/test_3extras.py
         
         
         ## Acknowledgements ##
