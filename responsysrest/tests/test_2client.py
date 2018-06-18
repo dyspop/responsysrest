@@ -23,6 +23,7 @@ fixtures = {
     'profile_list_extension': f'{config.api_list}{config.profile_extension_table_alias}',
     'primary_key': f'{config.api_list}{config.primary_key_alias}',
     'email_address': creds.email_address,
+    'api_username': creds.user_name,
     'campaign_name': config.test_campaign_name,
     'document': './responsysrest/tests/document.htm',
     'content_library_folder': '___api-generated-test'
