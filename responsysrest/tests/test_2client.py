@@ -1,6 +1,7 @@
 """Tests for each individual function in the Client."""
 import responsysrest as r
 import random
+import string
 import requests
 import pytest
 
@@ -28,6 +29,11 @@ fixtures = {
     'document': './responsysrest/tests/document.htm',
     'content_library_folder': '___api-generated-test'
 }
+
+
+def _random_string(N=256):
+    # Generate a random string of N or 256 chars long
+    return ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=N))
 
 
 # Test-related functions.
@@ -282,12 +288,37 @@ def test_update_list_and_send_email_message_with_attachments():
 def test_send_email_message_returns_response():
     """Test if the API responds.
 
-    When we try to send a message, good or bad.
+    When we try to send a message, most likely to garbage entries.
     """
+    assert _heartbeat(client.send_email_message(
+        _random_string(), _random_string(), _random_string()
+    ))
+
+
+# Valid test but now we're spamming outselves
+def test_send_email_message_returns_response_for_send_to_one_recipient():
     assert _heartbeat(client.send_email_message(
         fixtures['email_address'],
         fixtures['folder'],
         fixtures['campaign_name']))
+
+
+# Valid test but now we're spamming outselves
+def test_send_email_message_returns_success_for_send_to_one_recipient():
+    resp = client.send_email_message(
+        fixtures['email_address'],
+        fixtures['folder'],
+        fixtures['campaign_name'])
+    assert list is type(resp)
+    assert 1 is len(resp) 
+    assert dict is type(resp[0])
+    assert 'errorMessage' in resp[0].keys()
+    assert 'success' in resp[0].keys()
+    assert 'recipientId' in resp[0].keys()
+    assert None is resp[0]['errorMessage']
+    assert True is resp[0]['success']
+    assert None is not resp[0]['recipientId']
+    assert False is not resp[0]['recipientId']
 
 
 @pytest.mark.xfail
