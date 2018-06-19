@@ -310,7 +310,7 @@ def test_send_email_message_returns_success_for_send_to_one_recipient():
         fixtures['folder'],
         fixtures['campaign_name'])
     assert list is type(resp)
-    assert 1 is len(resp) 
+    assert 1 is len(resp)
     assert dict is type(resp[0])
     assert 'errorMessage' in resp[0].keys()
     assert 'success' in resp[0].keys()
