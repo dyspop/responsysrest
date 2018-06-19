@@ -321,6 +321,19 @@ def test_send_email_message_returns_success_for_send_to_one_recipient():
     assert False is not resp[0]['recipientId']
 
 
+# Valid test but now we're spamming outselves
+def test_send_email_message_returns_response_for_send_to_multiple_recipients():
+    assert _heartbeat(
+        client.send_email_message(
+            [
+                fixtures['email_address'], fixtures['email_address']
+            ],
+            fixtures['folder'],
+            fixtures['campaign_name']
+        )
+    )
+
+
 @pytest.mark.xfail
 def test_update_list_and_send_sms():
     """Test update list and send SMS."""
