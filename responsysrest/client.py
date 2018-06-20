@@ -334,33 +334,31 @@ You will be happy you did.
                 member_of.append(profile_list)
         return member_of
 
-    def send_email_message(self, recipients, folder_name, campaign_name, optional_data=None):
+
+    def _list_child(self, child, from_type):
+        if type(child) is from_type:
+            parent = []
+            parent.append(child)
+            return parent
+        else:
+            return child
+
+
+    def send_email_message(self, recipients, folder_name, campaign_name, optional_data=''):
         """Trigger email message."""
         # accept a string for one recipient but work with a list either way.
-        if type(recipients) is str:
-            _ = []
-            _.append(recipients)
-            recipients = _
+        recipients = self._list_child(recipients, str)
         if type(recipients) is not list:
             raise TypeError(
                 'Recipients data must be a string of one recipient or a list.')
-        # For the optional data object, we want a list of dicts
-        if optional_data is not None and type(optional_data) is dict:
-            optional_data = list(optional_data)
-            # if there is optional data it needs to be the same 
-            # length as the recipients so we can zip them
-            if len(recipients) != len(optional_data):
-                raise ValueError(
-                    'Length of recipients list must match the length of the optional data list')
-            for datum in optional_data:
-                if type(datum) is not dict:
-                    raise TypeError(
-                        'Optional data must be a dict for one recipient or a list of dicts')
+        # accept a dict for one recipient's optional data but work with a list either way.
+        optional_data = self._list_child(optional_data, dict)
+
         # build recipient data with recipients list first
         data = {
             "recipientData": [
                 {
-                    "recipient": {
+                    "recipient": [{
                         "emailAddress": email_address,
                         "listName": {
                             "folderName": folder_name,
@@ -368,13 +366,11 @@ You will be happy you did.
                             "recipientId": None,
                             "mobileNumber": None,
                             "emailFormat": "HTML_FORMAT"
-                    }
-                } for email_address in recipients]
+                    } for email_address in recipients],
+                    "optionalData": [option for option in optional_data]
+                }
+            ]
         }
-        # if we have optional data we need to add it per
-        if optional_data is not None:
-            for (i, opts) in enumerate(optional_data):
-                data['recipientData'][i]['optionalData'] = [optional_data[i]]
         service_url = 'campaigns/{c}/email'.format(c=campaign_name)
         return self._post(service_url, data)
 
