@@ -344,7 +344,12 @@ You will be happy you did.
             return child
 
 
-    def send_email_message(self, recipients, folder_name, campaign_name, optional_data=''):
+    def send_email_message(
+            self,
+            recipients,
+            folder_name,
+            campaign_name,
+            optional_data=None):
         """Trigger email message."""
         # accept a string for one recipient but work with a list either way.
         recipients = self._list_child(recipients, str)
@@ -354,23 +359,33 @@ You will be happy you did.
         # accept a dict for one recipient's optional data but work with a list either way.
         optional_data = self._list_child(optional_data, dict)
 
-        # build recipient data with recipients list first
-        data = {
+        # build recipients for recipient data
+        recipients = {
+            "recipient": {
+                "emailAddress": email_address,
+                "listName": {
+                    "folderName": folder_name,
+                    "objectName": campaign_name
+                },
+                "recipientId": None,
+                "mobileNumber": None,
+                "emailFormat": "HTML_FORMAT"
+            } for email_address in recipients}
+        # define data structure for recipient data
+        recipient_data = {
             "recipientData": [
                 {
-                    "recipient": [{
-                        "emailAddress": email_address,
-                        "listName": {
-                            "folderName": folder_name,
-                            "objectName": campaign_name},
-                            "recipientId": None,
-                            "mobileNumber": None,
-                            "emailFormat": "HTML_FORMAT"
-                    } for email_address in recipients],
-                    "optionalData": [option for option in optional_data]
+                    # recipients
                 }
             ]
         }
+
+        # print(recipients, data)
+        # if optional_data is not None:
+            # optional_data =  "optionalData": [option for option in optional_data]
+            # data["recipientData"][0] = optionalData
+
+
         service_url = 'campaigns/{c}/email'.format(c=campaign_name)
         return self._post(service_url, data)
 
