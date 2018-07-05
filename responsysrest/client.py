@@ -387,8 +387,6 @@ You will be happy you did.
                 } for recipient in zipped
             ]
         }
-        print(data)
-        input()
         service_url = 'campaigns/{c}/email'.format(c=campaign_name)
         return self._post(service_url, data)
 
