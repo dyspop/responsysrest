@@ -383,6 +383,25 @@ def test_send_email_message_with_optional_data_to_one_recipient():
     assert False is not resp[0]['recipientId']
 
 
+def test_send_email_message_with_optional_data_to_multiple_recipients():
+    recipients = [fixtures['email_address'],fixtures['email_address']]
+    resp = client.send_email_message(
+        recipients,
+        fixtures['folder'],
+        fixtures['campaign_name'],
+        [fixtures['optional_data'] for r in recipients])
+    assert list is type(resp), "API returns a list of successes but a dict for failure."
+    assert len(recipients) is len(resp)
+    for respbody in resp:
+        assert dict is type(respbody)
+        assert 'errorMessage' in respbody.keys()
+        assert 'success' in respbody.keys()
+        assert 'recipientId' in respbody.keys()
+        assert None is respbody['errorMessage']
+        assert True is respbody['success']
+        assert None is not respbody['recipientId']
+        assert False is not respbody['recipientId']
+
 
 @pytest.mark.xfail
 def test_update_list_and_send_sms():
