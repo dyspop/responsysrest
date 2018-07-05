@@ -322,7 +322,7 @@ def test_send_email_message_returns_success_for_send_to_one_recipient():
     assert False is not resp[0]['recipientId']
 
 
-# Valid test but now we're spamming outselves
+# Valid test but now we're spamming ourselves
 def test_send_email_message_returns_response_for_send_to_multiple_recipients():
     assert _heartbeat(
         client.send_email_message(
