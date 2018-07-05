@@ -27,7 +27,17 @@ fixtures = {
     'api_username': creds.user_name,
     'campaign_name': config.test_campaign_name,
     'document': './responsysrest/tests/document.htm',
-    'content_library_folder': '___api-generated-test'
+    'content_library_folder': '___api-generated-test',
+    'optional_data': {
+        'foo': 'bar',
+        'spam': 0,
+        'baz': 0.1,
+        'ham': None,
+        'bacon': -1,
+        'eggs': r'flamingo',
+        'sausage': b'squirrel',
+        'toast': False
+    }
 }
 
 
@@ -352,6 +362,27 @@ def test_send_email_message_returns_success_for_send_to_multiple_recipients():
         assert True is respbody['success']
         assert None is not respbody['recipientId']
         assert False is not respbody['recipientId']
+
+
+def test_send_email_message_with_optional_data_to_one_recipient():
+    resp = client.send_email_message(
+        fixtures['email_address'],
+        fixtures['folder'],
+        fixtures['campaign_name'],
+        fixtures['optional_data'])
+    assert list is type(resp), "API returns a list of successes but a dict for failure."
+    # assert dict is type(resp)
+    assert 1 is len(resp)
+    assert dict is type(resp[0])
+    assert 'errorMessage' in resp[0].keys()
+    assert 'success' in resp[0].keys()
+    assert 'recipientId' in resp[0].keys()
+    assert None is resp[0]['errorMessage']
+    assert True is resp[0]['success']
+    assert None is not resp[0]['recipientId']
+    assert False is not resp[0]['recipientId']
+
+
 
 @pytest.mark.xfail
 def test_update_list_and_send_sms():
