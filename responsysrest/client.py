@@ -356,8 +356,13 @@ You will be happy you did.
         if type(recipients) is not list:
             raise TypeError(
                 'Recipients data must be a string of one recipient or a list.')
-        # Accept a dict for one recipient's optional data but work with a list either way.
+        # Accept a dict for one recipient's optional data
+        # but work with a list either way.
         optional_data = self._list_child(optional_data, dict)
+        if type(optional_data) is not list:
+            raise TypeError(
+                'Recipients data must be a dictionary of key/value pairs for\n'+
+                'one recipient or a list of dictionaries for multiple recipients')
         data = {
             "recipientData" : [
                 {
@@ -372,16 +377,7 @@ You will be happy you did.
                         "mobileNumber" : None,
                         "emailFormat" : "HTML_FORMAT"
                     },
-                    "optionalData" : [
-                        {
-                            "name" : "CUSTOM1",
-                            "value" : "c1a_value_new"
-                        },
-                        {
-                            "name" : "CUSTOM2",
-                            "value" : "c2a_value_new"
-                        }
-                    ]
+                    "optionalData" : [rdict for rdict in optional_data]
                 } for recipient in recipients
             ]
         }
