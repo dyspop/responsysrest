@@ -359,6 +359,9 @@ You will be happy you did.
         # Accept a dict for one recipient's optional data
         # but work with a list either way.
         optional_data = self._list_child(optional_data, dict)
+        # then if there's no optional data extend it out so we can zip it up
+        if optional_data == [{}] and len(recipients) > 1:
+            optional_data = optional_data * len(recipients)
         if type(optional_data) is not list:
             raise TypeError(
                 'Recipients data must be a dictionary of key/value pairs for\n'+

@@ -344,14 +344,14 @@ def test_send_email_message_returns_success_for_send_to_multiple_recipients():
     assert list is type(resp), "API returns a list of successes but a dict for failure."
     assert len(recipients) is len(resp)
     for respbody in resp:
-        assert dict is type(respbody[0])
-        assert 'errorMessage' in respbody[0].keys()
-        assert 'success' in respbody[0].keys()
-        assert 'recipientId' in respbody[0].keys()
-        assert None is respbody[0]['errorMessage']
-        assert True is respbody[0]['success']
-        assert None is not respbody[0]['recipientId']
-        assert False is not respbody[0]['recipientId']
+        assert dict is type(respbody)
+        assert 'errorMessage' in respbody.keys()
+        assert 'success' in respbody.keys()
+        assert 'recipientId' in respbody.keys()
+        assert None is respbody['errorMessage']
+        assert True is respbody['success']
+        assert None is not respbody['recipientId']
+        assert False is not respbody['recipientId']
 
 @pytest.mark.xfail
 def test_update_list_and_send_sms():
