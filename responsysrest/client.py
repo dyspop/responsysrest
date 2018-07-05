@@ -373,8 +373,8 @@ You will be happy you did.
                         "customerId" : None,
                         "emailAddress" : recipient,
                         "listName" : {
-                            "folderName" : "___api-generated-test",
-                            "objectName" : "test_api_classic"
+                            "folderName" : folder_name,
+                            "objectName" : campaign_name
                         },
                         "recipientId" : None,
                         "mobileNumber" : None,
