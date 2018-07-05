@@ -379,8 +379,8 @@ You will be happy you did.
                     },
                     "optionalData" : [
                         {
-                            "name": list(d.values())[0],
-                            "value": list(d.keys())[0]
+                            "name": list(d.keys())[0],
+                            "value": list(d.values())[0]
                         } for d in optional_data
                     ]
                 } for recipient in recipients
