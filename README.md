@@ -706,6 +706,95 @@ Unlike the opinionated create and get and update methods, you can try to delete 
 
 
 
+### Sending Messages
+
+There are a number of types of messages you can send with Responsys via API and methods available. For now we just implement Send Email Message.
+
+
+#### Send Email Message
+
+This wrapper requires each call to this function to target a single message but allow for any number of recipients and any amount of optional data to be passed along with each recipient. It only accepts email address as the ID type.
+
+    client.send_email_message(
+        recipients, responsys_target_folder, responsys_target_campaign_name)
+
+`recipients` can be either a string or a list of strings. The wrapper will take any but Responsys will fail/reject invalid addresses. The following are all valid as the `recipients` argument (as far as the wrapper is concerned), but the third example should return an error from the Responsys response:
+
+    'team_member@company.com'
+    ['team_member@company.com', 'team_member2@company.com']
+    ['team_member@company.com', 'team_member2@company.com', 42]
+
+Messages will only be sent if the recipient exists in the target list. The target list must be configured from the campaign dashboard in the Responsys UI. If the recipient doesn't exist in the target list for the target campaign then a failure response will be returned from the Responsys API for that item in the list.
+
+You can also pass optional data to be used within the campaign HTML build, whether it be used in classic or EMD campaigns. This is done with a dictionary for one recipient:
+
+    client.send_email_message(
+        'team_member@company.com',
+        'myfolder',
+        'mycampaign',
+        {
+            'FIELD1': 'Value1',
+            'FIELD2': 'Value2'
+        }
+    )
+
+or a list of dictionaries for multiple recipients:
+
+    recipients = ['team_member@company.com', 'team_member2@company.com']
+    optional_data = [
+        {
+            'FIELD1': 'foo',
+            'FIELD2': 'bar'
+        },
+        {
+            'FIELD1': 'ham',
+            'FIELD2': 'eggs'
+        }
+    ]
+
+The length of the recipients list and the optional data key/value pairs must match or the wrapper will return an error.
+
+Note that the key don't need to match:
+
+    recipients = ['team_member@company.com', 'team_member2@company.com']
+    optional_data = [
+        {
+            'FIELD1': 'foo',
+            'FIELD2': 'bar'
+        },
+        {
+            'FIELD1': 'ham',
+            'OTHER_FIELD': 'bazinga'
+            'YET_ANOTHER_FIELD': 'Batman!'
+        }
+    ]
+
+But be careful, you'll need to pass an empty dictionary if you have a recipient to receive no optional data mixed in with recipients who do receive optional data:
+
+    recipients = [
+        'team_member@company.com',
+        'team_member2@company.com',
+        'otherperson@othercompany.net',
+        'someonesfriend@friendlypeople.biz'
+        ]
+        optional_data = [
+            {
+                'FIELD1': 'foo',
+                'FIELD2': 'bar'
+            },
+            {
+                'FIELD1': 'baz',
+                'FIELD2': 'bazoink'
+            },
+            {},
+            {
+                'FIELD1': 'spam',
+                'FIELD2': 'bacon'
+            },
+        ]
+
+
+
 ### Non-native features
 
 There are a few things you might want to do with the API that are a little hard based on arbitrary endpoint calls. The wrapper provides you this piece of candy.
