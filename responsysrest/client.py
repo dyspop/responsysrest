@@ -382,7 +382,7 @@ You will be happy you did.
                         "emailFormat" : "HTML_FORMAT"
                     },
                     "optionalData" : [
-                    {} if len(d.items()) is 0 else {
+                        {} if len(d.items()) is 0 else {
                             "name": list(d.keys())[0],
                             "value": list(d.values())[0]
                         } for d in self._list_child(recipient[1], dict)
