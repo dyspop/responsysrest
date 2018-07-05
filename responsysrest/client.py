@@ -33,9 +33,6 @@ class Client:
         """Initialize."""
         self.config = config
         self.creds = creds
-        # ID types EmailAddress, CustomerId, MobileNumber, RecipientId (RIID)
-        # shorthand matches Responsys
-        self.record_id_types = ['e', 'c', 'm', 'r']
 
     def _login(self, user_name, password, url):
         """Login with username and password."""
@@ -352,14 +349,9 @@ You will be happy you did.
             recipients,
             folder_name,
             campaign_name,
-            id_type='e',
             optional_data=None):
         """Trigger email message."""
         # Accept a string for one recipient but work with a list either way.
-        if id_type.lower() not in self.record_id_types:
-            raise ValueError(
-                'ID Type must be one of "e", "c", "m" or "r"\n ' +
-                'for EmailAddress, CustomerId, MobileNumber or RecipientId')
         recipients = self._list_child(recipients, str)
         if type(recipients) is not list:
             raise TypeError(
