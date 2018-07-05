@@ -363,12 +363,13 @@ You will be happy you did.
             raise TypeError(
                 'Recipients data must be a dictionary of key/value pairs for\n'+
                 'one recipient or a list of dictionaries for multiple recipients')
+        zipped = zip(recipients, optional_data)
         data = {
             "recipientData" : [
                 {
                     "recipient" : {
                         "customerId" : None,
-                        "emailAddress" : recipient,
+                        "emailAddress" : recipient[0],
                         "listName" : {
                             "folderName" : folder_name,
                             "objectName" : campaign_name
@@ -381,9 +382,9 @@ You will be happy you did.
                         {
                             "name": list(d.keys())[0],
                             "value": list(d.values())[0]
-                        } for d in optional_data
+                        } for d in self._list_child(recipient[1], dict)
                     ]
-                } for recipient in recipients
+                } for recipient in zipped
             ]
         }
         print(data)
