@@ -356,7 +356,10 @@ You will be happy you did.
             optional_data=None):
         """Trigger email message."""
         # Accept a string for one recipient but work with a list either way.
-        if lower(id_type) not in record_id_types
+        if lower(id_type) not in record_id_types:
+            raise ValueError(
+                'ID Type must be one of "e", "c", "m" or "r"\n ' +
+                'for EmailAddress, CustomerId, MobileNumber or RecipientId')
         recipients = self._list_child(recipients, str)
         if type(recipients) is not list:
             raise TypeError(
