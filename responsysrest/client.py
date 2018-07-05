@@ -349,7 +349,7 @@ You will be happy you did.
             recipients,
             folder_name,
             campaign_name,
-            optional_data=None):
+            optional_data={}):
         """Trigger email message."""
         # Accept a string for one recipient but work with a list either way.
         recipients = self._list_child(recipients, str)
