@@ -403,6 +403,17 @@ def test_send_email_message_with_optional_data_to_multiple_recipients():
         assert False is not respbody['recipientId']
 
 
+def test_send_email_message_raises_error_for_bad_length_optional_data():
+    with pytest.raises(ValueError):
+        recipients = [fixtures['email_address'],fixtures['email_address']]
+        resp = client.send_email_message(
+            recipients,
+            fixtures['folder'],
+            fixtures['campaign_name'],
+            fixtures['optional_data'])
+
+
+
 @pytest.mark.xfail
 def test_update_list_and_send_sms():
     """Test update list and send SMS."""

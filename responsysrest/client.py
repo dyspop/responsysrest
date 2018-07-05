@@ -25,7 +25,6 @@ from .containers import rules
 #         bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8')
 #     )
 
-
 class Client:
     """The main client."""
 
@@ -366,6 +365,9 @@ You will be happy you did.
             raise TypeError(
                 'Recipients data must be a dictionary of key/value pairs for\n'+
                 'one recipient or a list of dictionaries for multiple recipients')
+        if len(recipients) != len(optional_data):
+            raise ValueError(
+                'Recipients list must be same length as optional data list')
         zipped = zip(recipients, optional_data)
         data = {
             "recipientData" : [
