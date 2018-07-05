@@ -33,6 +33,9 @@ class Client:
         """Initialize."""
         self.config = config
         self.creds = creds
+        # ID types EmailAddress, CustomerId, MobileNumber, RecipientId (RIID)
+        # shorthand matches Responsys
+        self.record_id_types = ['e', 'c', 'm', 'r']
 
     def _login(self, user_name, password, url):
         """Login with username and password."""
@@ -349,9 +352,11 @@ You will be happy you did.
             recipients,
             folder_name,
             campaign_name,
+            id_type='e',
             optional_data=None):
         """Trigger email message."""
         # Accept a string for one recipient but work with a list either way.
+        if lower(id_type) not in record_id_types
         recipients = self._list_child(recipients, str)
         if type(recipients) is not list:
             raise TypeError(
@@ -362,8 +367,8 @@ You will be happy you did.
             "recipientData" : [
                 {
                     "recipient" : {
-                        "customerId" : "1",
-                        "emailAddress" : "dblack+test@shutterstock.com",
+                        "customerId" : None,
+                        "emailAddress" : recipient,
                         "listName" : {
                             "folderName" : "___api-generated-test",
                             "objectName" : "test_api_classic"
