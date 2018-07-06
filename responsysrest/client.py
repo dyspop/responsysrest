@@ -459,13 +459,6 @@ You will be happy you did.
         }
         return self._post(service_url, data)
 
-    def delete_folder(self, folder_path=''):
-        """Delete a folder in /contentlibrary/."""
-        if folder_path == '':
-            folder_path = self.config.content_library_folder
-        service_url = 'clFolders/contentlibrary/{f}'.format(f=folder_path)
-        return self._delete(service_url)
-
     def create_document(self, document, sub_folder_path=None):
         """Create a document in /contentlibrary/."""
         service_url = 'clDocs'
@@ -494,6 +487,13 @@ You will be happy you did.
         """Delete a document in /contentlibrary/'."""
         service_url = 'clDocs/contentlibrary/{p}'.format(
             p=path_to_interact_document)
+        return self._delete(service_url)
+
+    def delete_folder(self, folder_path=''):
+        """Delete a folder in /contentlibrary/."""
+        if folder_path == '':
+            folder_path = self.config.content_library_folder
+        service_url = 'clFolders/contentlibrary/{f}'.format(f=folder_path)
         return self._delete(service_url)
 
     # NOT IMPLEMENTED GROUP
