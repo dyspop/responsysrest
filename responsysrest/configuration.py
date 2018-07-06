@@ -185,7 +185,7 @@ class Configuration:
         """Get the login URL."""
         return self.__test_content_library_folder
 
-    @login_url.setter
+    @test_content_library_folder.setter
     def test_content_library_folder(self, test_content_library_folder):
         """Set the login URL."""
         self.__test_content_library_folder = test_content_library_folder
