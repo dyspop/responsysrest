@@ -37,7 +37,8 @@ fixtures = {
         'eggs': r'flamingo',
         'sausage': b'squirrel',
         'toast': False
-    }
+    },
+    'local_content_library_folder': config.test_local_content_library_folder
 }
 
 

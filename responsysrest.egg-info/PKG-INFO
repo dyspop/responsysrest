@@ -329,7 +329,7 @@ Description: # Responsys Interact REST API python client #
         
             client.delete_from_profile_list(list_name, riid)
         
-        Delets a record from a profile list. Examples:
+        Deletes a record from a profile list. Examples:
         
             client.delete_from_profile_list('CONTACTS_LIST', 'a@b.c')
         
@@ -563,7 +563,7 @@ Description: # Responsys Interact REST API python client #
         
         ### Managing Content
         
-        You'll notice the files we use are `.htm`. It is Responsys's nature to change `.html` to `.htm` silently on upload. It is recommended to simply create all of your files with `.htm` to comply, otherwise you might end up with duplicates in your local copies if you're pulling files out. In fact, the wrapper won't allow .html files. 
+        You'll notice the files we use are `.htm`. Responsy changes `.html` to `.htm` silently on upload, and appends `.htm` to `.html` files creted in the UI. It is recommended to simply create all of your files with `.htm` to comply, otherwise you might end up with duplicates in your local copies if you're pulling files out. In fact, the wrapper won't allow `.html` files (though you'll have to rename them yourself).
         
         
         
@@ -576,6 +576,15 @@ Description: # Responsys Interact REST API python client #
         Creates a folder `/contentlibarary/new_folder` in the Content Library.
         
         If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated`. 
+        
+        
+        #### Delete Folder
+        
+        Deletes a folder if it exists in the content library (`/contentlibary/`). 
+        
+            client.delete_folder('folder_name')
+        
+        This recursively deletes all files in the folder as well.
         
         
         #### Create Content Library Document
@@ -711,6 +720,126 @@ Description: # Responsys Interact REST API python client #
                 'interact/contentlibrary/external/path/to/document.html')
         
         Unlike the opinionated create and get and update methods, you can try to delete anything from the content library even at the (content library) root. If you've managed to load a file into the content library you should be able to delete it.
+        
+        
+        
+        ### Sending Messages
+        
+        There are a number of types of messages you can send with Responsys via API and methods available. For now we just implement Send Email Message.
+        
+        
+        #### Send Email Message
+        
+        This wrapper requires each call to this function to target a single message but allow for any number of recipients and any amount of optional data to be passed along with each recipient. It only accepts email address as the ID type.
+        
+            client.send_email_message(
+                recipients, responsys_target_folder, responsys_target_campaign_name)
+        
+        `recipients` can be either a string or a list of strings. The wrapper will take any but Responsys will fail/reject invalid addresses. The following are all valid as the `recipients` argument (as far as the wrapper is concerned), but the third example should return an error from the Responsys response:
+        
+            'team_member@company.com'
+            ['team_member@company.com', 'team_member2@company.com']
+            ['team_member@company.com', 'team_member2@company.com', 42]
+        
+        Messages will only be sent if the recipient exists in the target list. The target list must be configured from the campaign dashboard in the Responsys UI. If the recipient doesn't exist in the target list for the target campaign then a failure response will be returned from the Responsys API for that item in the list.
+        
+        You can also pass optional data to be used within the campaign build, whether it be used in classic or EMD campaigns. This is done with a dictionary for one recipient:
+        
+            client.send_email_message(
+                'team_member@company.com',
+                'myfolder',
+                'mycampaign',
+                {
+                    'FIELD1': 'Value1',
+                    'FIELD2': 'Value2'
+                }
+            )
+        
+        or a list of dictionaries for multiple recipients:
+        
+            recipients = ['team_member@company.com', 'team_member2@company.com']
+            optional_data = [
+                {
+                    'FIELD1': 'foo',
+                    'FIELD2': 'bar'
+                },
+                {
+                    'FIELD1': 'ham',
+                    'FIELD2': 'eggs'
+                }
+            ]
+        
+        The length of the recipients list and the optional data key/value pairs must match or the wrapper will return an error.
+        
+        Note that the key don't need to match:
+        
+            recipients = ['team_member@company.com', 'team_member2@company.com']
+            optional_data = [
+                {
+                    'FIELD1': 'foo',
+                    'FIELD2': 'bar'
+                },
+                {
+                    'FIELD1': 'ham',
+                    'OTHER_FIELD': 'bazinga'
+                    'YET_ANOTHER_FIELD': 'Batman!'
+                }
+            ]
+        
+        But be careful, you'll need to pass an empty dictionary if you have a recipient to receive no optional data mixed in with recipients who do receive optional data:
+        
+            recipients = [
+                'team_member@company.com',
+                'team_member2@company.com',
+                'otherperson@othercompany.net',
+                'someonesfriend@friendlypeople.biz'
+                ]
+                optional_data = [
+                    {
+                        'FIELD1': 'foo',
+                        'FIELD2': 'bar'
+                    },
+                    {
+                        'FIELD1': 'baz',
+                        'FIELD2': 'bazoink'
+                    },
+                    {},
+                    {
+                        'FIELD1': 'spam',
+                        'FIELD2': 'bacon'
+                    },
+                ]
+        
+        It can sometimes be easier to pass in `None` or an empty string:
+        
+            recipients = [
+                'team_member@company.com',
+                'team_member2@company.com',
+                'otherperson@othercompany.net',
+                'someonesfriend@friendlypeople.biz'
+                ]
+                optional_data = [
+                    {
+                        'FIELD1': 'foo',
+                        'FIELD2': 'bar'
+                        'FIELD3': None
+                    },
+                    {
+                        'FIELD1': 'baz',
+                        'FIELD2': None,
+                        'FIELD3': 'flamingo'
+                    },
+                    {
+                        'FIELD1': None,
+                        'FIELD2': None,
+                        'FIELD3': None
+                    },
+                    {
+                        'FIELD1': '',
+                        'FIELD2': 'bacon',
+                        'FIELD3': 'flamenco'
+                    },
+                ]
         
         
         
