@@ -18,6 +18,7 @@ class Configuration:
             test_campaign_name,
             content_library_folder,
             api_version,
+            test_content_library_folder,
             user_cerficates=False
     ):
         """Initialize the Interact Configuration."""
@@ -34,6 +35,7 @@ class Configuration:
         self.login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
             p=self.pod,
             a=self.api_version)
+        self.test_content_library_folder = test_content_library_folder
         self.user_cerficates = user_cerficates
 
     def __repr__(self):
@@ -177,6 +179,16 @@ class Configuration:
         self.__login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
             p=self.pod,
             a=self.api_version)
+
+    @property
+    def test_content_library_folder(self):
+        """Get the login URL."""
+        return self.__test_content_library_folder
+
+    @login_url.setter
+    def test_content_library_folder(self, test_content_library_folder):
+        """Set the login URL."""
+        self.__test_content_library_folder = test_content_library_folder
 
 
     # login_url = f'http://login{pod}.responsys.net/rest/api/v{api_version}/'
