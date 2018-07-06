@@ -8,6 +8,8 @@
     "riid_generator_length": 11,
     "test_campaign_name": "test_api_classic",
     "test_content_library_folder": "___api-generated-test",
+    "test_local_content_libary_folder": "responsysrest/tests/documents/",
     "content_library_folder": "___api-generated-cl",
+    "local_content_library_folder": ".",
     "api_version": "1.3"
 }
