@@ -27,7 +27,7 @@ fixtures = {
     'api_username': creds.user_name,
     'campaign_name': config.test_campaign_name,
     'document': './responsysrest/tests/document.htm',
-    'content_library_folder': '___api-generated-test',
+    'content_library_folder': config.test_content_library_folder,
     'optional_data': {
         'foo': 'bar',
         'spam': 0,
@@ -465,15 +465,29 @@ def test_unschedule_campaign():
 def test_create_folder_returns_response():
     """Test if the API responds.
 
-    When we try to list all push campaigns.
+    When we try to list create a blank folder.
     """
-    assert _heartbeat(client.create_folder(fixtures['content_library_folder']))
+    assert _heartbeat(client.create_folder(None))
 
 
-@pytest.mark.xfail
+def test_create_folder_creates_folder_at_config_path():
+    """Test if the API responds's response folder is at the location we expect.
+    """
+    resp = client.create_folder(fixtures['content_library_folder'])
+    assert ('errorCode' in resp.keys() or 'folderPath' in resp.keys())
+    # assert (
+    #     (
+    #         resp['errorCode'] == 'FOLDER_ALREADY_EXISTS'
+    #     ) or (
+    #         resp['folderPath'] == '/contentlibrary/{}'.format(
+    #             fixtures['content_library_folder'])
+    #     )
+    # )
+
+
 def test_list_folder():
     """Test listing a content library folder."""
-    assert client.list_folder(None)
+    assert _heartbeat(client.list_folder(None))
 
 
 def test_delete_folder_returns_response():
