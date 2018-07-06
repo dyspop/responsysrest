@@ -321,7 +321,7 @@ The fields to return should be a python list data object, if left blank it will 
 
     client.delete_from_profile_list(list_name, riid)
 
-Delets a record from a profile list. Examples:
+Deletes a record from a profile list. Examples:
 
     client.delete_from_profile_list('CONTACTS_LIST', 'a@b.c')
 
