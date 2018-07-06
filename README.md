@@ -726,7 +726,7 @@ This wrapper requires each call to this function to target a single message but 
 
 Messages will only be sent if the recipient exists in the target list. The target list must be configured from the campaign dashboard in the Responsys UI. If the recipient doesn't exist in the target list for the target campaign then a failure response will be returned from the Responsys API for that item in the list.
 
-You can also pass optional data to be used within the campaign HTML build, whether it be used in classic or EMD campaigns. This is done with a dictionary for one recipient:
+You can also pass optional data to be used within the campaign build, whether it be used in classic or EMD campaigns. This is done with a dictionary for one recipient:
 
     client.send_email_message(
         'team_member@company.com',
@@ -790,6 +790,37 @@ But be careful, you'll need to pass an empty dictionary if you have a recipient 
             {
                 'FIELD1': 'spam',
                 'FIELD2': 'bacon'
+            },
+        ]
+
+It can sometimes be easier to pass in `None` or an empty string:
+
+    recipients = [
+        'team_member@company.com',
+        'team_member2@company.com',
+        'otherperson@othercompany.net',
+        'someonesfriend@friendlypeople.biz'
+        ]
+        optional_data = [
+            {
+                'FIELD1': 'foo',
+                'FIELD2': 'bar'
+                'FIELD3': None
+            },
+            {
+                'FIELD1': 'baz',
+                'FIELD2': None,
+                'FIELD3': 'flamingo'
+            },
+            {
+                'FIELD1': None,
+                'FIELD2': None,
+                'FIELD3': None
+            },
+            {
+                'FIELD1': '',
+                'FIELD2': 'bacon',
+                'FIELD3': 'flamenco'
             },
         ]
 
