@@ -570,6 +570,15 @@ Creates a folder `/contentlibarary/new_folder` in the Content Library.
 If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated`. 
 
 
+#### Delete Folder
+
+Deletes a folder if it exists in the content library (`/contentlibary/`). 
+
+    client.delete_folder('folder_name')
+
+This recursively deletes all files in the folder as well.
+
+
 #### Create Content Library Document
 
 Creates a document in the content library (`/contentlibary/`). Takes a document system path, not document data or other protocol path.
