@@ -208,7 +208,8 @@ def from_json(f):
             riid_generator_length=user_config['riid_generator_length'],
             test_campaign_name=user_config['test_campaign_name'],
             content_library_folder=user_config['content_library_folder'],
-            api_version=user_config['api_version']
+            api_version=user_config['api_version'],
+            test_content_library_folder=user_config['test_content_library_folder']
         )
         return config
 
