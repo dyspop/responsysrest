@@ -449,6 +449,23 @@ You will be happy you did.
         }
         return self._post(service_url, data)
 
+
+
+    def list_folder(self, folder_path='', object_type='all'):
+        """List the contents of a folder."""
+        valid_types = ['all', 'folders', 'docs', 'items']
+        if object_type not in valid_types:
+            raise ValueError(
+                """Object type must be one of {v}.""".format(
+                    v=str(valid_types)[1:-1])
+                )
+        if folder_path == '':
+            folder_path = self.config.content_library_folder
+        service_url = 'clFolders/contentlibrary/{f}?type={o}'.format(
+            f=folder_path, o=object_type)
+        return self._get(service_url)
+
+
     def create_folder(self, folder_path=''):
         """Create a new folder in /contentlibrary/."""
         service_url = 'clFolders'
@@ -459,42 +476,47 @@ You will be happy you did.
         }
         return self._post(service_url, data)
 
-    def create_document(self, document, sub_folder_path=None):
-        """Create a document in /contentlibrary/."""
-        service_url = 'clDocs'
-        data = self._prep_doc_and_path(document, sub_folder_path)['data']
-        return self._post(service_url, data)
+    # def create_document(self, document, sub_folder_path=None):
+    #     """Create a document in /contentlibrary/."""
+    #     service_url = 'clDocs'
+    #     data = self._prep_doc_and_path(document, sub_folder_path)['data']
+    #     return self._post(service_url, data)
 
-    def get_document(self, document, sub_folder_path=None):
-        """Get a document from /contentlibrary/."""
-        if sub_folder_path is None:
-            sub_folder_path = self.config.content_library_folder
-        document_name = document
-        service_url = 'clDocs/contentlibrary/{sf}/{d}'.format(
-            sf=sub_folder_path,
-            d=document_name)
-        return self._get(service_url)
+    # def get_document(self, document, sub_folder_path=None):
+    #     """Get a document from /contentlibrary/."""
+    #     if sub_folder_path is None:
+    #         sub_folder_path = self.config.content_library_folder
+    #     document_name = document
+    #     service_url = 'clDocs/contentlibrary/{sf}/{d}'.format(
+    #         sf=sub_folder_path,
+    #         d=document_name)
+    #     return self._get(service_url)
 
-    def update_document(self, document, sub_folder_path=None):
-        """Update a document that's already in /contentlibrary/."""
-        prepped = self._prep_doc_and_path(document, sub_folder_path)
-        service_url = 'clDocs/contentlibrary/{sf}/{p}'.format(
-            sf=sub_folder_path,
-            p=prepped["document_name"])
-        return self._post(service_url, prepped['data'])
+    # def update_document(self, document, sub_folder_path=None):
+    #     """Update a document that's already in /contentlibrary/."""
+    #     prepped = self._prep_doc_and_path(document, sub_folder_path)
+    #     service_url = 'clDocs/contentlibrary/{sf}/{p}'.format(
+    #         sf=sub_folder_path,
+    #         p=prepped["document_name"])
+    #     return self._post(service_url, prepped['data'])
 
-    def delete_document(self, path_to_interact_document):
-        """Delete a document in /contentlibrary/'."""
-        service_url = 'clDocs/contentlibrary/{p}'.format(
-            p=path_to_interact_document)
-        return self._delete(service_url)
+    # def delete_document(self, path_to_interact_document):
+    #     """Delete a document in /contentlibrary/'."""
+    #     service_url = 'clDocs/contentlibrary/{p}'.format(
+    #         p=path_to_interact_document)
+    #     return self._delete(service_url)
 
-    def delete_folder(self, folder_path=''):
-        """Delete a folder in /contentlibrary/."""
-        if folder_path == '':
-            folder_path = self.config.content_library_folder
-        service_url = 'clFolders/contentlibrary/{f}'.format(f=folder_path)
-        return self._delete(service_url)
+    # def delete_folder(self, folder_path=''):
+    #     """Delete a folder in /contentlibrary/."""
+    #     if folder_path == '':
+    #         folder_path = self.config.content_library_folder
+    #     service_url = 'clFolders/contentlibrary/{f}'.format(f=folder_path)
+    #     return self._delete(service_url)
+
+
+
+
+
 
     # NOT IMPLEMENTED GROUP
 
@@ -559,10 +581,6 @@ You will be happy you did.
 
     def unschedule_campaign(self, campaign_name):
         """Unschedule a campaign."""
-        raise(NotImplementedError)
-
-    def list_folder(self, path):
-        """List the contents of a folder."""
         raise(NotImplementedError)
 
     def create_media_file(self, path_to_media_file, media_file):
