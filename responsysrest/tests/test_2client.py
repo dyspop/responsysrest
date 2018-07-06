@@ -483,7 +483,7 @@ def test_create_folder_creates_folder_at_config_path():
     if 'errorCode' in resp.keys():
         assert resp['errorCode'] == 'FOLDER_ALREADY_EXISTS'
     if 'folderPath' in resp.keys():
-        assert  esp['folderPath'] == '/contentlibrary/{}'.format(
+        assert resp['folderPath'] == '/contentlibrary/{}'.format(
             fixtures['content_library_folder'])
 
 
