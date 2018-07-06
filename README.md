@@ -555,7 +555,7 @@ Returns a list of push campaigns and their associated data.
 
 ### Managing Content
 
-You'll notice the files we use are `.htm`. It is Responsys's nature to change `.html` to `.htm` silently on upload. It is recommended to simply create all of your files with `.htm` to comply, otherwise you might end up with duplicates in your local copies if you're pulling files out. In fact, the wrapper won't allow .html files. 
+You'll notice the files we use are `.htm`. Responsy changes `.html` to `.htm` silently on upload, and appends `.htm` to `.html` files creted in the UI. It is recommended to simply create all of your files with `.htm` to comply, otherwise you might end up with duplicates in your local copies if you're pulling files out. In fact, the wrapper won't allow `.html` files (though you'll have to rename them yourself).
 
 
 
