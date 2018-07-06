@@ -471,18 +471,19 @@ def test_create_folder_returns_response():
 
 
 def test_create_folder_creates_folder_at_config_path():
-    """Test if the API responds's response folder is at the location we expect.
+    """Test if the API's response folder is at the location we expect.
+
+    If the folder exists we should get an error saying so.
+    If the folder didn't exist we should see it returned within the
+    contentlibrary/
     """
     resp = client.create_folder(fixtures['content_library_folder'])
     assert ('errorCode' in resp.keys() or 'folderPath' in resp.keys())
-    # assert (
-    #     (
-    #         resp['errorCode'] == 'FOLDER_ALREADY_EXISTS'
-    #     ) or (
-    #         resp['folderPath'] == '/contentlibrary/{}'.format(
-    #             fixtures['content_library_folder'])
-    #     )
-    # )
+    if 'errorCode' in resp.keys():
+        assert resp['errorCode'] == 'FOLDER_ALREADY_EXISTS'
+    if 'folderPath' in resp.keys():
+        assert  esp['folderPath'] == '/contentlibrary/{}'.format(
+            fixtures['content_library_folder'])
 
 
 def test_list_folder():
@@ -495,7 +496,8 @@ def test_delete_folder_returns_response():
 
     When we try to delete a content library folder.
     """
-    assert _heartbeat(client.delete_folder(fixtures['content_library_folder']))
+    assert _heartbeat(client.delete_folder(
+        fixtures['content_library_folder']))
 
 
 def test_create_document_returns_response():
