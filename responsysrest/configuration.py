@@ -19,6 +19,8 @@ class Configuration:
             content_library_folder,
             api_version,
             test_content_library_folder,
+            local_content_library_folder,
+            test_local_content_library_folder,
             user_cerficates=False
     ):
         """Initialize the Interact Configuration."""
@@ -37,6 +39,8 @@ class Configuration:
             a=self.api_version)
         self.test_content_library_folder = test_content_library_folder
         self.user_cerficates = user_cerficates
+        self.local_content_library_folder = local_content_library_folder
+        self.test_local_content_library_folder = test_local_content_library_folder
 
     def __repr__(self):
         """Text representation."""
@@ -190,6 +194,26 @@ class Configuration:
         """Set the login URL."""
         self.__test_content_library_folder = test_content_library_folder
 
+    @property
+    def local_content_library_folder(self):
+        """Get the login URL."""
+        return self.__local_content_library_folder
+
+    @local_content_library_folder.setter
+    def local_content_library_folder(self, local_content_library_folder):
+        """Set the login URL."""
+        self.__local_content_library_folder = local_content_library_folder
+
+    @property
+    def test_local_content_library_folder(self):
+        """Get the login URL."""
+        return self.__test_local_content_library_folder
+
+    @test_local_content_library_folder.setter
+    def test_local_content_library_folder(self, test_local_content_library_folder):
+        """Set the login URL."""
+        self.__test_local_content_library_folder = test_local_content_library_folder
+
 
     # login_url = f'http://login{pod}.responsys.net/rest/api/v{api_version}/'
 
@@ -209,7 +233,9 @@ def from_json(f):
             test_campaign_name=user_config['test_campaign_name'],
             content_library_folder=user_config['content_library_folder'],
             api_version=user_config['api_version'],
-            test_content_library_folder=user_config['test_content_library_folder']
+            test_content_library_folder=user_config['test_content_library_folder'],
+            local_content_library_folder=user_config['local_content_library_folder'],
+            test_local_content_library_folder=user_config['test_local_content_library_folder']
         )
         return config
 
