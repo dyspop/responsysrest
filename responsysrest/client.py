@@ -226,15 +226,24 @@ You will be happy you did.
                             default_permission_status='OPTIN'):
         """Merge or update members in a profile list table."""
 
-        # Clean bytes objects from fields
-        fields = [self._bytes_to_str(f) for f in fields]
 
-        # Clean bytes from records
-        records = [self._bytes_to_str(r) for r in records]
 
-        # Make them lists to accept string arguments for single record
+        # Fields, records to lists to accept str arg for single record updates
         fields = self._list_child(fields, str)
         records = self._list_child(records, str)
+
+        # Clean bytes objects from fields
+        try:
+            fields = [self._bytes_to_str(f) for f in fields]
+        except:
+            pass
+
+        # Clean bytes from records
+        try:
+            records = [self._bytes_to_str(r) for r in records]
+        except:
+            pass
+
 
         data = {
             'recordData': {
