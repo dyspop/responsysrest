@@ -138,6 +138,13 @@ def test_get_profile_lists_not_zero_length():
     assert len(client.get_profile_lists()) > 0
 
 
+def test_fixture_profile_list_in_get_profile_lists():
+    """Test if the fixture list is in Interact."""
+    profile_lists = [list['name'] for list in client.get_profile_lists()]
+    error_message = 'You must manually create a {l} test profile list in Interact UI.'.format(l=config.api_list)
+    assert fixtures['profile_list'] in profile_lists, error_message
+
+
 def test_update_profile_list_returns_response():
     """Test updating a profile list."""
     assert _heartbeat(client.update_profile_list(None, None, None))
@@ -152,11 +159,16 @@ def test_update_profile_list_updates_profile_list_with_an_assigned_riid():
     # It looks wrong [0][0] but the response body has a list of lists for returned records.
     assert int is type(int(resp['recordData']['records'][0][0]))
 
-def test_fixture_profile_list_in_get_profile_lists():
-    """Test if the fixture list is in Interact."""
-    profile_lists = [list['name'] for list in client.get_profile_lists()]
-    error_message = 'You must manually create a {l} test profile list in Interact UI.'.format(l=config.api_list)
-    assert fixtures['profile_list'] in profile_lists, error_message
+
+def test_update_profile_list_updates_profile_list_with_an_assigned_riid():
+    resp = client.update_profile_list(
+        fixtures['profile_list'],
+        ['EMAIL_ADDRESS_'],
+        [fixtures['email_address']],
+        match_column_name1='EMAIL_ADDRESS_')
+    # If we successfully updated the record the response will contain an RIID. 
+    # It looks wrong [0][0] but the response body has a list of lists for returned records.
+    assert int is type(int(resp['recordData']['records'][0][0]))
 
 
 def test_get_campaigns_not_zero_length():
