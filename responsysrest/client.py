@@ -33,6 +33,8 @@ class Client:
         self.config = config
         self.creds = creds
 
+    """Internal methods."""
+
     def _login(self, user_name, password, url):
         """Login with username and password."""
         data = {
@@ -111,6 +113,24 @@ class Client:
         #     return response
 
 
+    """Interal helper methods."""
+
+    def _list_child(self, child, from_type):
+        if type(child) is from_type:
+            parent = []
+            parent.append(child)
+            return parent
+        else:
+            return child
+
+
+    def _bytes_to_str(self, data):
+        # Quietly convery bytes to strings... I'm uneasy about this
+        if type(data) is bytes:
+            data = data.decode('utf-8')
+        return data
+
+
     def _post(self, service_url, data, **kwargs):
         context = self._get_context()
         data = json.dumps(data)
@@ -183,6 +203,8 @@ You will be happy you did.
     modified from their documentation and code-comment style to match PEP-8.
     """
 
+    """Main functions."""
+
     def get_profile_lists(self):
         """Retrieving all profile lists for an account."""
         return self._get('lists')
@@ -203,6 +225,17 @@ You will be happy you did.
                             reject_records_if_channel_empty=None,
                             default_permission_status='OPTIN'):
         """Merge or update members in a profile list table."""
+
+        # Clean bytes objects from fields
+        fields = [self._bytes_to_str(f) for f in fields]
+
+        # Clean bytes from records
+        records = [self._bytes_to_str(r) for r in records]
+
+        # Make them lists to accept string arguments for single record
+        fields = self._list_child(fields, str)
+        records = self._list_child(records, str)
+
         data = {
             'recordData': {
                 'fieldNames': fields,
@@ -332,16 +365,6 @@ You will be happy you did.
             if "recordData" in response:
                 member_of.append(profile_list)
         return member_of
-
-
-    def _list_child(self, child, from_type):
-        if type(child) is from_type:
-            parent = []
-            parent.append(child)
-            return parent
-        else:
-            return child
-
 
     def send_email_message(
             self,
