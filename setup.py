@@ -17,7 +17,7 @@ tests_require = (
     'nose',
     'pep8',
     'pinocchio',
-    'pyflakes',
+    'pyflakes'
 )
 
 setup(
