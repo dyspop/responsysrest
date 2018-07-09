@@ -150,6 +150,7 @@ def test_update_profile_list_returns_response():
     assert _heartbeat(client.update_profile_list(None, None, None))
 
 def test_update_profile_list_updates_profile_list_with_an_assigned_riid():
+    """Test updating the profile list returns an RIID in the response body."""
     resp = client.update_profile_list(
         fixtures['profile_list'],
         ['EMAIL_ADDRESS_'],
@@ -160,11 +161,20 @@ def test_update_profile_list_updates_profile_list_with_an_assigned_riid():
     assert int is type(int(resp['recordData']['records'][0][0]))
 
 
-def test_update_profile_list_updates_profile_list_with_an_assigned_riid():
+def test_update_profile_list_with_optional_data_updates_profile_list():
+    """Test updating the profile list with optional data returns an RIID and the test data."""
+    # Get the test data field names
+    fields = [k.upper() for k in fixtures['optional_data'].keys()]
+    # Add required email address to the beginning of fields
+    fields.insert(0, 'EMAIL_ADDRESS_')
+    # Get the test data as a record row
+    records = [v for v in fixtures['optional_data'].values()]
+    # Add email address value to the beginning of the values record row.
+    records.insert(0, fixtures['email_address'])
     resp = client.update_profile_list(
         fixtures['profile_list'],
-        ['EMAIL_ADDRESS_'],
-        [fixtures['email_address']],
+        fields,
+        records,
         match_column_name1='EMAIL_ADDRESS_')
     # If we successfully updated the record the response will contain an RIID. 
     # It looks wrong [0][0] but the response body has a list of lists for returned records.

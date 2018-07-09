@@ -226,8 +226,6 @@ You will be happy you did.
                             default_permission_status='OPTIN'):
         """Merge or update members in a profile list table."""
 
-
-
         # Fields, records to lists to accept str arg for single record updates
         fields = self._list_child(fields, str)
         records = self._list_child(records, str)
@@ -389,7 +387,11 @@ You will be happy you did.
                 'Recipients data must be a string of one recipient or a list.')
         # Accept a dict for one recipient's optional data
         # but work with a list either way.
+        print(optional_data)
+        input()
         optional_data = self._list_child(optional_data, dict)
+        print(optional_data)
+        input()
         # then if there's no optional data extend it out so we can zip it up
         if optional_data == [{}] and len(recipients) > 1:
             optional_data = optional_data * len(recipients)
@@ -500,6 +502,7 @@ You will be happy you did.
 
     def create_folder(self, folder_path=''):
         """Create a new folder in /contentlibrary/."""
+        folder_path = self._trim_path(folder_path)
         service_url = 'clFolders'
         if folder_path == '':
             folder_path = self.config.content_library_folder
