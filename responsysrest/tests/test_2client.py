@@ -138,11 +138,19 @@ def test_get_profile_lists_not_zero_length():
     assert len(client.get_profile_lists()) > 0
 
 
-@pytest.mark.xfail
-def test_update_profile_list():
+def test_update_profile_list_returns_response():
     """Test updating a profile list."""
-    assert client.update_profile_list(None)
+    assert _heartbeat(client.update_profile_list(None, None, None))
 
+def test_update_profile_list_updates_profile_list_with_an_assigned_riid():
+    resp = client.update_profile_list(
+        fixtures['profile_list'],
+        ['EMAIL_ADDRESS_'],
+        [fixtures['email_address']],
+        match_column_name1='EMAIL_ADDRESS_')
+    # If we successfully updated the record the response will contain an RIID. 
+    # It looks wrong [0][0] but the response body has a list of lists for returned records.
+    assert int is type(int(resp['recordData']['records'][0][0]))
 
 def test_fixture_profile_list_in_get_profile_lists():
     """Test if the fixture list is in Interact."""
@@ -543,12 +551,6 @@ def test_delete_document_returns_response():
     When we try to create a content library document.
     """
     assert _heartbeat(client.delete_document(fixtures['document']))
-
-
-def test_update_profile_list_returns_response():
-    """Test if the API responds."""
-    assert _heartbeat(client.update_profile_list(
-        fixtures['profile_list'], ['RIID_'], fixtures['riid']))
 
 
 @pytest.mark.xfail
