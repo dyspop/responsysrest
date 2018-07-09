@@ -283,7 +283,12 @@ or
         list_name,
         fields,
         records,
-        match_column_name1='CUSTOMER_ID_')    
+        match_column_name1='CUSTOMER_ID_')
+
+For single records you can just pass in a string:
+
+    client.update_profile_list(
+        'test@test.com', 'FIRST_NAME', 'Mister Mime', match_column_name1='EMAIL_ADDRESS_')
 
 
 #### Retrieve a member of a profile list using RIID
