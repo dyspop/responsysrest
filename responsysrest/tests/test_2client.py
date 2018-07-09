@@ -29,14 +29,16 @@ fixtures = {
     'document': './responsysrest/tests/document.htm',
     'content_library_folder': config.test_content_library_folder,
     'optional_data': {
-        'foo': 'bar',
-        'spam': 0,
-        'baz': 0.1,
-        'ham': None,
-        'bacon': -1,
-        'eggs': r'flamingo',
-        'sausage': b'squirrel',
-        'toast': False
+        'str': 'bar',
+        'integer_zero': 0,
+        'floating_point_number': 0.1,
+        'nonetype': None,
+        'int_negative': -1,
+        'rstr': r'flamingo',
+        'bstr': b'squirrel',
+        'bool': False,
+        'api_user_name': creds.user_name,
+        'api_user_email_address': creds.email_address
     },
     'local_content_library_folder': config.test_local_content_library_folder
 }
