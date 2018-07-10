@@ -238,16 +238,17 @@ You will be happy you did.
         records = self._list_child(records, str)
 
         # Clean non string objects from fields
-        try:
-            fields = [self._nonstr_to_str(f) for f in fields]
-        except:
-            pass
+        if self.config.caste_nonstr_to_str == True:
+            try:
+                fields = [self._nonstr_to_str(f) for f in fields]
+            except:
+                pass
 
-        # Clean non string from records
-        try:
-            records = [self._nonstr_to_str(r) for r in records]
-        except:
-            pass
+            # Clean non string from records
+            try:
+                records = [self._nonstr_to_str(r) for r in records]
+            except:
+                pass
 
 
         data = {
