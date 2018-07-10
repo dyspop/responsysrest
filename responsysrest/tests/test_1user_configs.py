@@ -68,9 +68,34 @@ def test_test_campaign_name_exists():
     assert config.test_campaign_name
 
 
-def test_test_content_library_folder_exists():
+def test_test_remote_content_library_folder_exists():
     """Test if we loaded something in the test content library folder."""
-    assert config.content_library_folder
+    assert config.test_remote_content_library_folder
+
+
+def test_test_local_content_library_exists():
+    """Test if we loaded something for the test local content library."""
+    assert config.test_local_content_library
+
+
+def test_remote_content_library_folder_exists():
+    """Test if we loaded something for the remote content library."""
+    assert config.remote_content_library_folder
+
+
+def test_local_content_library_folder_exists():
+    """Test if we loaded something for the local content library."""
+    assert config.local_content_library_folder
+
+
+def test_caste_nonstr_to_str_exists():
+    """Test if we loaded something for the option."""
+    assert config.caste_nonstr_to_str
+
+
+def test_caste_nonstr_to_str_is_bool():
+    """Test that the value for caste types is set."""
+    assert bool is type(config.caste_nonstr_to_str)
 
 
 def test_config_in_client():
@@ -91,3 +116,5 @@ def test_config_matches_client_config():
 def test_creds_match_client_creds():
     """The instantiations should match."""
     assert creds == client.creds
+
+
