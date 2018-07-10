@@ -387,9 +387,14 @@ You will be happy you did.
                 'Recipients data must be a string of one recipient or a list.')
         # Accept a dict for one recipient's optional data
         # but work with a list either way.
+        optional_data = self._list_child(optional_data, dict)
         print(optional_data)
         input()
-        optional_data = self._list_child(optional_data, dict)
+        optional_data = [
+            {
+                self._bytes_to_str(k):self._bytes_to_str(v) for k,v in d.items()
+            } for d in optional_data
+        ]
         print(optional_data)
         input()
         # then if there's no optional data extend it out so we can zip it up
