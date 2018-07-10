@@ -592,7 +592,7 @@ You will be happy you did.
 
     def delete_folder(self, remote_path=None):
         """Delete a folder in /contentlibrary/."""
-         if remote_path is None:
+        if remote_path is None:
             remote_path = self.config.content_library_folder
             remote_path = self._trim_path(remote_path)
         remote_path = self._trim_path(remote_path)
