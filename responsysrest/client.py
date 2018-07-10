@@ -124,10 +124,14 @@ class Client:
             return child
 
 
-    def _bytes_to_str(self, data):
-        # Quietly convery bytes to strings... I'm uneasy about this
+    def _nonstr_to_str(self, data):
+        # Quietly convert bytes to strings... I'm uneasy about this
         if type(data) is bytes:
             data = data.decode('utf-8')
+        # Convert other types to strings because Responsys ignores most of them
+        if type(data) in [
+            int, float, bool, dict, list, set, tuple, type(None)]
+            data = str(data)
         return data
 
 
@@ -230,15 +234,15 @@ You will be happy you did.
         fields = self._list_child(fields, str)
         records = self._list_child(records, str)
 
-        # Clean bytes objects from fields
+        # Clean non string objects from fields
         try:
-            fields = [self._bytes_to_str(f) for f in fields]
+            fields = [self._nonstr_to_str(f) for f in fields]
         except:
             pass
 
-        # Clean bytes from records
+        # Clean non string from records
         try:
-            records = [self._bytes_to_str(r) for r in records]
+            records = [self._nonstr_to_str(r) for r in records]
         except:
             pass
 
@@ -390,7 +394,7 @@ You will be happy you did.
         optional_data = self._list_child(optional_data, dict)
         optional_data = [
             {
-                self._bytes_to_str(k):self._bytes_to_str(v) for k,v in d.items()
+                self._nonstr_to_str(k):self._nonstr_to_str(v) for k,v in d.items()
             } for d in optional_data
         ]
         # then if there's no optional data extend it out so we can zip it up
