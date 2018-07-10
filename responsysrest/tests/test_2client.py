@@ -26,7 +26,7 @@ fixtures = {
     'email_address': creds.email_address,
     'api_username': creds.user_name,
     'campaign_name': config.test_campaign_name,
-    'document': './responsysrest/tests/document.htm',
+    'document': 'document.htm',
     'content_library_folder': config.test_content_library_folder,
     'optional_data': {
         'str': 'bar',
@@ -495,84 +495,99 @@ def test_unschedule_campaign():
     assert client.unschedule_campaign(None, None)
 
 
-def test_create_folder_returns_response():
-    """Test if the API responds.
+# def test_create_folder_returns_response():
+#     """Test if the API responds.
 
-    When we try to list create a blank folder.
-    """
-    assert _heartbeat(client.create_folder(None))
-
-
-def test_create_folder_creates_folder_at_config_path():
-    """Test if the API's response folder is at the location we expect.
-
-    If the folder exists we should get an error saying so.
-    If the folder didn't exist we should see it returned within the
-    contentlibrary/
-    """
-    resp = client.create_folder(fixtures['content_library_folder'])
-    assert ('errorCode' in resp.keys() or 'folderPath' in resp.keys())
-    if 'errorCode' in resp.keys():
-        assert resp['errorCode'] == 'FOLDER_ALREADY_EXISTS'
-    if 'folderPath' in resp.keys():
-        assert resp['folderPath'] == '/contentlibrary/{}'.format(
-            fixtures['content_library_folder'])
+#     When we try to list create a blank folder.
+#     """
+#     assert _heartbeat(client.create_folder(None))
 
 
-def test_list_folder():
-    """Test listing a content library folder."""
-    assert _heartbeat(client.list_folder(None))
+# def test_create_folder_creates_folder_at_config_path():
+#     """Test if the API's response folder is at the location we expect.
+
+#     If the folder exists we should get an error saying so.
+#     If the folder didn't exist we should see it returned within the
+#     contentlibrary/
+#     """
+#     resp = client.create_folder(fixtures['content_library_folder'])
+#     assert ('errorCode' in resp.keys() or 'folderPath' in resp.keys())
+#     if 'errorCode' in resp.keys():
+#         assert resp['errorCode'] == 'FOLDER_ALREADY_EXISTS'
+#     if 'folderPath' in resp.keys():
+#         assert resp['folderPath'] == '/contentlibrary/{}'.format(
+#             fixtures['content_library_folder'])
 
 
-def test_delete_folder_returns_response():
-    """Test if the API responds.
-
-    When we try to delete a content library folder.
-    """
-    assert _heartbeat(client.delete_folder(
-        fixtures['content_library_folder']))
+# def test_create_folder_creates_folder_at_test_remote_folder_locations():
+#     """Test to see if the folder in responsys is mapped to the local test folder."""
+#     resp = client.create_folder(fixtures['content_library_folder'])
 
 
-def test_create_document_returns_response():
-    """Test if the API responds.
-
-    When we try to create a content library document.
-    """
-    assert _heartbeat(client.create_document(fixtures['document']))
+# def test_list_folder():
+#     """Test listing a content library folder."""
+#     assert _heartbeat(client.list_folder())
+#     assert _heartbeat(client.list_folder(None))
 
 
-def test_get_document_returns_response():
-    """Test if the API responds.
-
-    When we try to create a content library document.
-    """
-    assert _heartbeat(client.get_document(fixtures['document']))
-
-
-def test_get_document_returns_document_at_config_path():
-    """Test if the API's response document is at the config path."""
-    assert client.get_document(fixtures['document'])[
-        'documentPath'].startswith(
-            '/contentlibrary/{f}/'.format(
-                f=fixtures['content_library_folder']
-            )
-        )
+# def test_list_folder_by_object_type():
+#     """Test the object type options."""
+#     valid_types = ['all', 'folders', 'docs', 'items']
+#     for t in valid_types:
+#         assert _heartbeat(
+#             client.list_folder(object_type=t))
 
 
-def test_update_document_returns_response():
-    """Test if the API responds.
+# def test_delete_folder_returns_response():
+#     """Test if the API responds.
 
-    When we try to create a content library document.
-    """
-    assert _heartbeat(client.update_document(fixtures['document']))
+#     When we try to delete a content library folder.
+#     """
+#     assert _heartbeat(client.delete_folder(
+#         fixtures['content_library_folder']))
 
 
-def test_delete_document_returns_response():
-    """Test if the API responds.
+# def test_create_document_returns_response():
+#     """Test if the API responds.
 
-    When we try to create a content library document.
-    """
-    assert _heartbeat(client.delete_document(fixtures['document']))
+#     When we try to create a content library document.
+#     """
+#     assert _heartbeat(client.create_document(
+#         fixtures['document'], remote_path=fixtures['content_library_folder']))
+
+
+# def test_get_document_returns_response():
+#     """Test if the API responds.
+
+#     When we try to create a content library document.
+#     """
+#     assert _heartbeat(client.get_document(fixtures['document']))
+
+
+# def test_get_document_returns_document_at_config_path():
+#     """Test if the API's response document is at the config path."""
+#     assert client.get_document(fixtures['document'])[
+#         'documentPath'].startswith(
+#             '/contentlibrary/{f}/'.format(
+#                 f=fixtures['content_library_folder']
+#             )
+#         )
+
+
+# def test_update_document_returns_response():
+#     """Test if the API responds.
+
+#     When we try to create a content library document.
+#     """
+#     assert _heartbeat(client.update_document(fixtures['document']))
+
+
+# def test_delete_document_returns_response():
+#     """Test if the API responds.
+
+#     When we try to create a content library document.
+#     """
+#     assert _heartbeat(client.delete_document(fixtures['document']))
 
 
 @pytest.mark.xfail
