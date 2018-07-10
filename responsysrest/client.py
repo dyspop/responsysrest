@@ -129,8 +129,7 @@ class Client:
         if type(data) is bytes:
             data = data.decode('utf-8')
         # Convert other types to strings because Responsys ignores most of them
-        if type(data) in [
-            int, float, bool, dict, list, set, tuple, type(None)]
+        if type(data) in [int, float, bool, dict, list, set, tuple, type(None)]:
             data = str(data)
         return data
 
