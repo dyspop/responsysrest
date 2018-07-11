@@ -27,7 +27,7 @@ fixtures = {
     'api_username': creds.user_name,
     'campaign_name': config.test_campaign_name,
     'document': 'document.htm',
-    'content_library_folder': config.test_content_library_folder,
+    'remote_content_library_folder': config.test_remote_content_library_folder,
     'optional_data': {
         'str': 'bar',
         'integer_zero': 0,
@@ -168,7 +168,10 @@ def test_update_profile_list_with_optional_data_updates_profile_list():
     # Add required email address to the beginning of fields
     fields.insert(0, 'EMAIL_ADDRESS_')
     # Get the test data as a record row
-    records = [v for v in fixtures['optional_data'].values()]
+    records = [
+        v if config.caste_nonstr_to_str else client._nonstr_to_str(v) for v 
+        in fixtures['optional_data'].values()
+    ]
     # Add email address value to the beginning of the values record row.
     records.insert(0, fixtures['email_address'])
     resp = client.update_profile_list(
