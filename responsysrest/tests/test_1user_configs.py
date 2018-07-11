@@ -100,7 +100,12 @@ def test_test_remote_content_library_folder_exists():
 
 def test_test_local_content_library_folder_exists():
     """Test if we loaded something for the test local content library."""
-    assert config.test_local_content_library_folder
+    assert (
+        config.test_local_content_library_folder
+        or
+        config.test_local_content_library_folder == ''
+    )
+    assert config.test_local_content_library_folder is not None
 
 
 def test_remote_content_library_folder_exists():
@@ -110,7 +115,12 @@ def test_remote_content_library_folder_exists():
 
 def test_local_content_library_folder_exists():
     """Test if we loaded something for the local content library."""
-    assert config.local_content_library_folder
+    assert (
+        config.local_content_library_folder
+        or
+        config.local_content_library_folder == ''
+    )
+    assert config.local_content_library_folder is not None
 
 
 def test_caste_nonstr_to_str_exists():
