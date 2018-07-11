@@ -146,16 +146,6 @@ class Configuration:
         self.__test_campaign_name = test_campaign_name
 
     @property
-    def content_library_folder(self):
-        """Get content library folder."""
-        return self.__content_library_folder
-
-    @content_library_folder.setter
-    def content_library_folder(self, content_library_folder):
-        """Set content library folder."""
-        self.__content_library_folder = content_library_folder
-
-    @property
     def api_url(self):
         """API url partial."""
         return 'rest/api/v{a}'.format(a=self.api_version)
