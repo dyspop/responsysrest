@@ -24,19 +24,20 @@ def test_credentials_class():
 def test_credentials_class():
     """Test that the class instantiates."""
     assert r.Configuration(
-        pod="pod",
+        pod="5",
+        api_version="api_version",
         api_folder="api_folder",
         api_list="api_list",
         profile_extension_table_alias="profile_extension_table_alias",
         supplemental_table_alias="supplemental_table_alias",
         primary_key_alias="primary_key_alias",
         riid_generator_length=11,
-        test_campaign_name="test_campaign_name",
-        content_library_folder="content_library_folder",
-        api_version="api_version",
-        test_content_library_folder="test_content_library_folder",
+        caste_nonstr_to_str="caste_nonstr_to_str",
         local_content_library_folder="local_content_library_folder",
+        remote_content_library_folder="remote_content_library_folder",
+        test_campaign_name="test_campaign_name",
         test_local_content_library_folder="test_local_content_library_folder",
+        test_remote_content_library_folder="test_remote_content_library_folder",
         user_cerficates=False
     )
 
@@ -97,9 +98,9 @@ def test_test_remote_content_library_folder_exists():
     assert config.test_remote_content_library_folder
 
 
-def test_test_local_content_library_exists():
+def test_test_local_content_library_folder_exists():
     """Test if we loaded something for the test local content library."""
-    assert config.test_local_content_library
+    assert config.test_local_content_library_folder
 
 
 def test_remote_content_library_folder_exists():
@@ -114,7 +115,7 @@ def test_local_content_library_folder_exists():
 
 def test_caste_nonstr_to_str_exists():
     """Test if we loaded something for the option."""
-    assert config.caste_nonstr_to_str
+    assert config.caste_nonstr_to_str in [True, False]
 
 
 def test_caste_nonstr_to_str_is_bool():
