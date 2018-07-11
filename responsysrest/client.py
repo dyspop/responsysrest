@@ -191,7 +191,7 @@ class Client:
         if remote_path is None:
             remote_path = self.config.remote_content_library_folder
         remote_path = self._trim_path(remote_path)
-        document_data = open(document, 'r').read()
+        document_data = open(f'{local_path}/{document}', 'r').read()
         # just use the filename, omit the path
         document_name = document.split('/')[-1]
         if document_name.endswith('.html'):
