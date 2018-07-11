@@ -8,7 +8,7 @@
     "primary_key_alias": "_primary_key",
     "riid_generator_length": 11,
     "caste_nonstr_to_str": false,
-    "local_content_library_folder": ".",
+    "local_content_library_folder": "",
     "remote_content_library_folder": "___api-generated-cl",
     "test_campaign_name": "test_api_classic",
     "test_local_content_library_folder": "responsysrest/tests/documents/",
