@@ -48,16 +48,19 @@ config.json boilerplate:
 
     {
         "pod": "5",
+        "api_version": "1.3",
         "api_folder": "___api-generated",
-        "api_list": "API_testing",
+        "api_list": "___api-list",
         "profile_extension_table_alias": "_pet",
         "supplemental_table_alias": "_supp",
         "primary_key_alias": "_primary_key",
         "riid_generator_length": 11,
+        "caste_nonstr_to_str": false,
+        "local_content_library_folder": "",
+        "remote_content_library_folder": "___api-generated-cl",
         "test_campaign_name": "test_api_classic",
-        "test_content_library_folder": "___api-generated-test",
-        "content_library_folder": "___api-generated-cl",
-        "api_version": "1.3"
+        "test_local_content_library_folder": "responsysrest/tests/documents/",
+        "test_remote_content_library_folder": "___api-generated-test"
     }
 
 secret.json boilerplate:
