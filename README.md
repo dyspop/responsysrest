@@ -85,32 +85,21 @@ Then instantiate the client:
 
     client = r.Client(config, creds)
 
-If you're in an application context you can directly configure your client by passing the following values
-
-    client = r.Client(
-        pod='2',
-        api_folder='folder_name',
-        api_list='api_list',
-        profile_extension_table_alias='pet_alias',
-        supplemental_table_alias='supp_alias',
-        primary_key_alias='pk_alias',
-        riid_generator_length=11,
-        test_campaign_name='testtest',
-        content_library_folder='clsubfolder',
-        api_version='1.3')
-
-| Property  | Value  |
-|---|---|
-| pod  | string, `2` or `5`  |
-| api_folder  | string  |
-| api_list  | string  |
-| profile_extension_table_alias  | string  |
-| supplemental_table_alias  | string  |
-| primary_key_alias  | string  |
-| riid_generator_length  | integer  |
-| test_campaign_name  | string  |
-| content_library_folder  | string  |
-| api_version  | string  |
+| Property  | Value  | What it is |
+|---|---|---|
+| pod  | string, `2` or `5`  | Oracle subdomain server group, found in the endpoint URL |
+| api_folder  | string  | The default location within your instance you want to store non-content assets  |
+| api_list  | string  | The default list within your instance to populate to  |
+| profile_extension_table_alias  | string  | What to append to PET names by default  |
+| supplemental_table_alias  | string  | What to append to Supplemental Table names by default |
+| primary_key_alias  | string  | What to append to primary key fields by default  |
+| riid_generator_length  | integer  | How long the builtin RIIDs should be, mostly used for tests  |
+| caste_nonstr_to_str  | bool  | True if you want the wrapper to convert data to strings  |
+| local_content_library_folder  | string  | Location of content library local to code execution  |
+| remote_content_library_folder  | string  | Location of the content library on your instance. It's not wise to use the Content Library root  |
+| test_campaign_name  | string  | Name of the campaign that tests will fire to. You'll have to set this up manually for now  |
+| test_local_content_library_folder  | string  | Where the test suite documents are. Doubtful you'll want to change it.  |
+| test_remote_content_library_folder  | string  | Where the test suite points to remotely. It should be created and deleted when integrations tests are run, so don't plan on using this location in production.  |
 
 
 ## Client functions usage:
