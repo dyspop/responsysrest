@@ -1,5 +1,5 @@
 MANIFEST.in
-README.rst
+README.md
 setup.py
 responsysrest/__init__.py
 responsysrest/client.py
