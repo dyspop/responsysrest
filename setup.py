@@ -17,7 +17,7 @@ tests_require = (
     'nose',
     'pep8',
     'pinocchio',
-    'pyflakes',
+    'pyflakes'
 )
 
 setup(
@@ -36,7 +36,7 @@ setup(
     tests_require=tests_require,
     test_suite='pytest',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Environment :: MacOS X',
         'Framework :: Flake8',

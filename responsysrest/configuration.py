@@ -9,15 +9,19 @@ class Configuration:
     def __init__(
             self,
             pod,
+            api_version,
             api_folder,
             api_list,
             profile_extension_table_alias,
             supplemental_table_alias,
             primary_key_alias,
             riid_generator_length,
+            caste_nonstr_to_str,
+            local_content_library_folder,
+            remote_content_library_folder,
             test_campaign_name,
-            content_library_folder,
-            api_version,
+            test_local_content_library_folder,
+            test_remote_content_library_folder,
             user_cerficates=False
     ):
         """Initialize the Interact Configuration."""
@@ -28,13 +32,18 @@ class Configuration:
         self.supplemental_table_alias = supplemental_table_alias
         self.primary_key_alias = primary_key_alias
         self.riid_generator_length = riid_generator_length
+        self.caste_nonstr_to_str = caste_nonstr_to_str
         self.test_campaign_name = test_campaign_name
-        self.content_library_folder = content_library_folder
         self.api_version = api_version
         self.login_url = 'http://login{p}.responsys.net/rest/api/v{a}/auth/token'.format(
             p=self.pod,
             a=self.api_version)
         self.user_cerficates = user_cerficates
+        self.local_content_library_folder = local_content_library_folder
+        self.test_local_content_library_folder = test_local_content_library_folder
+        self.remote_content_library_folder = remote_content_library_folder
+        self.test_remote_content_library_folder = test_remote_content_library_folder
+
 
     def __repr__(self):
         """Text representation."""
@@ -137,16 +146,6 @@ class Configuration:
         self.__test_campaign_name = test_campaign_name
 
     @property
-    def content_library_folder(self):
-        """Get content library folder."""
-        return self.__content_library_folder
-
-    @content_library_folder.setter
-    def content_library_folder(self, content_library_folder):
-        """Set content library folder."""
-        self.__content_library_folder = content_library_folder
-
-    @property
     def api_url(self):
         """API url partial."""
         return 'rest/api/v{a}'.format(a=self.api_version)
@@ -178,6 +177,46 @@ class Configuration:
             p=self.pod,
             a=self.api_version)
 
+    @property
+    def local_content_library_folder(self):
+        """Get the login URL."""
+        return self.__local_content_library_folder
+
+    @local_content_library_folder.setter
+    def local_content_library_folder(self, local_content_library_folder):
+        """Set the login URL."""
+        self.__local_content_library_folder = local_content_library_folder
+
+    @property
+    def test_local_content_library_folder(self):
+        """Get the login URL."""
+        return self.__test_local_content_library_folder
+
+    @test_local_content_library_folder.setter
+    def test_local_content_library_folder(self, test_local_content_library_folder):
+        """Set the login URL."""
+        self.__test_local_content_library_folder = test_local_content_library_folder
+
+    @property
+    def remote_content_library_folder(self):
+        """Get the login URL."""
+        return self.__remote_content_library_folder
+
+    @remote_content_library_folder.setter
+    def remote_content_library_folder(self, remote_content_library_folder):
+        """Set the login URL."""
+        self.__remote_content_library_folder = remote_content_library_folder
+
+    @property
+    def test_remote_content_library_folder(self):
+        """Get the login URL."""
+        return self.__test_remote_content_library_folder
+
+    @test_remote_content_library_folder.setter
+    def test_remote_content_library_folder(self, test_remote_content_library_folder):
+        """Set the login URL."""
+        self.__test_remote_content_library_folder = test_remote_content_library_folder
+
 
     # login_url = f'http://login{pod}.responsys.net/rest/api/v{api_version}/'
 
@@ -187,16 +226,20 @@ def from_json(f):
     with open(f) as f:
         user_config = json.load(f)
         config = Configuration(
-            pod=user_config['pod'],
-            api_folder=user_config['api_folder'],
-            api_list=user_config['api_list'],
-            profile_extension_table_alias=user_config['profile_extension_table_alias'],
-            supplemental_table_alias=user_config['supplemental_table_alias'],
-            primary_key_alias=user_config['primary_key_alias'],
-            riid_generator_length=user_config['riid_generator_length'],
-            test_campaign_name=user_config['test_campaign_name'],
-            content_library_folder=user_config['content_library_folder'],
-            api_version=user_config['api_version']
+            pod=user_config["pod"],
+            api_version=user_config["api_version"],
+            api_folder=user_config["api_folder"],
+            api_list=user_config["api_list"],
+            profile_extension_table_alias=user_config["profile_extension_table_alias"],
+            supplemental_table_alias=user_config["supplemental_table_alias"],
+            primary_key_alias=user_config["primary_key_alias"],
+            riid_generator_length=user_config["riid_generator_length"],
+            caste_nonstr_to_str=user_config["caste_nonstr_to_str"],
+            local_content_library_folder=user_config["local_content_library_folder"],
+            remote_content_library_folder=user_config["remote_content_library_folder"],
+            test_campaign_name=user_config["test_campaign_name"],
+            test_local_content_library_folder=user_config["test_local_content_library_folder"],
+            test_remote_content_library_folder=user_config["test_remote_content_library_folder"]
         )
         return config
 

@@ -1,8 +1,8 @@
 """Tests for each individual function in the Client."""
 import responsysrest as r
 import random
+import string
 import requests
-import sys
 import pytest
 
 creds = r.credentials.auto()
@@ -24,10 +24,29 @@ fixtures = {
     'profile_list_extension': f'{config.api_list}{config.profile_extension_table_alias}',
     'primary_key': f'{config.api_list}{config.primary_key_alias}',
     'email_address': creds.email_address,
+    'api_username': creds.user_name,
     'campaign_name': config.test_campaign_name,
-    'document': './responsysrest/tests/document.htm',
-    'content_library_folder': '___api-generated-test'
+    'document': 'document.htm',
+    'remote_content_library_folder': config.test_remote_content_library_folder,
+    'optional_data': {
+        'str': 'bar',
+        'integer_zero': 0,
+        'floating_point_number': 0.1,
+        'nonetype': None,
+        'int_negative': -1,
+        'rstr': r'flamingo',
+        'bstr': b'squirrel',
+        'bool': False,
+        'api_user_name': creds.user_name,
+        'api_user_email_address': creds.email_address
+    },
+    'local_content_library_folder': config.test_local_content_library_folder
 }
+
+
+def _random_string(N=256):
+    # Generate a random string of N or 256 chars long
+    return ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=N))
 
 
 # Test-related functions.
@@ -100,7 +119,7 @@ def test_get():
     assert _bad_request(client._get(None))
 
 
-def test_get():
+def test_post():
     """Test to see if the server responds when we try to post a bad request."""
     assert _bad_request(client._post(None, None))
 
@@ -119,17 +138,50 @@ def test_get_profile_lists_not_zero_length():
     assert len(client.get_profile_lists()) > 0
 
 
-@pytest.mark.xfail
-def test_update_profile_list():
-    """Test updating a profile list."""
-    assert client.update_profile_list(None)
-
-
 def test_fixture_profile_list_in_get_profile_lists():
     """Test if the fixture list is in Interact."""
     profile_lists = [list['name'] for list in client.get_profile_lists()]
     error_message = 'You must manually create a {l} test profile list in Interact UI.'.format(l=config.api_list)
     assert fixtures['profile_list'] in profile_lists, error_message
+
+
+def test_update_profile_list_returns_response():
+    """Test updating a profile list."""
+    assert _heartbeat(client.update_profile_list(None, None, None))
+
+def test_update_profile_list_updates_profile_list_with_an_assigned_riid():
+    """Test updating the profile list returns an RIID in the response body."""
+    resp = client.update_profile_list(
+        fixtures['profile_list'],
+        ['EMAIL_ADDRESS_'],
+        [fixtures['email_address']],
+        match_column_name1='EMAIL_ADDRESS_')
+    # If we successfully updated the record the response will contain an RIID. 
+    # It looks wrong [0][0] but the response body has a list of lists for returned records.
+    assert int is type(int(resp['recordData']['records'][0][0]))
+
+
+def test_update_profile_list_with_optional_data_updates_profile_list():
+    """Test updating the profile list with optional data returns an RIID and the test data."""
+    # Get the test data field names
+    fields = [k.upper() for k in fixtures['optional_data'].keys()]
+    # Add required email address to the beginning of fields
+    fields.insert(0, 'EMAIL_ADDRESS_')
+    # Get the test data as a record row
+    records = [
+        v if config.caste_nonstr_to_str else client._nonstr_to_str(v) for v 
+        in fixtures['optional_data'].values()
+    ]
+    # Add email address value to the beginning of the values record row.
+    records.insert(0, fixtures['email_address'])
+    resp = client.update_profile_list(
+        fixtures['profile_list'],
+        fields,
+        records,
+        match_column_name1='EMAIL_ADDRESS_')
+    # If we successfully updated the record the response will contain an RIID. 
+    # It looks wrong [0][0] but the response body has a list of lists for returned records.
+    assert int is type(int(resp['recordData']['records'][0][0]))
 
 
 def test_get_campaigns_not_zero_length():
@@ -282,12 +334,120 @@ def test_update_list_and_send_email_message_with_attachments():
 def test_send_email_message_returns_response():
     """Test if the API responds.
 
-    When we try to send a message, good or bad.
+    When we try to send a message, most likely to garbage entries.
     """
+    assert _heartbeat(client.send_email_message(
+        _random_string(), _random_string(), _random_string()
+    ))
+
+
+# Valid test but now we're spamming outselves
+def test_send_email_message_returns_response_for_send_to_one_recipient():
     assert _heartbeat(client.send_email_message(
         fixtures['email_address'],
         fixtures['folder'],
         fixtures['campaign_name']))
+
+
+# Valid test but now we're spamming outselves
+def test_send_email_message_returns_success_for_send_to_one_recipient():
+    resp = client.send_email_message(
+        fixtures['email_address'],
+        fixtures['folder'],
+        fixtures['campaign_name'])
+    assert list is type(resp), "API returns a list of successes but a dict for failure."
+    # assert dict is type(resp)
+    assert 1 is len(resp)
+    assert dict is type(resp[0])
+    assert 'errorMessage' in resp[0].keys()
+    assert 'success' in resp[0].keys()
+    assert 'recipientId' in resp[0].keys()
+    assert None is resp[0]['errorMessage']
+    assert True is resp[0]['success']
+    assert None is not resp[0]['recipientId']
+    assert False is not resp[0]['recipientId']
+
+
+# Valid test but now we're spamming ourselves
+def test_send_email_message_returns_response_for_send_to_multiple_recipients():
+    assert _heartbeat(
+        client.send_email_message(
+            [
+                fixtures['email_address'], fixtures['email_address']
+            ],
+            fixtures['folder'],
+            fixtures['campaign_name']
+        )
+    )
+
+
+def test_send_email_message_returns_success_for_send_to_multiple_recipients():
+    recipients = [fixtures['email_address'],fixtures['email_address']]
+    resp = client.send_email_message(
+        recipients,
+        fixtures['folder'],
+        fixtures['campaign_name'])
+    assert list is type(resp), "API returns a list of successes but a dict for failure."
+    assert len(recipients) is len(resp)
+    for respbody in resp:
+        assert dict is type(respbody)
+        assert 'errorMessage' in respbody.keys()
+        assert 'success' in respbody.keys()
+        assert 'recipientId' in respbody.keys()
+        assert None is respbody['errorMessage']
+        assert True is respbody['success']
+        assert None is not respbody['recipientId']
+        assert False is not respbody['recipientId']
+
+
+def test_send_email_message_with_optional_data_to_one_recipient():
+    resp = client.send_email_message(
+        fixtures['email_address'],
+        fixtures['folder'],
+        fixtures['campaign_name'],
+        fixtures['optional_data'])
+    assert list is type(resp), "API returns a list of successes but a dict for failure."
+    # assert dict is type(resp)
+    assert 1 is len(resp)
+    assert dict is type(resp[0])
+    assert 'errorMessage' in resp[0].keys()
+    assert 'success' in resp[0].keys()
+    assert 'recipientId' in resp[0].keys()
+    assert None is resp[0]['errorMessage']
+    assert True is resp[0]['success']
+    assert None is not resp[0]['recipientId']
+    assert False is not resp[0]['recipientId']
+
+
+def test_send_email_message_with_optional_data_to_multiple_recipients():
+    recipients = [fixtures['email_address'],fixtures['email_address']]
+    resp = client.send_email_message(
+        recipients,
+        fixtures['folder'],
+        fixtures['campaign_name'],
+        [fixtures['optional_data'] for r in recipients])
+    assert list is type(resp), "API returns a list of successes but a dict for failure."
+    assert len(recipients) is len(resp)
+    for respbody in resp:
+        assert dict is type(respbody)
+        assert 'errorMessage' in respbody.keys()
+        assert 'success' in respbody.keys()
+        assert 'recipientId' in respbody.keys()
+        assert None is respbody['errorMessage']
+        assert True is respbody['success']
+        assert None is not respbody['recipientId']
+        assert False is not respbody['recipientId']
+
+
+def test_send_email_message_raises_error_for_bad_length_optional_data():
+    with pytest.raises(ValueError):
+        recipients = [fixtures['email_address'],fixtures['email_address']]
+        resp = client.send_email_message(
+            recipients,
+            fixtures['folder'],
+            fixtures['campaign_name'],
+            fixtures['optional_data'])
+
 
 
 @pytest.mark.xfail
@@ -341,31 +501,56 @@ def test_unschedule_campaign():
 def test_create_folder_returns_response():
     """Test if the API responds.
 
-    When we try to list all push campaigns.
+    When we try to list create a blank folder.
     """
-    assert _heartbeat(client.create_folder(fixtures['content_library_folder']))
+    assert _heartbeat(client.create_folder(None))
+    assert _heartbeat(client.create_folder(
+        fixtures['remote_content_library_folder']))
 
 
-@pytest.mark.xfail
+def test_create_folder_creates_folder_at_remote_config_path():
+    """Test if the API's response folder is at the location we expect.
+
+    If the folder exists we should get an error saying so.
+    If the folder didn't exist we should see it returned within the
+    contentlibrary/
+    """
+    resp = client.create_folder(fixtures['remote_content_library_folder'])
+    assert ('errorCode' in resp.keys() or 'folderPath' in resp.keys())
+    if 'errorCode' in resp.keys():
+        assert resp['errorCode'] == 'FOLDER_ALREADY_EXISTS'
+    if 'folderPath' in resp.keys():
+        assert resp['folderPath'] == '/contentlibrary/{}'.format(
+            fixtures['remote_content_library_folder'])
+
+
+# def test_create_folder_creates_folder_at_test_remote_folder_locations():
+#     """Test to see if the folder in responsys is mapped to the local test folder."""
+#     resp = client.create_folder(fixtures['content_library_folder'])
+
+
 def test_list_folder():
     """Test listing a content library folder."""
-    assert client.list_folder(None)
+    assert _heartbeat(client.list_folder())
+    assert _heartbeat(client.list_folder(None))
 
 
-def test_delete_folder_returns_response():
-    """Test if the API responds.
-
-    When we try to delete a content library folder.
-    """
-    assert _heartbeat(client.delete_folder(fixtures['content_library_folder']))
-
+def test_list_folder_by_object_type():
+    """Test the object type options."""
+    valid_types = ['all', 'folders', 'docs', 'items']
+    for t in valid_types:
+        assert _heartbeat(
+            client.list_folder(object_type=t))
 
 def test_create_document_returns_response():
     """Test if the API responds.
 
     When we try to create a content library document.
     """
-    assert _heartbeat(client.create_document(fixtures['document']))
+    assert _heartbeat(client.create_document(
+        fixtures['document'],
+        local_path=fixtures['local_content_library_folder'],
+        remote_path=fixtures['remote_content_library_folder']))
 
 
 def test_get_document_returns_response():
@@ -376,6 +561,18 @@ def test_get_document_returns_response():
     assert _heartbeat(client.get_document(fixtures['document']))
 
 
+def test_get_document_returns_document_at_config_path():
+    """Test if the API's response document is at the config path."""
+    assert client.get_document(
+        fixtures['document'],
+        remote_path=fixtures['remote_content_library_folder']
+    )['documentPath'].startswith(
+        '/contentlibrary/{f}/'.format(
+            f=fixtures['remote_content_library_folder']
+        )
+    )
+
+@pytest.mark.xfail
 def test_update_document_returns_response():
     """Test if the API responds.
 
@@ -392,10 +589,14 @@ def test_delete_document_returns_response():
     assert _heartbeat(client.delete_document(fixtures['document']))
 
 
-def test_update_profile_list_returns_response():
-    """Test if the API responds."""
-    assert _heartbeat(client.update_profile_list(
-        fixtures['profile_list'], ['RIID_'], fixtures['riid']))
+def test_delete_folder_returns_response():
+    """Test if the API responds.
+
+    When we try to delete a content library folder.
+    """
+    assert _heartbeat(client.delete_folder(
+        fixtures['remote_content_library_folder']))
+
 
 
 @pytest.mark.xfail

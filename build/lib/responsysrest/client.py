@@ -15,7 +15,7 @@ import json
 # from string import ascii_uppercase
 
 # our own rules for data objects.
-# from .containers import rules
+from .containers import rules
 
 # Helper functions for use with direct implementations of calls as below
 
@@ -25,7 +25,6 @@ import json
 #         bytes(''.join(choice(ascii_uppercase) for i in range(16)), 'utf-8')
 #     )
 
-
 class Client:
     """The main client."""
 
@@ -33,6 +32,8 @@ class Client:
         """Initialize."""
         self.config = config
         self.creds = creds
+
+    """Internal methods."""
 
     def _login(self, user_name, password, url):
         """Login with username and password."""
@@ -111,103 +112,27 @@ class Client:
         #     response = requests.post(url, data=data, headers=headers)
         #     return response
 
-        # # Merge or update members in a profile list table
-        # # TODO: fix 403 response
-        # # TODO: implement context and api_url with post
-        # def manage_profile_list(list_name, **kwargs):
-        #     """Merge or update members in a profile list table."""
-        #     # load container data
-        #     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-        #     # process keyword arguments
-        #     fields = kwargs.get('fields')
-        #     records = kwargs.get('records', None)
-        #     merge_rules = kwargs.get('merge_rules', data["mergeRule"])
 
-        #     # make sure the input fields and records are lists
-        #     if isinstance(fields, list) and isinstance(records, list):
-        #         # make sure the fields and records have the same amount of columns
-        #         if len(fields) == len(records):
-        #             # insert our fields into the data
-        #             data["recordData"]["fieldNames"] = fields
-        #             # insert our records into the data
-        #             data["recordData"]["records"] = records
-        #         else:
-        #             raise ValueError(
-        #                 """ERROR: List headers count does not
-        #                 match record column count"""
-        #             )
-        #     else:
-        #         raise ValueError(
-        #             """
-        #             ARGUMENT ERROR: input fields or records are not list objects.\n
-        #             Please specify lists for 'fields' or 'records' arguments.
-        #             """
-        #         )
-        #     # extract merge rules
-        #     rules_keys = [key for key in data["mergeRule"]]
-        #     # extract merge rules default values
-        #     rules_values = [
-        #         data["mergeRule"][rule]["default"] for rule in rules_keys
-        #     ]
-        #     # assign a new rules object to work on before we insert it into the
-        #     # request object
-        #     rules_dict = dict(zip(rules_keys, rules_values))
+    """Interal helper methods."""
 
-        #     for merge_rule, merge_value in merge_rules.items():
-        #         try:
-        #             # if the user input merge rule value is valid based on the
-        #             # container data
-        #             if merge_value in data["mergeRule"][merge_rule]["options"]:
-        #                 # add the new merge rule value to the data
-        #                 data["mergeRule"][merge_rule] = merge_value
-        #         except KeyError:
-        #             print(
-        #                 """
-        #                 f'ERROR: Merge rule "{merge_rule}" is not valid.
-        #                 Valid merge rules are:
-        #                 {rules_keys}'
-        #                 """
-        #             )
-        #         # print(merge_rule + " : " + merge_value)
-        #         # assign parameters from merge_rules keyword arguments to new rules
-        #         rules_dict[merge_rule] = merge_value
+    def _list_child(self, child, from_type):
+        if type(child) is from_type:
+            parent = []
+            parent.append(child)
+            return parent
+        else:
+            return child
 
-        #     # add the merge rules back into the data
-        #     data["mergeRule"] = rules_dict
 
-        #     # build post request
-        #     context = get_context()
-        #     auth_token = context["authToken"]
-        #     url = f'{context["endPoint"]}/{api_url}/lists/{list_name}/members'
-        #     headers = {
-        #         'Authorization': auth_token, 'Content-Type': 'application/json'
-        #     }
-        #     print(json.dumps(data))
-        #     # make the request
-        #     response = requests.post(url, data=json.dumps(data), headers=headers)
-        #     # return the data to the container?
-        #     data = rules["merge_or_update_members_in_a_profile_list_table"][0]
-        #     return response
-        raise(NotImplementedError)
+    def _nonstr_to_str(self, data):
+        # Quietly convert bytes to strings... I'm uneasy about this
+        if type(data) is bytes:
+            data = data.decode('utf-8')
+        # Convert other types to strings because Responsys ignores most of them
+        if type(data) in [int, float, bool, dict, list, set, tuple, type(None)]:
+            data = str(data)
+        return data
 
-    def _get(self, service_url, **kwargs):
-        """General purpose build for GET requests to Interact API."""
-        context = self._get_context()
-        endpoint = '{e}/{a}/{s}'.format(
-            e=context["endPoint"],
-            a=context["api_url"],
-            s=service_url)
-        headers = kwargs.get('headers', {'Authorization': context['authToken']})
-        # use parameters if we got them
-        if "parameters" in kwargs:
-            parameters = kwargs.get('parameters', None)
-            endpoint = '{e}?{p}'.format(e=endpoint, p=parameters)
-        response = requests.get(url=endpoint, headers=headers)
-        try:
-            response = json.loads(response.text)
-        except:
-            pass
-        return response
 
     def _post(self, service_url, data, **kwargs):
         context = self._get_context()
@@ -243,19 +168,30 @@ class Client:
 
     def _trim_path(self, path):
         # chop trailing slash
-        if path[-1] == '/':
-            path = path[:-1]
-        # chop leading slash
-        if path[0] == '/':
-            path = path[1:]
+        try:
+            if path[-1] == '/':
+                path = path[:-1]
+            # chop leading slash
+            if path[0] == '/':
+                path = path[1:]
+        except:
+            pass
         return path
 
 
-    def _prep_doc_and_path(self, document, path=None):
-        if not path:
-            path = self.config.content_library_folder
-        path = self._trim_path(path)
-        document_data = open(document, 'r').read()
+    def _prep_doc_and_path(
+        self,
+        document,
+        local_path=None,
+        remote_path=None
+    ):
+        if local_path is None:
+            local_path = self.config.remote_content_library_folder
+        local_path = self._trim_path(local_path)
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+        remote_path = self._trim_path(remote_path)
+        document_data = open(f'{local_path}/{document}', 'r').read()
         # just use the filename, omit the path
         document_name = document.split('/')[-1]
         if document_name.endswith('.html'):
@@ -269,10 +205,10 @@ You will be happy you did.
                 """)
         data = {
             'documentPath': '/contentlibrary/{p}/{d}'.format(
-                p=path, d=document_name),
+                p=remote_path, d=document_name),
             'content': document_data
         }
-        return {'data': data, 'document_name': document_name, 'path': path}
+        return {'data': data, 'document_name': document_name, 'remote_path': remote_path}
 
     """Direct implentations of calls from Responsys Interact REST API documentation
     https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCEB/OMCEB.pdf
@@ -281,13 +217,91 @@ You will be happy you did.
     modified from their documentation and code-comment style to match PEP-8.
     """
 
+    """Main functions."""
+
     def get_profile_lists(self):
         """Retrieving all profile lists for an account."""
         return self._get('lists')
 
-    def update_profile_lists(self):
-        """Update a profile list."""
-        raise(NotImplementedError)
+    def update_profile_list(self,
+                            list_name,
+                            fields,
+                            records,
+                            html_value='H',
+                            optin_value='I',
+                            text_value='T',
+                            insert_on_no_match=True,
+                            insert_on_match='REPLACE_ALL',
+                            match_column_name1='RIID_',
+                            match_column_name2=None,
+                            match_operator='NONE',
+                            opt_out_value='O',
+                            reject_records_if_channel_empty=None,
+                            default_permission_status='OPTIN'):
+        """Merge or update members in a profile list table."""
+
+        # Fields, records to lists to accept str arg for single record updates
+        fields = self._list_child(fields, str)
+        records = self._list_child(records, str)
+
+        # Clean non string objects from fields
+        if self.config.caste_nonstr_to_str == True:
+            try:
+                fields = [self._nonstr_to_str(f) for f in fields]
+            except:
+                pass
+
+            # Clean non string from records
+            try:
+                records = [self._nonstr_to_str(r) for r in records]
+            except:
+                pass
+
+
+        data = {
+            'recordData': {
+                'fieldNames': fields,
+                'records': [
+                    records
+                ],
+                'mapTemplateName': None
+            },
+            'mergeRule': {
+                'htmlValue': html_value,
+                'optinValue': optin_value,
+                'textValue': text_value,
+                'insertOnNoMatch': insert_on_no_match,
+                'updateOnMatch': insert_on_match,
+                'matchColumnName1': match_column_name1,
+                'matchColumnName2': match_column_name2,
+                'matchOperator': match_operator,
+                'optoutValue': opt_out_value,
+                'rejectRecordIfChannelEmpty': reject_records_if_channel_empty,
+                'defaultPermissionStatus': default_permission_status
+            }
+        }
+        service_url = 'lists/{list_name}/members'.format(list_name=list_name)
+        return self._post(service_url, data)
+        # raise(NotImplementedError)
+
+    def _get(self, service_url, **kwargs):
+        """General purpose build for GET requests to Interact API."""
+        context = self._get_context()
+        endpoint = '{e}/{a}/{s}'.format(
+            e=context["endPoint"],
+            a=context["api_url"],
+            s=service_url)
+        headers = kwargs.get('headers', {'Authorization': context['authToken']})
+        # use parameters if we got them
+        if "parameters" in kwargs:
+            parameters = kwargs.get('parameters', None)
+            endpoint = '{e}?{p}'.format(e=endpoint, p=parameters)
+        response = requests.get(url=endpoint, headers=headers)
+        try:
+            response = json.loads(response.text)
+        except:
+            pass
+        return response
 
     def get_campaigns(self):
         """Get all EMD email campaigns."""
@@ -374,18 +388,60 @@ You will be happy you did.
                 member_of.append(profile_list)
         return member_of
 
-    def send_email_message(self, email_address, folder_name, campaign_name):
+    def send_email_message(
+            self,
+            recipients,
+            folder_name,
+            campaign_name,
+            optional_data={}):
         """Trigger email message."""
+        # Accept a string for one recipient but work with a list either way.
+        recipients = self._list_child(recipients, str)
+        if type(recipients) is not list:
+            raise TypeError(
+                'Recipients data must be a string of one recipient or a list.')
+        # Accept a dict for one recipient's optional data
+        # but work with a list either way.
+        optional_data = self._list_child(optional_data, dict)
+        optional_data = [
+            {
+                self._nonstr_to_str(k):self._nonstr_to_str(v) for k,v in d.items()
+            } for d in optional_data
+        ]
+        # then if there's no optional data extend it out so we can zip it up
+        if optional_data == [{}] and len(recipients) > 1:
+            optional_data = optional_data * len(recipients)
+        if type(optional_data) is not list:
+            raise TypeError(
+                'Recipients data must be a dictionary of key/value pairs for\n'+
+                'one recipient or a list of dictionaries for multiple recipients')
+        if len(recipients) != len(optional_data):
+            raise ValueError(
+                'Recipients list must be same length as optional data list')
+        zipped = zip(recipients, optional_data)
         data = {
-            "recipientData": [{
-                "recipient": {
-                    "emailAddress": email_address,
-                    "listName": {
-                        "folderName": folder_name,
-                        "objectName": campaign_name},
-                    "recipientId": None,
-                    "mobileNumber": None,
-                    "emailFormat": "HTML_FORMAT"}}]}  # Damn that's ugly
+            "recipientData" : [
+                {
+                    "recipient" : {
+                        "customerId" : None,
+                        "emailAddress" : recipient[0],
+                        "listName" : {
+                            "folderName" : folder_name,
+                            "objectName" : campaign_name
+                        },
+                        "recipientId" : None,
+                        "mobileNumber" : None,
+                        "emailFormat" : "HTML_FORMAT"
+                    },
+                    "optionalData" : [
+                        {} if len(d.items()) is 0 else {
+                            "name": list(d.keys())[0],
+                            "value": list(d.values())[0]
+                        } for d in self._list_child(recipient[1], dict)
+                    ]
+                } for recipient in zipped
+            ]
+        }
         service_url = 'campaigns/{c}/email'.format(c=campaign_name)
         return self._post(service_url, data)
 
@@ -443,52 +499,129 @@ You will be happy you did.
         }
         return self._post(service_url, data)
 
-    def create_folder(self, folder_path=''):
+    def list_folder(
+        self,
+        remote_path=None,
+        object_type='all'
+    ):
+        """List the contents of a folder."""
+        valid_types = ['all', 'folders', 'docs', 'items']
+        if object_type not in valid_types:
+            raise ValueError(
+                """Object type must be one of {v}.""".format(
+                    v=str(valid_types)[1:-1])
+                )
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+        remote_path = self._trim_path(remote_path)
+        service_url = 'clFolders/contentlibrary/{f}?type={o}'.format(
+            f=remote_path, o=object_type)
+        return self._get(service_url)
+
+    def create_folder(
+        self,
+        remote_path=None
+    ):
         """Create a new folder in /contentlibrary/."""
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+        remote_path = self._trim_path(remote_path)
         service_url = 'clFolders'
-        if folder_path == '':
-            folder_path = self.config.content_library_folder
         data = {
-            "folderPath": '/contentlibrary/{f}'.format(f=folder_path)
+            "folderPath": '/contentlibrary/{f}'.format(f=remote_path)
         }
         return self._post(service_url, data)
 
-    def delete_folder(self, folder_path=''):
-        """Delete a folder in /contentlibrary/."""
-        if folder_path == '':
-            folder_path = self.config.content_library_folder
-        service_url = 'clFolders/contentlibrary/{f}'.format(f=folder_path)
-        return self._delete(service_url)
-
-    def create_document(self, document, sub_folder_path=None):
+    def create_document(
+        self,
+        document,
+        local_path=None,
+        remote_path=None
+    ):
         """Create a document in /contentlibrary/."""
+        if local_path is None:
+            local_path = self.config.local_content_library_folder,
+        local_path = self._trim_path(local_path)
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+        remote_path = self._trim_path(remote_path)
         service_url = 'clDocs'
-        data = self._prep_doc_and_path(document, sub_folder_path)['data']
+        data = self._prep_doc_and_path(
+            document, local_path, remote_path)['data']
         return self._post(service_url, data)
 
-    def get_document(self, document, sub_folder_path=None):
+    def get_document(
+        self,
+        document,
+        remote_path=None
+    ):
         """Get a document from /contentlibrary/."""
-        if sub_folder_path is None:
-            sub_folder_path = self.config.content_library_folder
-        document_name = document
-        service_url = 'clDocs/contentlibrary/{sf}/{d}'.format(
-            sf=sub_folder_path,
-            d=document_name)
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+        remote_path = self._trim_path(remote_path)
+        service_url = 'clDocs/contentlibrary/{rfp}/{d}'.format(
+            rfp=remote_path,
+            d=document)
         return self._get(service_url)
 
-    def update_document(self, document, sub_folder_path=None):
-        """Update a document that's already in /contentlibrary/."""
-        prepped = self._prep_doc_and_path(document, sub_folder_path)
-        service_url = 'clDocs/contentlibrary/{sf}/{p}'.format(
-            sf=sub_folder_path,
-            p=prepped["document_name"])
-        return self._post(service_url, prepped['data'])
+    # def update_document(
+    #     self,
+    #     document,
+    #     local_path=None,
+    #     remote_path=None
+    # ):
+    #     # print(local_path, remote_path, document)
+    #     # input()
+    #     """Update a document that's already in /contentlibrary/."""
+    #     # print(type(local_path), local_path)
+    #     # if local_path is None:
+    #     #     print(type(local_path), local_path)
+    #     #     local_path = self.config.local_content_library_folder,
+    #     #     print(type(local_path), local_path)
+    #     # local_path = self._trim_path(local_path)
+    #     if remote_path is None:
+    #         remote_path = self.config.remote_content_library_folder
+    #     remote_path = self._trim_path(remote_path)
+    #     # print(type(local_path), local_path, remote_path, document)
+    #     # input()
+    #     prepped = self._prep_doc_and_path(
+    #         document, local_path, remote_path)
+    #     print(prepped)
+    #     service_url = 'clDocs/contentlibrary/{rfp}/{p}'.format(
+    #         rfp=remote_path,
+    #         p=prepped["document_name"])
+    #     print(service_url)
+    #     input()
+    #     return self._post(service_url, {prepped['data']['content']})
+        # return
 
-    def delete_document(self, path_to_interact_document):
+
+    def delete_document(self, document, remote_path=None):
         """Delete a document in /contentlibrary/'."""
-        service_url = 'clDocs/contentlibrary/{p}'.format(
-            p=path_to_interact_document)
+
+        # # First try to get the document before we delete it!
+        # self.get_document(document, remote_path)
+
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+        remote_path = self._trim_path(remote_path)
+        service_url = 'clDocs/contentlibrary/{p}/{d}'.format(
+            p=remote_path, d=document)
         return self._delete(service_url)
+
+    def delete_folder(self, remote_path=None):
+        """Delete a folder in /contentlibrary/."""
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+            remote_path = self._trim_path(remote_path)
+        remote_path = self._trim_path(remote_path)
+        service_url = 'clFolders/contentlibrary/{f}'.format(f=remote_path)
+        return self._delete(service_url)
+
+
+
+
+
 
     # NOT IMPLEMENTED GROUP
 
@@ -553,10 +686,6 @@ You will be happy you did.
 
     def unschedule_campaign(self, campaign_name):
         """Unschedule a campaign."""
-        raise(NotImplementedError)
-
-    def list_folder(self, path):
-        """List the contents of a folder."""
         raise(NotImplementedError)
 
     def create_media_file(self, path_to_media_file, media_file):
