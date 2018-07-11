@@ -168,21 +168,28 @@ class Client:
 
     def _trim_path(self, path):
         # chop trailing slash
-        if path[-1] == '/':
-            path = path[:-1]
-        # chop leading slash
-        if path[0] == '/':
-            path = path[1:]
+        try:
+            if path[-1] == '/':
+                path = path[:-1]
+            # chop leading slash
+            if path[0] == '/':
+                path = path[1:]
+        except:
+            pass
         return path
 
 
     def _prep_doc_and_path(
         self,
         document,
+        local_path=None,
         remote_path=None
     ):
+        if local_path is None:
+            local_path = self.config.remote_content_library_folder
+        local_path = self._trim_path(local_path)
         if remote_path is None:
-            remote_path = self.config.content_library_folder
+            remote_path = self.config.remote_content_library_folder
         remote_path = self._trim_path(remote_path)
         document_data = open(document, 'r').read()
         # just use the filename, omit the path
@@ -505,7 +512,7 @@ You will be happy you did.
                     v=str(valid_types)[1:-1])
                 )
         if remote_path is None:
-            remote_path = self.config.content_library_folder
+            remote_path = self.config.remote_content_library_folder
         remote_path = self._trim_path(remote_path)
         service_url = 'clFolders/contentlibrary/{f}?type={o}'.format(
             f=remote_path, o=object_type)
@@ -517,7 +524,7 @@ You will be happy you did.
     ):
         """Create a new folder in /contentlibrary/."""
         if remote_path is None:
-            remote_path = self.config.content_library_folder
+            remote_path = self.config.remote_content_library_folder
         remote_path = self._trim_path(remote_path)
         service_url = 'clFolders'
         data = {
@@ -536,7 +543,7 @@ You will be happy you did.
             local_path = self.config.local_content_library_folder,
         local_path = self._trim_path(local_path)
         if remote_path is None:
-            remote_path = self.config.content_library_folder
+            remote_path = self.config.remote_content_library_folder
         remote_path = self._trim_path(remote_path)
         service_url = 'clDocs'
         data = self._prep_doc_and_path(
@@ -550,50 +557,62 @@ You will be happy you did.
     ):
         """Get a document from /contentlibrary/."""
         if remote_path is None:
-            remote_path = self.config.content_library_folder
+            remote_path = self.config.remote_content_library_folder
         remote_path = self._trim_path(remote_path)
-        document_name = document
-        service_url = 'clDocs/contentlibrary/{sf}/{d}'.format(
-            sf=sub_folder_path,
-            d=document_name)
+        service_url = 'clDocs/contentlibrary/{rfp}/{d}'.format(
+            rfp=remote_path,
+            d=document)
         return self._get(service_url)
 
-    def update_document(
-        self,
-        document,
-        local_path=None,
-        remote_path=None
-    ):
-        """Update a document that's already in /contentlibrary/."""
-        if local_path is None:
-            local_path = self.config.local_content_library_folder,
-        local_path = self._trim_path(local_path)
-        if remote_path is None:
-            remote_path = self.config.content_library_folder
-        remote_path = self._trim_path(remote_path)
-        prepped = self._prep_doc_and_path(document, sub_folder_path)
-        service_url = 'clDocs/contentlibrary/{sf}/{p}'.format(
-            sf=remote_path,
-            p=prepped["document_name"])
-        return self._post(service_url, prepped['data'])
+    # def update_document(
+    #     self,
+    #     document,
+    #     local_path=None,
+    #     remote_path=None
+    # ):
+    #     # print(local_path, remote_path, document)
+    #     # input()
+    #     """Update a document that's already in /contentlibrary/."""
+    #     # print(type(local_path), local_path)
+    #     # if local_path is None:
+    #     #     print(type(local_path), local_path)
+    #     #     local_path = self.config.local_content_library_folder,
+    #     #     print(type(local_path), local_path)
+    #     # local_path = self._trim_path(local_path)
+    #     if remote_path is None:
+    #         remote_path = self.config.remote_content_library_folder
+    #     remote_path = self._trim_path(remote_path)
+    #     # print(type(local_path), local_path, remote_path, document)
+    #     # input()
+    #     prepped = self._prep_doc_and_path(
+    #         document, local_path, remote_path)
+    #     print(prepped)
+    #     service_url = 'clDocs/contentlibrary/{rfp}/{p}'.format(
+    #         rfp=remote_path,
+    #         p=prepped["document_name"])
+    #     print(service_url)
+    #     input()
+    #     return self._post(service_url, {prepped['data']['content']})
+        # return
+
 
     def delete_document(self, document, remote_path=None):
         """Delete a document in /contentlibrary/'."""
 
-        # First try to get the document before we delete it!
-        self.get_document(document, remote_path)
+        # # First try to get the document before we delete it!
+        # self.get_document(document, remote_path)
 
         if remote_path is None:
-            remote_path = self.config.content_library_folder
+            remote_path = self.config.remote_content_library_folder
         remote_path = self._trim_path(remote_path)
-        service_url = 'clDocs/contentlibrary/{p}'.format(
-            p=remote_path)
+        service_url = 'clDocs/contentlibrary/{p}/{d}'.format(
+            p=remote_path, d=document)
         return self._delete(service_url)
 
     def delete_folder(self, remote_path=None):
         """Delete a folder in /contentlibrary/."""
         if remote_path is None:
-            remote_path = self.config.content_library_folder
+            remote_path = self.config.remote_content_library_folder
             remote_path = self._trim_path(remote_path)
         remote_path = self._trim_path(remote_path)
         service_url = 'clFolders/contentlibrary/{f}'.format(f=remote_path)
