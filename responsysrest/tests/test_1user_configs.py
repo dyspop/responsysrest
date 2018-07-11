@@ -30,6 +30,7 @@ def test_credentials_class():
         profile_extension_table_alias="profile_extension_table_alias",
         supplemental_table_alias="supplemental_table_alias",
         primary_key_alias="primary_key_alias",
+        riid_generator_length=11,
         test_campaign_name="test_campaign_name",
         content_library_folder="content_library_folder",
         api_version="api_version",
