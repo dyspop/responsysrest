@@ -66,6 +66,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/dyspop/responsysrest",
+    install_requires=['requests'],
     packages=setuptools.find_packages(),
     classifiers=(
         'Development Status :: 3 - Alpha',
