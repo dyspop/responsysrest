@@ -23,13 +23,16 @@ This package is developed for Python3.x but should work on 2.7 if you're so incl
 
 ### Standard install for using in your application
 
-    pip install git+https://@github.com/dyspop/responsysrest.git@0.1.8
+    pip install responsysrest
 
 ### Development install via repository clone
+
+If you want to help developing this package:
+
 1. Clone this repo:
     git clone git@github.com:dyspop/responsysrest.git
 2. Create Virtual Environment
-    cd responsysrest && virtualenv env && source env/bin/activate
+    cd responsysrest && python -m venv venv && source venv/bin/activate
 2. Install via source package in development mode:
 ```
     pip install -e .

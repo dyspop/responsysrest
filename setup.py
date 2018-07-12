@@ -59,7 +59,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="responsysrest",
-    version="0.1.8",
+    version="0.1.9",
     author="Dan Black",
     author_email="dyspop@gmail.com",
     description="Python client library for the Responsys Interact REST API",
@@ -77,7 +77,7 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Information Technology',
-        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3.6',
         'Topic :: Communications :: Email',
