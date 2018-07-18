@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: responsysrest
-Version: 0.1.8
+Version: 0.1.9
 Summary: Python client library for the Responsys Interact REST API
 Home-page: https://github.com/dyspop/responsysrest
 Author: Dan Black
@@ -31,13 +31,16 @@ Description: # Responsys Interact REST API python client #
         
         ### Standard install for using in your application
         
-            pip install git+https://@github.com/dyspop/responsysrest.git@0.1.8
+            pip install responsysrest
         
         ### Development install via repository clone
+        
+        If you want to help developing this package:
+        
         1. Clone this repo:
             git clone git@github.com:dyspop/responsysrest.git
         2. Create Virtual Environment
-            cd responsysrest && virtualenv env && source env/bin/activate
+            cd responsysrest && python -m venv venv && source venv/bin/activate
         2. Install via source package in development mode:
         ```
             pip install -e .
@@ -904,7 +907,7 @@ Classifier: Framework :: Pytest
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: End Users/Desktop
 Classifier: Intended Audience :: Information Technology
-Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
+Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Topic :: Communications :: Email
