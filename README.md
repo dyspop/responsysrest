@@ -2,6 +2,53 @@
 
 A python library providing access to the Responsys Interact API. Currently supports version 1.3 Release 6.33 E65150-15.
 
+As this is Alpha software many features remain to be implemented. Here's a list of every feature based on its Responsys documentation name (not the internal function names) and its implementation status:
+
+| Feature  | Status  | Implementation Notes |
+|---|---|---|
+| Login with username and certificates | Not implemented |  |
+| Retrieving all profile lists for an account | Complete |  |
+| Merge or update members in a profile list table | Partial | While you can override merge rules, they are applied globally to the merge, not set per record. |
+| Get all EMD email campaigns | Complete |  |
+| Get all Push campaigns | Complete |  |
+| Retrieve a member of a profile list using RIID | Complete |  |
+| Retrieve a member of a profile list based on query attribute | Complete |  |
+| Retrieve all profile extensions of a profile list | Complete |  |
+| Retrieve a member of a profile extension table based on RIID | Complete |  |
+| Retrieve a member of a profile extension table based on a query attribute | Complete |  |
+| Trigger email message | Complete |  |
+| Delete Profile List Recipients based on RIID | Complete |  |
+| Create a new supplemental table | Complete |  |
+| List the contents of a folder | Complete |  |
+| Create a new folder in /contentlibrary/ | Complete |  |
+| Create a document in /contentlibrary/ | Complete |  |
+| Get a document from /contentlibrary/ | Complete |  |
+| Update a document that's already in /contentlibrary/ | Missing |  |
+| Delete a document in /contentlibrary/ | Complete | Could be improved |
+| Delete a folder in /contentlibrary/ | Complete | Could be improved |
+| Create a profile extension table | Missing |  |
+| Update a profile extension table | Missing |  |
+| Update a supplemental table | Missing |  |
+| Get a record from a supplemental table | Missing |  |
+| Delete a record from a supplemental table | Missing |  |
+| Update a list and then send an email message | Missing |  |
+| Update a list and send an email message | Missing |  |
+| Update a list and send an sms | Missing |  |
+| Send a push message | Missing |  |
+| Trigger a custom event | Missing |  |
+| Schedule a campaign | Missing |  |
+| Get the schedule IDs for a campaign | Missing |  |
+| Get the schedule for a campaign | Missing |  |
+| Update a campaign schedule | Missing |  |
+| Unschedule a campaign | Missing |  |
+| Create a media file | Missing |  |
+| Get a media file | Missing |  |
+| Update a media file | Missing |  |
+| Delete a media file | Missing |  |
+| Copy a media file | Missing |  |
+| Set the image data for media that are referenced in a document | Missing |  |
+| Get the image data for media that are referenced in a document | Missing |  |
+
 
 ## Requirements
 
