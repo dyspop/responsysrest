@@ -4,9 +4,9 @@ A python library providing access to the Responsys Interact API. Currently suppo
 
 As this is Alpha software many features remain to be implemented. Here's a list of every feature based on its Responsys documentation name (not the internal function names) and its implementation status:
 
-| Feature  | Status  | Implementation Notes |
+| Feature  | Implementation  |  Notes |
 |---|---|---|
-| Login with username and certificates | Not implemented |  |
+| Login with username and certificates | Missing |  |
 | Retrieving all profile lists for an account | Complete |  |
 | Merge or update members in a profile list table | Partial | While you can override merge rules, they are applied globally to the merge, not set per record. |
 | Get all EMD email campaigns | Complete |  |
