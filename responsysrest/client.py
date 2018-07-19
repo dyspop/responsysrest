@@ -564,36 +564,24 @@ You will be happy you did.
             d=document)
         return self._get(service_url)
 
-    # def update_document(
-    #     self,
-    #     document,
-    #     local_path=None,
-    #     remote_path=None
-    # ):
-    #     # print(local_path, remote_path, document)
-    #     # input()
-    #     """Update a document that's already in /contentlibrary/."""
-    #     # print(type(local_path), local_path)
-    #     # if local_path is None:
-    #     #     print(type(local_path), local_path)
-    #     #     local_path = self.config.local_content_library_folder,
-    #     #     print(type(local_path), local_path)
-    #     # local_path = self._trim_path(local_path)
-    #     if remote_path is None:
-    #         remote_path = self.config.remote_content_library_folder
-    #     remote_path = self._trim_path(remote_path)
-    #     # print(type(local_path), local_path, remote_path, document)
-    #     # input()
-    #     prepped = self._prep_doc_and_path(
-    #         document, local_path, remote_path)
-    #     print(prepped)
-    #     service_url = 'clDocs/contentlibrary/{rfp}/{p}'.format(
-    #         rfp=remote_path,
-    #         p=prepped["document_name"])
-    #     print(service_url)
-    #     input()
-    #     return self._post(service_url, {prepped['data']['content']})
-        # return
+    def update_document(
+        self,
+        document,
+        local_path=None,
+        remote_path=None
+    ):
+        """Update a document that's already in /contentlibrary/."""
+        if local_path is None:
+            local_path = self.config.local_content_library_folder,
+        local_path = self._trim_path(local_path)
+        if remote_path is None:
+            remote_path = self.config.remote_content_library_folder
+        remote_path = self._trim_path(remote_path)
+        service_url = 'clDocs/contentlibrary/{rfp}/{d}'.format(
+            rfp=remote_path,
+            d=document)
+        prepped = self._prep_doc_and_path(
+            document, local_path, remote_path)
 
 
     def delete_document(self, document, remote_path=None):
