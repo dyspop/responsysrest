@@ -582,6 +582,7 @@ You will be happy you did.
             d=document)
         prepped = self._prep_doc_and_path(
             document, local_path, remote_path)
+        return self._post(service_url, prepped['data'])
 
 
     def delete_document(self, document, remote_path=None):
