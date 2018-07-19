@@ -186,7 +186,7 @@ class Client:
         remote_path=None
     ):
         if local_path is None:
-            local_path = self.config.remote_content_library_folder
+            local_path = self.config.local_content_library_folder
         local_path = self._trim_path(local_path)
         if remote_path is None:
             remote_path = self.config.remote_content_library_folder
