@@ -572,7 +572,7 @@ def test_get_document_returns_document_at_config_path():
         )
     )
 
-@pytest.mark.xfail
+
 def test_update_document_returns_response():
     """Test if the API responds.
 
