@@ -113,7 +113,7 @@ class Client:
         #     return response
 
 
-    """Interal helper methods."""
+    """Internal helper methods."""
 
     def _list_child(self, child, from_type):
         if type(child) is from_type:
