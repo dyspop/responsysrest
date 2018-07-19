@@ -23,7 +23,7 @@ As this is Alpha software many features remain to be implemented. Here's a list 
 | Create a new folder in /contentlibrary/ | Complete |  |
 | Create a document in /contentlibrary/ | Complete |  |
 | Get a document from /contentlibrary/ | Complete |  |
-| Update a document that's already in /contentlibrary/ | Missing |  |
+| Update a document that's already in /contentlibrary/ | Complete |  |
 | Delete a document in /contentlibrary/ | Complete | Could be improved |
 | Delete a folder in /contentlibrary/ | Complete | Could be improved |
 | Create a profile extension table | Missing |  |
@@ -628,26 +628,34 @@ This recursively deletes all files in the folder as well.
 
 #### Create Content Library Document
 
-Creates a document in the content library (`/contentlibary/`). Takes a document system path, not document data or other protocol path.
+Creates a document in the content library (`/contentlibary/`). It uses your configuration local and remote paths if no paths are specified:
 
-    client.create_document('path/to/document.htm')
+    client.create_document('document.htm')
 
-You can specify a folder but it will become a content library subfolder:
+You can also specify the local and/or remote contentlibrary subfolder:
 
-    client.create_document('local/path/to/document.htm', 'arbitrary/folder/path')
+    client.update_document(
+        document='document.htm',
+        remote_path='path/to/interact/contentlibrary/subfolder/',
+        local_path='../../relative/local/path/')
 
 This should create (if you're on pod 5):
 
     https://interact5.responsys.net/suite/c#!liveViewEditor/%2Fcontentlibrary%2Farbitrary%2Ffolder%2Fpath/document%2Ehtm
 
-If you don't specify a folder the wrapper will default to the API folder name configured for your client. The boilerplate default is `___api-generated-cl`. 
-
 
 #### Get Content Library Document
 
-Gets the document path, content, and REST CRUD links for a content library document:
+Gets the document path, content, and REST CRUD links for a content library document. It uses your configuration local and remote paths if no paths are specified:
 
     client.get_document('document.htm')
+
+You can also specify the local and/or remote contentlibrary subfolder:
+
+    client.update_document(
+        document='document.htm',
+        remote_path='path/to/interact/contentlibrary/subfolder/',
+        local_path='../../relative/local/path/')
 
 returns:
 
@@ -681,9 +689,9 @@ returns:
 
 #### Update Content Library Document
 
-Updates a document in `/contentlibrary/` if it's already there. Takes a document system path, not document data or other protocol path.
+Update a document in `/contentlibrary/` if it's already there. It uses your configuration local and remote paths if no paths are specified.
 
-    client.update_document('local/path/to/document.htm')
+    client.update_document('document.htm')
 
 returns:
 
@@ -714,11 +722,12 @@ returns:
         ]
     }
 
-You can also specify the destination contentlibrary subfolder:
+You can also specify the local and/or remote contentlibrary subfolder:
 
     client.update_document(
-        'local/path/to/document.htm',
-        'path/to/interact/contentlibrary/subfolder')
+        document='document.htm',
+        remote_path='path/to/interact/contentlibrary/subfolder/',
+        local_path='../../relative/local/path/')
 
     {
         'documentPath': '/contentlibrary/path/to/interact/contentlibrary/subfolder/document.htm', 

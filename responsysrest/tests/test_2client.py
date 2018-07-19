@@ -572,13 +572,17 @@ def test_get_document_returns_document_at_config_path():
         )
     )
 
-@pytest.mark.xfail
+
 def test_update_document_returns_response():
     """Test if the API responds.
 
     When we try to create a content library document.
+    Unlike get document we must have a valid local document.
     """
-    assert _heartbeat(client.update_document(fixtures['document']))
+    assert _heartbeat(client.update_document(
+        document=fixtures['document'],
+        local_path=fixtures['local_content_library_folder'])
+    )
 
 
 def test_delete_document_returns_response():
