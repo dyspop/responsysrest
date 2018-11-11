@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: responsysrest
-Version: 0.1.10
+Version: 0.1.11
 Summary: Python client library for the Responsys Interact REST API
 Home-page: https://github.com/dyspop/responsysrest
 Author: Dan Black
