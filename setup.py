@@ -59,7 +59,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="responsysrest",
-    version="0.1.10",
+    version="0.1.11",
     author="Dan Black",
     author_email="dyspop@gmail.com",
     description="Python client library for the Responsys Interact REST API",
