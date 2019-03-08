@@ -26,6 +26,11 @@ def test_requirement_urllib3():
     assert None is not import_util.find_spec('urllib3')
 
 
+# Test pytest loaded... with pytest? ¯\_(ツ)_/¯
+def test_pytest():
+    assert None is not import_util.find_spec('pytest')
+
+
 # Test that the library itself loads
 
 def test_self_responsysrest():
