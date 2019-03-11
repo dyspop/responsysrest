@@ -1,55 +1,18 @@
 import os
 import json
+from dataclasses import dataclass
 
-
+@dataclass
 class Credentials:
     """Load credentials information like passwords."""
 
-    def __init__(
-        self,
-        user_name,
-        password,
-        email_address,
-        certificates=None
-    ):
-        """Initialize the credentials."""
-        self.user_name = user_name
-        self.password = password
-        self.email_address = email_address
-        self.certificates = certificates
-
-    @property
-    def user_name(self):
-        """Get Username."""
-        return self.__user_name
-
-    @user_name.setter
-    def user_name(self, user_name):
-        """Set Username."""
-        self.__user_name = user_name
-
-    @property
-    def password(self):
-        """Get Password."""
-        return self.__password
-
-    @password.setter
-    def password(self, password):
-        """Set Username."""
-        self.__password = password
-
-    @property
-    def email_address(self):
-        """Get Email Address."""
-        return self.__email_address
-
-    @email_address.setter
-    def email_address(self, email_address):
-        """Set Username."""
-        self.__email_address = email_address
+    user_name: str
+    password: str
+    email_address: str
+    certificates: None = None
 
 
-def from_json(f):
+def from_json(f: bytes):
     """Load credentials from json."""
     with open(bytes(f)) as f:
         user_secrets = json.load(f)
