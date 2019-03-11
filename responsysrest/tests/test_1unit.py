@@ -16,8 +16,8 @@ def test_credentials_with_args():
     assert r.Credentials(user_name, password, email_address)
 
 
-def test_from_json_on_nonbinary_path():
+def test_from_json_on_windows_path():
     # Test that the from json won't freak out with escape-looking backslash paths
-    path = b'\mypath\'
-    from_json = r.Credentials.from_json(path)
-    assert from_json
+    path = b'C:\\Users\\randomuser\\paththatshould not exist\\Application\\Sub Directory\\config.json'
+    with pytest.raises(Exception) as e_info:
+        from_json = r.credentials.from_json(path)
