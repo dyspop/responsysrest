@@ -51,7 +51,7 @@ class Credentials:
 
 def from_json(f):
     """Load credentials from json."""
-    with open(f) as f:
+    with open(bytes(f)) as f:
         user_secrets = json.load(f)
         creds = Credentials(
             user_name=user_secrets['user_name'],
