@@ -45,10 +45,6 @@ class Configuration:
         self.test_remote_content_library_folder = test_remote_content_library_folder
 
 
-    def __repr__(self):
-        """Text representation."""
-        return "Configuration"
-
     @property
     def pod(self):
         """Get pod."""

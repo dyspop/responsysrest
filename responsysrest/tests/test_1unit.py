@@ -18,6 +18,10 @@ def test_credentials_with_args():
 
 def test_from_json_on_windows_path():
     # Test that the from json won't freak out with escape-looking backslash paths
-    path = b'C:\\Users\\randomuser\\paththatshould not exist\\Application\\Sub Directory\\config.json'
+    paths = [
+        b'C:\\Users\\randomuser\\paththatshould not exist\\Sub Directory\\config.json',
+        r'C:\Users\randomuser\paththatshould not exist\Sub Directory\config.json'
+    ]
     with pytest.raises(Exception) as e_info:
-        from_json = r.credentials.from_json(path)
+        for path in paths:
+            from_json = r.credentials.from_json(path)
