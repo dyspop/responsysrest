@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: responsysrest
-Version: 0.1.10
+Version: 0.1.12
 Summary: Python client library for the Responsys Interact REST API
 Home-page: https://github.com/dyspop/responsysrest
 Author: Dan Black
@@ -965,7 +965,7 @@ Classifier: Intended Audience :: End Users/Desktop
 Classifier: Intended Audience :: Information Technology
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
-Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.6+
 Classifier: Topic :: Communications :: Email
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Description-Content-Type: text/markdown

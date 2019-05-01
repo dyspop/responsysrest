@@ -59,7 +59,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="responsysrest",
-    version="0.1.10",
+    version="0.1.12",
     author="Dan Black",
     author_email="dyspop@gmail.com",
     description="Python client library for the Responsys Interact REST API",
@@ -68,7 +68,7 @@ setuptools.setup(
     url="https://github.com/dyspop/responsysrest",
     install_requires=['requests'],
     packages=setuptools.find_packages(),
-    classifiers=(
+    classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Environment :: MacOS X',
@@ -79,8 +79,8 @@ setuptools.setup(
         'Intended Audience :: Information Technology',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.6+',
         'Topic :: Communications :: Email',
         'Topic :: Software Development :: Libraries :: Python Modules',
-    ),
+    ],
 )
